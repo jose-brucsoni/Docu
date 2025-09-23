@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docu - Control de Documentos</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Configuración y utilidades -->
+    <script src="config/app-config.js"></script>
+    <script src="utils/constants.js"></script>
+    <script src="utils/helpers.js"></script>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-content">
+            <div class="logo-container">
+                <i class="fas fa-file-alt logo-icon"></i>
+                <h1 class="app-name">Docu</h1>
+                <p class="app-tagline">Control de Documentos</p>
+            </div>
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen hidden">
+        <div class="login-container">
+            <div class="login-header">
+                <i class="fas fa-file-alt login-logo"></i>
+                <h2>Bienvenido a Docu</h2>
+                <p>Gestiona tus documentos de manera inteligente</p>
+            </div>
+            
+            <form class="login-form" id="loginForm">
+                <div class="input-group">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" id="username" placeholder="Usuario" required>
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="password" placeholder="Contraseña" required>
+                    <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+                </div>
+                
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <span class="checkmark"></span>
+                        Recordarme
+                    </label>
+                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                </div>
+                
+                <button type="submit" class="login-btn">
+                    <span class="btn-text">Iniciar Sesión</span>
+                    <i class="fas fa-arrow-right btn-icon"></i>
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <p>¿No tienes cuenta? <a href="#" class="register-link">Regístrate aquí</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
