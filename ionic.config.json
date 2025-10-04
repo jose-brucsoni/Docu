@@ -1,0 +1,7 @@
+{
+  "name": "DOCU",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
