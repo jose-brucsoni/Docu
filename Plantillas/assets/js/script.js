@@ -313,7 +313,7 @@ document.head.appendChild(styleSheet);
 // Manejar errores globales
 window.addEventListener('error', function(event) {
     console.error('Error:', event.error);
-    showNotification('Ha ocurrido un error inesperado', 'error');
+    //showNotification('Ha ocurrido un error inesperado', 'error');
 });
 
 // Prevenir zoom en iOS

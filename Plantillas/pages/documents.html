@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Documentos - Docu</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Configuración y utilidades -->
+    <script src="../config/app-config.js"></script>
+    <script src="../utils/constants.js"></script>
+    <script src="../utils/helpers.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <div class="header-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="logo">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Docu</span>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" placeholder="Buscar documentos..." class="search-input" id="searchInput">
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <button class="notification-btn" id="notificationBtn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationBadge">3</span>
+                </button>
+                
+                <div class="user-menu" id="userMenu">
+                    <button class="user-avatar" id="userAvatar">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-info">
+                            <div class="user-name" id="userName">Usuario</div>
+                            <div class="user-email" id="userEmail">usuario1@docu.com</div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user"></i>
+                            Mi Perfil
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            Configuración
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item logout-btn" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Cerrar Sesión
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar" id="dashboardSidebar">
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <h3 class="nav-title">Principal</h3>
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="documents.html" class="nav-item active">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Mis Documentos</span>
+                    <span class="nav-badge" id="documentsCount">35</span>
+                </a>
+                <a href="recent.html" class="nav-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Recientes</span>
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <h3 class="nav-title">Categorías</h3>
+                <a href="documents.html?category=identification" class="nav-item">
+                    <i class="fas fa-id-card"></i>
+                    <span>Identificación</span>
+                </a>
+                <a href="documents.html?category=legal" class="nav-item">
+                    <i class="fas fa-gavel"></i>
+                    <span>Legales</span>
+                </a>
+                <a href="documents.html?category=medical" class="nav-item">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Médicos</span>
+                </a>
+                <a href="documents.html?category=financial" class="nav-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span>Financieros</span>
+                </a>
+                <a href="documents.html?category=education" class="nav-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Educación</span>
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <h3 class="nav-title">Herramientas</h3>
+                <a href="scanner.html" class="nav-item">
+                    <i class="fas fa-camera"></i>
+                    <span>Escanear</span>
+                </a>
+                <a href="search.html" class="nav-item">
+                    <i class="fas fa-search"></i>
+                    <span>Búsqueda Avanzada</span>
+                </a>
+                <a href="export.html" class="nav-item">
+                    <i class="fas fa-download"></i>
+                    <span>Exportar</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <div class="dashboard-content">
+            <!-- Header Section -->
+            <section class="documents-header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1 class="page-title">Mis Documentos</h1>
+                        <p class="page-subtitle">Gestiona y organiza todos tus documentos</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary mobile-hidden" id="viewToggleBtn">
+                            <i class="fas fa-th" id="viewIcon"></i>
+                            <span id="viewText">Vista Grid</span>
+                        </button>
+                        <button class="btn btn-primary" id="addDocumentBtn">
+                            <i class="fas fa-plus"></i>
+                            <span class="mobile-hidden">Agregar Documento</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mobile Filter Toggle -->
+            <div class="mobile-filter-toggle">
+                <button class="btn btn-outline mobile-only" id="mobileFilterToggle">
+                    <i class="fas fa-filter"></i>
+                    <span>Filtros</span>
+                    <i class="fas fa-chevron-down" id="filterChevron"></i>
+                </button>
+            </div>
+
+            <!-- Filters Section -->
+            <section class="filters-section" id="filtersSection">
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <label for="categoryFilter" class="filter-label">Categoría</label>
+                        <select id="categoryFilter" class="filter-select">
+                            <option value="">Todas las categorías</option>
+                            <option value="identification">Identificación</option>
+                            <option value="legal">Legales</option>
+                            <option value="medical">Médicos</option>
+                            <option value="financial">Financieros</option>
+                            <option value="education">Educación</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="statusFilter" class="filter-label">Estado</label>
+                        <select id="statusFilter" class="filter-select">
+                            <option value="">Todos los estados</option>
+                            <option value="active">Activos</option>
+                            <option value="expiring_soon">Próximos a vencer</option>
+                            <option value="expired">Vencidos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="sortBy" class="filter-label">Ordenar por</label>
+                        <select id="sortBy" class="filter-select">
+                            <option value="name">Nombre</option>
+                            <option value="date_added">Fecha de agregado</option>
+                            <option value="expiration_date">Fecha de vencimiento</option>
+                            <option value="category">Categoría</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="sortOrder" class="filter-label">Orden</label>
+                        <select id="sortOrder" class="filter-select">
+                            <option value="asc">Ascendente</option>
+                            <option value="desc">Descendente</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-outline" id="clearFiltersBtn">
+                        <i class="fas fa-times"></i>
+                        <span class="mobile-hidden">Limpiar Filtros</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Documents Stats -->
+            <section class="documents-stats">
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalDocumentsCount">35</span>
+                        <span class="stat-label">Total</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="activeDocumentsCount">28</span>
+                        <span class="stat-label">Activos</span>
+                    </div>
+                    <div class="stat-item urgent">
+                        <span class="stat-number" id="expiringDocumentsCount">6</span>
+                        <span class="stat-label">Próximos a vencer</span>
+                    </div>
+                    <div class="stat-item expired">
+                        <span class="stat-number" id="expiredDocumentsCount">1</span>
+                        <span class="stat-label">Vencidos</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mobile View Toggle -->
+            <div class="mobile-view-toggle">
+                <button class="btn btn-outline mobile-only" id="mobileViewToggle">
+                    <i class="fas fa-th" id="mobileViewIcon"></i>
+                    <span id="mobileViewText">Vista Grid</span>
+                </button>
+            </div>
+
+            <!-- Documents Grid/List -->
+            <section class="documents-content">
+                <div class="documents-container" id="documentsContainer">
+                    <!-- Los documentos se cargarán dinámicamente -->
+                </div>
+            </section>
+
+            <!-- Pagination -->
+            <section class="pagination-section">
+                <div class="pagination-container">
+                    <button class="pagination-btn" id="prevPageBtn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                        <span class="mobile-hidden">Anterior</span>
+                    </button>
+                    
+                    <div class="pagination-info">
+                        <span id="paginationInfo">Página 1 de 3</span>
+                    </div>
+                    
+                    <div class="pagination-pages" id="paginationPages">
+                        <!-- Los números de página se generarán dinámicamente -->
+                    </div>
+                    
+                    <button class="pagination-btn" id="nextPageBtn">
+                        <span class="mobile-hidden">Siguiente</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Overlay para sidebar móvil -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/script.js"></script>
+    <script src="../assets/js/dashboard.js"></script>
+    <script src="../assets/js/documents.js"></script>
+</body>
+</html>
