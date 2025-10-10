@@ -2,13 +2,14 @@ import { Component, inject, signal,NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import {firstValueFrom}from 'rxjs';
 import { Login } from 'src/app/services/login'; // Tu servicio Firebase
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, IonicModule, ReactiveFormsModule],
+  imports: [CommonModule, IonicModule, ReactiveFormsModule,RouterLink],
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
@@ -22,12 +23,17 @@ export class LoginPage {
   // --- Estados reactivos ---
   loading = signal(false);
   error = signal<string | null>(null);
+  showPassword = signal(false);
 
   // --- Formulario reactivo ---
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
+    remember: [false],
   });
+
+  togglePwd() { this.showPassword.update(v => !v); }
+  showPwd() { return this.showPassword(); }
 
   // --- Inicio de sesión ---
   async onLogin() {
@@ -46,6 +52,17 @@ export class LoginPage {
       this.error.set(this.humanizeError(e?.code || e?.message));
     } finally {
       this.loading.set(false);
+    }
+  }
+
+   async onForgot() {
+    const email = this.loginForm.value.email?.trim();
+    if (!email) { this.error.set('Ingresa tu correo para recuperar la contraseña.'); return; }
+    try {
+      await firstValueFrom(this.auth.resetPassword(email)); // añade este método en tu servicio si aún no está
+      this.error.set('Te enviamos un enlace de recuperación a tu correo.');
+    } catch (e: any) {
+      this.error.set(this.humanizeError(e?.code || e?.message));
     }
   }
 

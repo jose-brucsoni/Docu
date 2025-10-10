@@ -1,13 +1,63 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>registro-usuario</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="register-screen" [fullscreen]="true">
+  <div class="register-wrapper">
+    <div class="register-card">
+      <div class="header">
+        <img src="assets/icon/COPU.png" alt="Logo Docu" class="logo" />
+        <h2>Crea tu cuenta</h2>
+        <p>Únete y gestiona tus documentos de manera inteligente</p>
+      </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">registro-usuario</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+        <!-- Nombre -->
+        <ion-item lines="none" class="field">
+          <ion-icon name="person-circle-outline" slot="start" class="icon"></ion-icon>
+          <ion-input
+            formControlName="displayName"
+            type="text"
+            placeholder="Nombre y apellido">
+          </ion-input>
+        </ion-item>
+
+        <!-- Correo -->
+        <ion-item lines="none" class="field">
+          <ion-icon name="mail-outline" slot="start" class="icon"></ion-icon>
+          <ion-input
+            formControlName="email"
+            type="email"
+            placeholder="Correo electrónico">
+          </ion-input>
+        </ion-item>
+
+        <!-- Contraseña -->
+        <ion-item lines="none" class="field">
+          <ion-icon name="lock-closed-outline" slot="start" class="icon"></ion-icon>
+          <ion-input
+            formControlName="password"
+            [type]="showPwd() ? 'text' : 'password'"
+            placeholder="Contraseña (mín. 6 caracteres)">
+          </ion-input>
+          <ion-button fill="clear" size="small" slot="end" class="eye" type="button" (click)="togglePwd()">
+            <ion-icon [name]="showPwd() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </ion-button>
+        </ion-item>
+
+        <!-- Confirmar -->
+        <ion-item lines="none" class="field">
+          <ion-icon name="shield-checkmark-outline" slot="start" class="icon"></ion-icon>
+          <ion-input
+            formControlName="confirm"
+            [type]="showConfirm() ? 'text' : 'password'"
+            placeholder="Confirmar contraseña">
+          </ion-input>
+          <ion-button fill="clear" size="small" slot="end" class="eye" type="button" (click)="toggleConfirm()">
+            <ion-icon [name]="showConfirm() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </ion-button>
+        </ion-item>
+
+        <!-- Términos -->
+        <div class="inline">
+          <ion-checkbox formControlName="terms" labelPlacement="end">
+            Acepto los <a href="#" (click)="$event.preventDefault()">términos y condiciones</a>
+          </ion-checkbox>
+        </div>

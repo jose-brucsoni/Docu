@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Auth, authState, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile, GoogleAuthProvider, signInWithPopup, User } from '@angular/fire/auth';
 import { Firestore, doc, docData, setDoc, serverTimestamp, getDoc } from '@angular/fire/firestore';
 import { from, map, switchMap } from 'rxjs';
+import {sendPasswordResetEmail}from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,10 @@ export class Login {
   /** Login con email y clave */
   loginEmail(email: string, password: string) {
     return from(signInWithEmailAndPassword(this.auth, email, password));
+  }
+
+  resetPassword(email: string) {
+  return from(sendPasswordResetEmail(this.auth, email));
   }
 
   /** Registro con email/clave (y crea perfil en Firestore si no existe) */
