@@ -2,9 +2,7 @@
   <div class="login-wrapper">
     <div class="login-container">
       <div class="login-header">
-        <!-- Aquí va tu logo -->
         <img src="assets/icon/COPU.png" alt="Logo de Docu" class="login-logo-img" />
-
         <h2>Bienvenido a Docu</h2>
         <p>Gestiona tus documentos de manera inteligente</p>
       </div>
@@ -12,13 +10,14 @@
       <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
         <!-- campo del usuario con icono-->
         <ion-item>
-          
+          <ion-icon slot="start" name="mail-outline"></ion-icon>
           <ion-label position="floating">Correo electrónico</ion-label>
-          <ion-input formControlName="username" type="email"></ion-input>
+          <ion-input formControlName="email" type="email"></ion-input>
         </ion-item>
+
         <!-- campo de la contraseña con icono-->
         <ion-item>
-          
+          <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
           <ion-label position="floating">Contraseña</ion-label>
           <ion-input formControlName="password" type="password"></ion-input>
         </ion-item>
@@ -29,7 +28,7 @@
       </form>
 
       <div class="login-footer">
-        <p>¿No tienes cuenta? <a href="#">Regístrate aquí</a></p>
+        <p>¿No tienes cuenta? <a routerLink="/registro-usuario">Regístrate aquí</a></p>
       </div>
     </div>
   </div>
