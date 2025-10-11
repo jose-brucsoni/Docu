@@ -4,33 +4,31 @@
       <div class="header">
         <img src="assets/icon/COPU.png" alt="Logo Docu" class="logo" />
         <h2>Crea tu cuenta</h2>
-        <p>Únete y gestiona tus documentos de manera inteligente</p>
+        <p>Solo unos datos para comenzar</p>
       </div>
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
 
         <!-- Nombre -->
-        <ion-item lines="none" class="field">
-          <ion-icon name="person-circle-outline" slot="start" class="icon"></ion-icon>
-          <ion-input
-            formControlName="displayName"
-            type="text"
-            placeholder="Nombre y apellido">
-          </ion-input>
+        <ion-item lines="none" class="field" mode="md">
+          <ion-icon name="person-outline" slot="start" class="icon"></ion-icon>
+          <ion-input formControlName="nombre" type="text" placeholder="Nombre"></ion-input>
         </ion-item>
 
-        <!-- Correo -->
-        <ion-item lines="none" class="field">
+        <!-- Apellido -->
+        <ion-item lines="none" class="field" mode="md">
+          <ion-icon name="id-card-outline" slot="start" class="icon"></ion-icon>
+          <ion-input formControlName="apellido" type="text" placeholder="Apellido"></ion-input>
+        </ion-item>
+
+        <!-- Email -->
+        <ion-item lines="none" class="field" mode="md">
           <ion-icon name="mail-outline" slot="start" class="icon"></ion-icon>
-          <ion-input
-            formControlName="email"
-            type="email"
-            placeholder="Correo electrónico">
-          </ion-input>
+          <ion-input formControlName="email" type="email" placeholder="Correo electrónico"></ion-input>
         </ion-item>
 
-        <!-- Contraseña -->
-        <ion-item lines="none" class="field">
+        <!-- Password con ojo -->
+        <ion-item lines="none" class="field" mode="md">
           <ion-icon name="lock-closed-outline" slot="start" class="icon"></ion-icon>
           <ion-input
             formControlName="password"
@@ -42,22 +40,21 @@
           </ion-button>
         </ion-item>
 
-        <!-- Confirmar -->
-        <ion-item lines="none" class="field">
-          <ion-icon name="shield-checkmark-outline" slot="start" class="icon"></ion-icon>
-          <ion-input
-            formControlName="confirm"
-            [type]="showConfirm() ? 'text' : 'password'"
-            placeholder="Confirmar contraseña">
-          </ion-input>
-          <ion-button fill="clear" size="small" slot="end" class="eye" type="button" (click)="toggleConfirm()">
-            <ion-icon [name]="showConfirm() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
-          </ion-button>
-        </ion-item>
+        <!-- Error visual (opcional) -->
+        <div *ngIf="error()" class="error">{{ error() }}</div>
 
-        <!-- Términos -->
-        <div class="inline">
-          <ion-checkbox formControlName="terms" labelPlacement="end">
-            Acepto los <a href="#" (click)="$event.preventDefault()">términos y condiciones</a>
-          </ion-checkbox>
+        <!-- Botón registrar -->
+        <ion-button expand="block" type="submit" class="primary" [disabled]="form.invalid || loading()">
+          {{ loading() ? 'Creando cuenta…' : 'Crear cuenta →' }}
+        </ion-button>
+
+        <hr class="divider" />
+
+        <div class="footer">
+          ¿Ya tienes cuenta?
+          <a routerLink="/login"> Inicia sesión</a>
         </div>
+      </form>
+    </div>
+  </div>
+</ion-content>
