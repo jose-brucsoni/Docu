@@ -21,5 +21,11 @@ export const routes: Routes = [
     path: 'registro-usuario',
     loadComponent: () => import('./pages/registro-usuario/registro-usuario.page').then( m => m.RegistroUsuarioPage)
   },
+  {
+    path: 'menu-principal',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/menu-principal/menu-principal.page').then( m => m.MenuPrincipalPage)
+  },
+
 
 ];
