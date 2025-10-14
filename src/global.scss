@@ -35,3 +35,583 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/* ========================================
+   VARIABLES GLOBALES
+   ======================================== */
+:root {
+  /* Colores principales */
+  --docu-primary: #3880ff;
+  --docu-secondary: #3dc2ff;
+  --docu-success: #2dd36f;
+  --docu-warning: #ffc409;
+  --docu-danger: #eb445a;
+  --docu-medium: #92949c;
+  --docu-light: #f4f5f8;
+  --docu-dark: #222428;
+  --docu-white: #ffffff;
+  --docu-text: #1e1e1e;
+  --docu-text-secondary: #666666;
+  --docu-border: #e0e0e0;
+  
+  /* Colores de marca */
+  --docu-orange: #d86a13;
+  --docu-orange-dark: #b34f0d;
+  --docu-orange-hover: #be5e13;
+  
+  /* Sombras */
+  --docu-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --docu-shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --docu-shadow-card: 0 16px 40px rgba(0,0,0,.25);
+  --docu-shadow-button: 0 6px 14px rgba(0,0,0,.25);
+}
+
+/* ========================================
+   ESTILOS COMUNES DE AUTENTICACIÓN
+   ======================================== */
+
+/* Fondo con gradiente naranja */
+ion-content.login-screen,
+ion-content.register-screen {
+  --background: linear-gradient(135deg, var(--docu-orange-dark) 0%, var(--docu-orange) 100%);
+}
+
+/* Wrapper centrado */
+.login-wrapper,
+.register-wrapper {
+  min-height: calc(100vh - var(--ion-safe-area-top) - var(--ion-safe-area-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+/* Tarjetas de autenticación */
+.login-container,
+.register-card {
+  background: var(--docu-white);
+  width: min(92vw, 430px);
+  border-radius: 22px;
+  padding: 24px 22px;
+  box-shadow: var(--docu-shadow-card);
+  text-align: center;
+  animation: fadeIn .45s ease;
+}
+
+/* Header común */
+.login-header,
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.login-header h2,
+.header h2 {
+  font-size: 1.9rem;
+  font-weight: 800;
+  margin: 0;
+  color: #222;
+}
+
+.login-header p,
+.header p {
+  font-size: 1.02rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Logo */
+.login-logo-img,
+.header .logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* Campos de formulario */
+ion-item.field {
+  --background: #f6f6f6;
+  --padding-start: 10px;
+  --inner-padding-start: 6px;
+  --inner-padding-end: 6px;
+  --min-height: 48px;
+  border: 1.5px solid #e3e3e3;
+  border-radius: 12px;
+  margin: 10px 0 14px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02) inset;
+}
+
+ion-item.field.item-has-focus,
+ion-item.field.ion-valid.ion-touched {
+  border-color: var(--docu-orange);
+  box-shadow: 0 0 0 3px rgba(216,106,19,0.12);
+}
+
+.field-icon,
+.icon {
+  font-size: 20px;
+  color: #9c9c9c;
+  margin-right: 6px;
+}
+
+.field-input {
+  font-size: 15px;
+  color: #222;
+}
+
+.eye-btn,
+.eye {
+  --padding-start: 6px;
+  --padding-end: 2px;
+  color: #9c9c9c;
+}
+
+/* Botones principales */
+ion-button.login-btn,
+ion-button.primary {
+  --background: var(--docu-orange);
+  --background-hover: var(--docu-orange-hover);
+  --color: var(--docu-white);
+  font-weight: 800;
+  border-radius: 12px;
+  height: 46px;
+  margin-top: 8px;
+  box-shadow: var(--docu-shadow-button);
+}
+
+/* Row inline para enlaces */
+.row-inline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 6px 2px 10px;
+}
+
+.row-inline .link {
+  background: none;
+  border: 0;
+  color: var(--docu-orange);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* Dividers y footers */
+.divider {
+  border: none;
+  border-top: 1px solid #eaeaea;
+  margin: 14px 0 10px;
+}
+
+.login-footer,
+.footer {
+  font-size: 0.98rem;
+  color: #555;
+}
+
+.login-footer a,
+.footer a {
+  color: var(--docu-orange);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+/* Mensajes de error */
+.error-msg,
+.error {
+  margin-top: 8px;
+  color: #b00020;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* ========================================
+   ESTILOS DE MENU PRINCIPAL / DOCUMENTOS
+   ======================================== */
+
+/* Header de página */
+.page-header {
+  background: linear-gradient(135deg, var(--docu-primary), var(--docu-secondary));
+  color: var(--docu-white);
+  padding: 2rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.page-header .header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header .header-left .page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+
+.page-header .header-left .page-subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* Sección de búsqueda */
+.search-section {
+  padding: 1rem;
+  background: var(--docu-white);
+  border-bottom: 1px solid var(--docu-border);
+}
+
+.search-section ion-searchbar {
+  --background: var(--docu-light);
+  --border-radius: 12px;
+  --box-shadow: var(--docu-shadow);
+  --placeholder-color: var(--docu-text-secondary);
+  --color: var(--docu-text);
+}
+
+/* Sección de filtros */
+.filters-section {
+  background: var(--docu-white);
+  padding: 1rem;
+  border-bottom: 1px solid var(--docu-border);
+}
+
+.filters-section ion-item {
+  --background: transparent;
+  --border-color: var(--docu-border);
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+.filters-section ion-label {
+  font-weight: 600;
+  color: var(--docu-text);
+}
+
+.filters-section ion-select {
+  --placeholder-color: var(--docu-text-secondary);
+  --color: var(--docu-text);
+}
+
+.filters-section .text-center {
+  text-align: center;
+  padding-top: 1rem;
+}
+
+/* Sección de estadísticas */
+.stats-section {
+  padding: 1rem;
+  background: var(--docu-light);
+}
+
+.stat-card {
+  margin: 0;
+  border-radius: 12px;
+  box-shadow: var(--docu-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--docu-shadow-hover);
+}
+
+.stat-card.urgent {
+  --background: linear-gradient(135deg, var(--docu-warning), #ffd54f);
+  color: var(--docu-white);
+}
+
+.stat-card.expired {
+  --background: linear-gradient(135deg, var(--docu-danger), #ff6b6b);
+  color: var(--docu-white);
+}
+
+.stat-card ion-card-content {
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+
+.stat-card .stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card .stat-label {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Sección de documentos */
+.documents-section {
+  padding: 1rem;
+}
+
+.document-card {
+  margin: 0 0 1rem 0;
+  border-radius: 12px;
+  box-shadow: var(--docu-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.document-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--docu-shadow-hover);
+}
+
+.document-card.list-view .document-header {
+  flex-direction: row;
+  align-items: center;
+}
+
+.document-card.list-view .document-icon {
+  margin-right: 1rem;
+  margin-bottom: 0;
+}
+
+.document-card.list-view .document-info {
+  flex: 1;
+}
+
+.document-card.list-view .document-actions {
+  margin-left: auto;
+}
+
+.document-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.document-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--docu-primary), var(--docu-secondary));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.document-icon ion-icon {
+  font-size: 24px;
+  color: var(--docu-white);
+}
+
+.document-info {
+  flex: 1;
+}
+
+.document-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--docu-text);
+  margin: 0 0 0.5rem 0;
+}
+
+.document-meta {
+  display: flex;
+  gap: 1rem;
+}
+
+.document-category {
+  background: var(--docu-light);
+  color: var(--docu-text-secondary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+}
+
+.document-type {
+  color: var(--docu-text-secondary);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.document-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.document-actions ion-button {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  height: 32px;
+  width: 32px;
+}
+
+.document-actions ion-button ion-icon {
+  font-size: 16px;
+}
+
+.document-details .detail-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--docu-text-secondary);
+}
+
+.document-details .detail-item ion-icon {
+  margin-right: 0.5rem;
+  font-size: 16px;
+}
+
+.document-status {
+  margin-top: 1rem;
+  text-align: right;
+}
+
+.document-status ion-badge {
+  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+}
+
+/* Paginación */
+.pagination-section {
+  padding: 2rem 1rem;
+  background: var(--docu-white);
+  border-top: 1px solid var(--docu-border);
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.pagination-info {
+  font-size: 0.9rem;
+  color: var(--docu-text-secondary);
+  font-weight: 500;
+}
+
+.pagination-controls ion-button {
+  --border-radius: 8px;
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+}
+
+.pagination-controls ion-button[disabled] {
+  opacity: 0.5;
+}
+
+/* ========================================
+   UTILIDADES Y ANIMACIONES
+   ======================================== */
+
+.text-center {
+  text-align: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.document-card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Estados de hover y focus */
+ion-button {
+  transition: all 0.2s ease;
+}
+
+ion-button:hover:not([disabled]) {
+  transform: translateY(-1px);
+}
+
+ion-button:active:not([disabled]) {
+  transform: translateY(0);
+}
+
+/* Estilos para el FAB */
+ion-fab-button {
+  --background: var(--docu-primary);
+  --background-activated: var(--docu-secondary);
+  --background-hover: var(--docu-secondary);
+  --color: var(--docu-white);
+  --box-shadow: var(--docu-shadow-hover);
+}
+
+ion-fab-button:hover {
+  transform: scale(1.1);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+@media (max-width: 768px) {
+  .page-header {
+    padding: 1.5rem 1rem;
+  }
+  
+  .page-header .header-content .header-left .page-title {
+    font-size: 1.5rem;
+  }
+  
+  .page-header .header-content .header-left .page-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .stats-section .stat-card ion-card-content {
+    padding: 1rem 0.5rem;
+  }
+  
+  .stats-section .stat-card .stat-number {
+    font-size: 1.5rem;
+  }
+  
+  .stats-section .stat-card .stat-label {
+    font-size: 0.8rem;
+  }
+  
+  .documents-section .document-card .document-header .document-actions {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  
+  .documents-section .document-card .document-header .document-actions ion-button {
+    --padding-start: 4px;
+    --padding-end: 4px;
+    --padding-top: 4px;
+    --padding-bottom: 4px;
+    height: 28px;
+    width: 28px;
+  }
+  
+  .documents-section .document-card .document-header .document-actions ion-button ion-icon {
+    font-size: 14px;
+  }
+  
+  .pagination-section .pagination-controls {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .pagination-section .pagination-controls ion-button {
+    width: 100%;
+    max-width: 200px;
+  }
+}
