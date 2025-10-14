@@ -42,7 +42,7 @@ export class LoginPage {
     this.error.set(null);
 
     const { email, password } = this.loginForm.value;
-
+    //si el usuario existe entra a home
     try {
       await this.auth.loginEmail(email!, password!).toPromise();
       this.zone.run(() => {
