@@ -1,0 +1,60 @@
+<ion-content class="register-screen" [fullscreen]="true">
+  <div class="register-wrapper">
+    <div class="register-card">
+      <div class="header">
+        <img src="assets/icon/COPU.png" alt="Logo Docu" class="logo" />
+        <h2>Crea tu cuenta</h2>
+        <p>Solo unos datos para comenzar</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+        <!-- Nombre -->
+        <ion-item lines="none" class="field" mode="md">
+          <ion-icon name="person-outline" slot="start" class="icon"></ion-icon>
+          <ion-input formControlName="nombre" type="text" placeholder="Nombre"></ion-input>
+        </ion-item>
+
+        <!-- Apellido -->
+        <ion-item lines="none" class="field" mode="md">
+          <ion-icon name="id-card-outline" slot="start" class="icon"></ion-icon>
+          <ion-input formControlName="apellido" type="text" placeholder="Apellido"></ion-input>
+        </ion-item>
+
+        <!-- Email -->
+        <ion-item lines="none" class="field" mode="md">
+          <ion-icon name="mail-outline" slot="start" class="icon"></ion-icon>
+          <ion-input formControlName="email" type="email" placeholder="Correo electrónico"></ion-input>
+        </ion-item>
+
+        <!-- Password con ojo -->
+        <ion-item lines="none" class="field" mode="md">
+          <ion-icon name="lock-closed-outline" slot="start" class="icon"></ion-icon>
+          <ion-input
+            formControlName="password"
+            [type]="showPwd() ? 'text' : 'password'"
+            placeholder="Contraseña (mín. 6 caracteres)">
+          </ion-input>
+          <ion-button fill="clear" size="small" slot="end" class="eye" type="button" (click)="togglePwd()">
+            <ion-icon [name]="showPwd() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </ion-button>
+        </ion-item>
+
+        <!-- Error visual (opcional) -->
+        <div *ngIf="error()" class="error">{{ error() }}</div>
+
+        <!-- Botón registrar -->
+        <ion-button expand="block" type="submit" class="primary" [disabled]="form.invalid || loading()">
+          {{ loading() ? 'Creando cuenta…' : 'Crear cuenta →' }}
+        </ion-button>
+
+        <hr class="divider" />
+
+        <div class="footer">
+          ¿Ya tienes cuenta?
+          <a routerLink="/login"> Inicia sesión</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</ion-content>
