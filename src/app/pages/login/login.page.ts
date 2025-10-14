@@ -46,7 +46,7 @@ export class LoginPage {
     try {
       await this.auth.loginEmail(email!, password!).toPromise();
       this.zone.run(() => {
-        this.router.navigateByUrl('/home', { replaceUrl: true });
+        this.router.navigateByUrl('/menu-principal', { replaceUrl: true });
       }); 
     } catch (e: any) {
       this.error.set(this.humanizeError(e?.code || e?.message));
