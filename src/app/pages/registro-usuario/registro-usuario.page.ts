@@ -16,7 +16,9 @@ import { RegistroUService } from 'src/app/services/registro-u';
 export class RegistroUsuarioPage {
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  private registroUService = inject(RegistroUService);
+  private registroUService = inject(RegistroUService);//injecta el servicio de registro
+
+  //estados reactivos
 
   loading = signal(false);
   error = signal<string | null>(null);
@@ -37,7 +39,7 @@ export class RegistroUsuarioPage {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
-
+  //Verifica el formulario, llama al servicio y redirige al login.
   async onSubmit() {
     this.error.set(null);
     if (this.form.invalid) {
@@ -54,9 +56,9 @@ export class RegistroUsuarioPage {
       this.router.navigateByUrl('/login', { replaceUrl: true });
     } catch (err: any) {
       console.error('Error al registrar usuario:', err);
-      this.error.set('No se pudo crear la cuenta: ' + (err.message || 'Error desconocido.'));
+      this.error.set('No se pudo crear la cuenta: ' + (err.message || 'Error desconocido.'));//Muestra errores (correo repetido, problemas de red, etc.).
     } finally {
-      this.loading.set(false);
+      this.loading.set(false);//Muestra un estado de carga mientras se crea el usuario.
     }
 
   }

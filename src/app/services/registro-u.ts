@@ -11,15 +11,15 @@ export class RegistroUService {
   private auth = inject(Auth);
 
   async registrarUsuario(nombre: string, apellido: string, email: string, password: string) {
-    // 1️⃣ Crear usuario en Firebase Authentication
+    // Crear usuario en Firebase Authentication
     const cred = await createUserWithEmailAndPassword(this.auth, email, password);
 
-    // 2️⃣ Actualizar su nombre visible en Auth
+    // Actualizar su nombre visible en Auth
     await updateProfile(cred.user, {
       displayName: `${nombre} ${apellido}`,
     });
 
-    // 3️⃣ Crear registro en Firestore
+    // Crear registro en Firestore
     const usuario: Usuario = {
       id: cred.user.uid,
       nombre,

@@ -59,7 +59,7 @@ export class LoginPage {
     const email = this.loginForm.value.email?.trim();
     if (!email) { this.error.set('Ingresa tu correo para recuperar la contraseña.'); return; }
     try {
-      await firstValueFrom(this.auth.resetPassword(email)); // añade este método en tu servicio si aún no está
+      await firstValueFrom(this.auth.resetPassword(email)); 
       this.error.set('Te enviamos un enlace de recuperación a tu correo.');
     } catch (e: any) {
       this.error.set(this.humanizeError(e?.code || e?.message));
