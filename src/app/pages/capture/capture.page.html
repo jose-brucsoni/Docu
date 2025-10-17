@@ -1,0 +1,73 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Escanear o Importar Documento</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-grid>
+    <!-- BOTONES -->
+    <ion-row class="ion-justify-content-center ion-text-center">
+      <ion-col size="12">
+        <ion-button expand="block" color="primary" (click)="onImport()">
+          Importar desde galería
+        </ion-button>
+        <ion-button expand="block" fill="outline" color="tertiary" (click)="onScan()">
+          Escanear con cámara
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <!-- PREVISUALIZACIÓN -->
+    <ion-row *ngIf="imgDataUrl()" class="ion-margin-top ion-justify-content-center">
+      <ion-col size="12">
+        <img
+          [src]="imgDataUrl()"
+          alt="Vista previa del documento"
+          class="preview-img"
+        />
+      </ion-col>
+    </ion-row>
+
+    <!-- BOTONES DE ACCIÓN -->
+    <ion-row class="ion-margin-top" *ngIf="imgDataUrl()">
+      <ion-col size="12">
+        <ion-button expand="block" color="warning" (click)="onOcr()">
+          Extraer texto (OCR)
+        </ion-button>
+        <ion-button expand="block" color="success" (click)="onSavePdf()">
+          Guardar como PDF
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <!-- RESULTADO DE OCR -->
+    <ion-row *ngIf="ocrText()" class="ion-margin-top">
+      <ion-col size="12">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Texto detectado</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <pre class="ocr-result">{{ ocrText() }}</pre>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-row *ngIf="selectedDate()" class="ion-margin-top">
+  <ion-col size="12">
+    <ion-card color="light">
+      <ion-card-header>
+        <ion-card-title>📅 Fecha de Expiración Detectada</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p style="font-size: 1.2em; color: #ece7e7; font-weight: bold;">
+          {{ formatDate(selectedDate()) }}
+        </p>
+      </ion-card-content>
+    </ion-card>
+  </ion-col>
+</ion-row>

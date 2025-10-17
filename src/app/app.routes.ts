@@ -9,7 +9,7 @@ export const routes: Routes = [
   },
     {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'capture',
     pathMatch: 'full',
   },
   {
@@ -26,6 +26,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./pages/menu-principal/menu-principal.page').then( m => m.MenuPrincipalPage)
   },
+  {
+    path: 'capture',
+    loadComponent: () => import('./pages/capture/capture.page').then( m => m.CapturePage)
+  },
+
 
 
 ];
