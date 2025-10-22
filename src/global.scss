@@ -67,166 +67,425 @@
 }
 
 /* ========================================
-   ESTILOS COMUNES DE AUTENTICACIÓN
+   ESTILOS COMUNES DE AUTENTICACIÓN - DISEÑO MINIMALISTA
    ======================================== */
 
-/* Fondo con gradiente naranja */
+/* Fondo minimalista con gradiente sutil */
 ion-content.login-screen,
 ion-content.register-screen {
-  --background: linear-gradient(135deg, var(--docu-orange-dark) 0%, var(--docu-orange) 100%);
+  min-height: 100vh;
 }
 
 /* Wrapper centrado */
 .login-wrapper,
 .register-wrapper {
-  min-height: calc(100vh - var(--ion-safe-area-top) - var(--ion-safe-area-bottom));
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 20px;
 }
 
-/* Tarjetas de autenticación */
+/* Tarjetas de autenticación minimalistas */
 .login-container,
 .register-card {
   background: var(--docu-white);
-  width: min(92vw, 430px);
-  border-radius: 22px;
-  padding: 24px 22px;
-  box-shadow: var(--docu-shadow-card);
+  width: 100%;
+  max-width: 400px;
+  border-radius: 24px;
+  padding: 32px 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  animation: slideUpFade 0.6s ease-out;
+}
+
+/* Diseño de pantalla completa para móviles */
+@media (max-width: 768px) {
+  .login-wrapper,
+  .register-wrapper {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .login-container,
+  .register-card {
+    width: 100%;
+    max-width: none;
+    height: 100vh;
+    border-radius: 0;
+    padding: 40px 24px;
+    box-shadow: none;
+    border: none;
+    backdrop-filter: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+/* Header minimalista */
+.login-header {
   text-align: center;
-  animation: fadeIn .45s ease;
+  margin-bottom: 32px;
 }
 
-/* Header común */
-.login-header,
-.header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
+.logo-container {
+  margin-bottom: 16px;
 }
 
-.login-header h2,
-.header h2 {
-  font-size: 1.9rem;
-  font-weight: 800;
-  margin: 0;
-  color: #222;
-}
-
-.login-header p,
-.header p {
-  font-size: 1.02rem;
-  color: #666;
-  margin: 0;
-}
-
-/* Logo */
-.login-logo-img,
-.header .logo {
-  width: 64px;
-  height: 64px;
+.login-logo {
+  width: 72px;
+  height: 72px;
   object-fit: contain;
-  display: block;
-  margin-bottom: 6px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(216, 106, 19, 0.2);
 }
 
-/* Campos de formulario */
-ion-item.field {
-  --background: #f6f6f6;
-  --padding-start: 10px;
-  --inner-padding-start: 6px;
-  --inner-padding-end: 6px;
-  --min-height: 48px;
-  border: 1.5px solid #e3e3e3;
-  border-radius: 12px;
-  margin: 10px 0 14px;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.02) inset;
-}
-
-ion-item.field.item-has-focus,
-ion-item.field.ion-valid.ion-touched {
-  border-color: var(--docu-orange);
-  box-shadow: 0 0 0 3px rgba(216,106,19,0.12);
-}
-
-.field-icon,
-.icon {
-  font-size: 20px;
-  color: #9c9c9c;
-  margin-right: 6px;
-}
-
-.field-input {
-  font-size: 15px;
-  color: #222;
-}
-
-.eye-btn,
-.eye {
-  --padding-start: 6px;
-  --padding-end: 2px;
-  color: #9c9c9c;
-}
-
-/* Botones principales */
-ion-button.login-btn,
-ion-button.primary {
-  --background: var(--docu-orange);
-  --background-hover: var(--docu-orange-hover);
-  --color: var(--docu-white);
+.login-title {
+  font-size: 2.5rem;
   font-weight: 800;
-  border-radius: 12px;
-  height: 46px;
-  margin-top: 8px;
-  box-shadow: var(--docu-shadow-button);
+  color: var(--docu-text);
+  margin: 0 0 8px 0;
+  letter-spacing: -0.02em;
 }
 
-/* Row inline para enlaces */
-.row-inline {
+.login-subtitle {
+  font-size: 1rem;
+  color: var(--docu-text-secondary);
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Ajustes para móviles - Header simplificado */
+@media (max-width: 768px) {
+  .login-header {
+    margin-bottom: 24px;
+  }
+
+  .logo-container {
+    margin-bottom: 12px;
+  }
+
+  .login-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(216, 106, 19, 0.15);
+  }
+
+  .login-title {
+    font-size: 2.2rem;
+    margin: 0 0 6px 0;
+  }
+
+  .login-subtitle {
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+}
+
+/* Formulario minimalista */
+.login-form {
+  width: 100%;
+}
+
+/* Grupos de input */
+.input-group {
+  margin-bottom: 24px;
+}
+
+.input-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--docu-text);
+  margin-bottom: 8px;
+  letter-spacing: 0.01em;
+}
+
+/* Contenedor de input moderno */
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 16px;
+  padding: 0 16px;
+  transition: all 0.3s ease;
+  min-height: 56px;
+}
+
+/* Ajustes para móviles - Inputs simplificados */
+@media (max-width: 768px) {
+  .input-group {
+    margin-bottom: 20px;
+  }
+
+  .input-label {
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+  }
+
+  .input-container {
+    border-radius: 12px;
+    padding: 0 14px;
+    min-height: 52px;
+  }
+}
+
+.input-container:focus-within {
+  border-color: var(--docu-orange);
+  background: var(--docu-white);
+  box-shadow: 0 0 0 4px rgba(216, 106, 19, 0.1);
+  transform: translateY(-1px);
+}
+
+.input-icon {
+  font-size: 20px;
+  color: var(--docu-text-secondary);
+  margin-right: 12px;
+  transition: color 0.3s ease;
+}
+
+.input-container:focus-within .input-icon {
+  color: var(--docu-orange);
+}
+
+/* Input moderno */
+.modern-input {
+  flex: 1;
+  --background: transparent;
+  --color: var(--docu-text);
+  --placeholder-color: var(--docu-text-secondary);
+  --padding-start: 0;
+  --padding-end: 0;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  outline: none;
+}
+
+.modern-input:focus {
+  --color: var(--docu-text);
+}
+
+/* Botón toggle password */
+.toggle-password {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --color: var(--docu-text-secondary);
+  margin-left: 8px;
+  transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+  --color: var(--docu-orange);
+}
+
+/* Opciones del formulario */
+.form-options {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 6px 2px 10px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.row-inline .link {
+/* Ajustes para móviles - Opciones simplificadas */
+@media (max-width: 768px) {
+  .form-options {
+    margin-bottom: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .forgot-link {
+    align-self: flex-end;
+    font-size: 0.85rem;
+  }
+}
+
+.remember-checkbox {
+  --color: var(--docu-orange);
+  --color-checked: var(--docu-orange);
+  --border-color: #e9ecef;
+  --border-color-checked: var(--docu-orange);
+  --background-checked: var(--docu-orange);
+}
+
+.checkbox-label {
+  font-size: 0.9rem;
+  color: var(--docu-text);
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+.forgot-link {
   background: none;
-  border: 0;
-  color: var(--docu-orange);
-  font-weight: 700;
-  font-size: 0.95rem;
-}
-
-/* Dividers y footers */
-.divider {
   border: none;
-  border-top: 1px solid #eaeaea;
-  margin: 14px 0 10px;
-}
-
-.login-footer,
-.footer {
-  font-size: 0.98rem;
-  color: #555;
-}
-
-.login-footer a,
-.footer a {
   color: var(--docu-orange);
-  font-weight: 800;
+  font-size: 0.9rem;
+  font-weight: 600;
   text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
 }
 
-/* Mensajes de error */
-.error-msg,
-.error {
-  margin-top: 8px;
-  color: #b00020;
+.forgot-link:hover {
+  color: var(--docu-orange-dark);
+  text-decoration: underline;
+}
+
+/* Botón principal moderno */
+.login-button {
+  --background: var(--docu-orange);
+  --background-hover: var(--docu-orange-hover);
+  --background-activated: var(--docu-orange-dark);
+  --color: var(--docu-white);
+  --border-radius: 16px;
+  --box-shadow: 0 8px 24px rgba(216, 106, 19, 0.3);
   font-weight: 700;
+  font-size: 1rem;
+  height: 56px;
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+
+/* Ajustes para móviles - Botón simplificado */
+@media (max-width: 768px) {
+  .login-button {
+    --border-radius: 12px;
+    --box-shadow: 0 4px 16px rgba(216, 106, 19, 0.25);
+    font-size: 0.95rem;
+    height: 52px;
+    margin-bottom: 20px;
+  }
+}
+
+.login-button:hover:not([disabled]) {
+  transform: translateY(-2px);
+  --box-shadow: 0 12px 32px rgba(216, 106, 19, 0.4);
+}
+
+.login-button:active:not([disabled]) {
+  transform: translateY(0);
+}
+
+.login-button[disabled] {
+  opacity: 0.6;
+  transform: none;
+}
+
+/* Mensaje de error moderno */
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fee;
+  color: #d32f2f;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  border: 1px solid #ffcdd2;
+  animation: shake 0.5s ease-in-out;
+}
+
+.error-message ion-icon {
+  font-size: 18px;
+  color: #d32f2f;
+}
+
+/* Divider moderno */
+.divider {
+  position: relative;
+  text-align: center;
+  margin: 32px 0;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e9ecef;
+}
+
+.divider-text {
+  background: var(--docu-white);
+  color: var(--docu-text-secondary);
+  padding: 0 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+
+/* Footer moderno */
+.login-footer {
+  text-align: center;
   font-size: 0.95rem;
+  color: var(--docu-text-secondary);
+}
+
+/* Ajustes para móviles - Divider y footer simplificados */
+@media (max-width: 768px) {
+  .divider {
+    margin: 24px 0;
+  }
+
+  .divider-text {
+    font-size: 0.85rem;
+    padding: 0 12px;
+  }
+
+  .login-footer {
+    font-size: 0.9rem;
+  }
+}
+
+.footer-text {
+  margin-right: 4px;
+}
+
+.register-link {
+  color: var(--docu-orange);
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.register-link:hover {
+  color: var(--docu-orange-dark);
+  text-decoration: underline;
+}
+
+/* Animaciones */
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
 }
 
 /* ========================================

@@ -1,60 +1,91 @@
 <ion-content class="login-screen" [fullscreen]="true">
   <div class="login-wrapper">
     <div class="login-container">
+      <!-- Header minimalista -->
       <div class="login-header">
-        <!-- Logo (puedes dejar tu imagen) -->
-        <img src="assets/icon/COPU.png" alt="Logo de Docu" class="login-logo-img" />
-
-        <h2>Bienvenido a Docu</h2>
-        <p>Gestiona tus documentos de manera inteligente</p>
+        <div class="logo-container">
+          <img src="assets/icon/COPU.png" alt="Docu" class="login-logo" />
+        </div>
+        <h1 class="login-title">Docu</h1>
+        <p class="login-subtitle">Gestiona tus documentos de forma inteligente</p>
       </div>
 
+      <!-- Formulario -->
       <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
-
-        <!-- Usuario -->
-        <ion-item class="field has-icon" lines="none" mode="md">
-          <ion-icon name="person-outline" slot="start" class="field-icon"></ion-icon>
-          <ion-input
-            formControlName="email"
-            type="email"
-            placeholder="Correo electrónico"
-            class="field-input">
-          </ion-input>
-        </ion-item>
-
-        <!-- Contraseña + ojo -->
-        <ion-item class="field has-icon" lines="none" mode="md">
-          <ion-icon name="lock-closed-outline" slot="start" class="field-icon"></ion-icon>
-          <ion-input
-            formControlName="password"
-            [type]="showPwd() ? 'text' : 'password'"
-            placeholder="Contraseña"
-            class="field-input">
-          </ion-input>
-          <ion-button fill="clear" size="small" slot="end" class="eye-btn" (click)="togglePwd()" type="button">
-            <ion-icon [name]="showPwd() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
-          </ion-button>
-        </ion-item>
-
-        <!-- Recordarme + Olvidaste -->
-        <div class="row-inline">
-          <ion-checkbox formControlName="remember" labelPlacement="end">Recordarme</ion-checkbox>
-          <button type="button" class="link" (click)="onForgot()">¿Olvidaste tu contraseña?</button>
+        
+        <!-- Campo Email -->
+        <div class="input-group">
+          <label class="input-label">Correo electrónico</label>
+          <div class="input-container">
+            <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+            <ion-input
+              formControlName="email"
+              type="email"
+              placeholder="tu@email.com"
+              class="modern-input">
+            </ion-input>
+          </div>
         </div>
 
-        <!-- Botón -->
-        <ion-button expand="block" type="submit" class="login-btn" [disabled]="loginForm.invalid || loading()">
-          {{ loading() ? 'Ingresando…' : 'Iniciar Sesión →' }}
+        <!-- Campo Contraseña -->
+        <div class="input-group">
+          <label class="input-label">Contraseña</label>
+          <div class="input-container">
+            <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+            <ion-input
+              formControlName="password"
+              [type]="showPwd() ? 'text' : 'password'"
+              placeholder="••••••••"
+              class="modern-input">
+            </ion-input>
+            <ion-button 
+              fill="clear" 
+              class="toggle-password" 
+              (click)="togglePwd()" 
+              type="button">
+              <ion-icon [name]="showPwd() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+
+        <!-- Opciones adicionales -->
+        <div class="form-options">
+          <ion-checkbox formControlName="remember" class="remember-checkbox">
+            <span class="checkbox-label">Recordarme</span>
+          </ion-checkbox>
+          <button type="button" class="forgot-link" (click)="onForgot()">
+            ¿Olvidaste tu contraseña?
+          </button>
+        </div>
+
+        <!-- Botón principal -->
+        <ion-button 
+          expand="block" 
+          type="submit" 
+          class="login-button" 
+          [disabled]="loginForm.invalid || loading()">
+          <ion-icon name="log-in-outline" slot="start" *ngIf="!loading()"></ion-icon>
+          <ion-spinner name="crescent" *ngIf="loading()"></ion-spinner>
+          {{ loading() ? 'Ingresando...' : 'Iniciar Sesión' }}
         </ion-button>
 
-        <!-- Error -->
-        <div *ngIf="error()" class="error-msg">{{ error() }}</div>
+        <!-- Mensaje de error -->
+        <div *ngIf="error()" class="error-message">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <span>{{ error() }}</span>
+        </div>
 
-        <hr class="divider" />
+        <!-- Divider -->
+        <div class="divider">
+          <span class="divider-text">o</span>
+        </div>
 
+        <!-- Footer -->
         <div class="login-footer">
-          ¿No tienes cuenta?
-          <a routerLink="/registro-usuario"> Regístrate aquí</a>
+          <span class="footer-text">¿No tienes cuenta?</span>
+          <a routerLink="/registro-usuario" class="register-link">
+            Regístrate aquí
+          </a>
         </div>
       </form>
     </div>
