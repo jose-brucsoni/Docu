@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { 
   IonContent, 
   IonHeader, 
@@ -23,14 +24,8 @@ import {
   IonCol,
   IonRefresher,
   IonRefresherContent,
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
-  IonMenu,
   IonMenuButton,
   IonButtons,
-  IonPopover,
-  IonList,
-  IonAvatar,
   IonFab,
   IonFabButton
 } from '@ionic/angular/standalone';
@@ -73,14 +68,8 @@ interface Documento {
     IonCol,
     IonRefresher,
     IonRefresherContent,
-    IonInfiniteScroll,
-    IonInfiniteScrollContent,
-    IonMenu,
     IonMenuButton,
     IonButtons,
-    IonPopover,
-    IonList,
-    IonAvatar,
     IonFab,
     IonFabButton,
     CommonModule, 
@@ -173,7 +162,7 @@ export class MenuPrincipalPage implements OnInit {
   documentosPorPagina: number = 6;
   totalPaginas: number = 1;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
     this.calcularEstadisticas();
@@ -334,8 +323,7 @@ export class MenuPrincipalPage implements OnInit {
   }
 
   agregarDocumento() {
-    console.log('Agregar documento');
-    // Aquí iría la lógica para agregar un nuevo documento
+    this.router.navigateByUrl('/capture');
   }
 
   verDocumento(documento: Documento) {

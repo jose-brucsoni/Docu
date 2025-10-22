@@ -1,10 +1,11 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {IonContent,IonHeader,IonTitle,IonToolbar,IonGrid,IonRow,IonCol,IonButton,IonCard,IonCardHeader,IonCardTitle,IonCardContent,IonIcon,ToastController} from '@ionic/angular/standalone';
+import { Router } from '@angular/router';
+import {IonContent, IonButton, IonIcon, ToastController} from '@ionic/angular/standalone';
 import { CaptureOcrService } from 'src/app/services/capture-io';
 import { extractExpiryDates, pickBestExpiryDate } from 'src/app/utils/date-detector';
-import { text } from 'stream/consumers';
+ 
 
 @Component({
   selector: 'app-capture',
@@ -14,17 +15,7 @@ import { text } from 'stream/consumers';
     CommonModule,
     FormsModule,
     IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonGrid,
-    IonRow,
-    IonCol,
     IonButton,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
     IonIcon
   ],
 })
@@ -38,7 +29,8 @@ export class CapturePage {
 
   constructor(
     private ocrService: CaptureOcrService,
-    private toast: ToastController //  añadido
+    private toast: ToastController,
+    private router: Router
   ) {}
 
   async onImport() {
@@ -124,6 +116,10 @@ formatDate(dateString: string | null): string {
     year: 'numeric',
   });
 }
+
+  volverMenuPrincipal() {
+    this.router.navigateByUrl('/menu-principal');
+  }
 
   private async notify(message: string) {
     const toast = await this.toast.create({

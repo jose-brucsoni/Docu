@@ -3,20 +3,14 @@ import { authGuard } from './core/auth-guard';
 
 export const routes: Routes = [
   {
-    path: 'home',
-    canActivate:[authGuard],
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
-  },
-    {
     path: '',
-    redirectTo: 'capture',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
   {
     path: 'login',
     loadComponent: () => import('./pages/login/login.page').then((m) => m.LoginPage),
   },
-
   {
     path: 'registro-usuario',
     loadComponent: () => import('./pages/registro-usuario/registro-usuario.page').then( m => m.RegistroUsuarioPage)
@@ -28,9 +22,12 @@ export const routes: Routes = [
   },
   {
     path: 'capture',
+    canActivate: [authGuard],
     loadComponent: () => import('./pages/capture/capture.page').then( m => m.CapturePage)
   },
-
-
-
+  {
+    path: 'home',
+    canActivate:[authGuard],
+    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
+  },
 ];

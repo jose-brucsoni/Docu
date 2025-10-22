@@ -28,6 +28,11 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "allowedCommonJsDependencies": [
+              "tesseract.js",
+              "regenerator-runtime/runtime",
+              "pako"
+            ],
             "assets": [
               {
                 "glob": "**/*",
