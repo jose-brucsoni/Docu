@@ -1,73 +1,94 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Escanear o Importar Documento</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="capture-screen">
+  <!-- Header minimalista -->
+  <div class="capture-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <ion-icon name="document-text-outline"></ion-icon>
+      </div>
+      <h1 class="header-title">Capturar Documento</h1>
+      <p class="header-subtitle">Escanea o importa desde tu galería</p>
+    </div>
+  </div>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <ion-grid>
-    <!-- BOTONES -->
-    <ion-row class="ion-justify-content-center ion-text-center">
-      <ion-col size="12">
-        <ion-button expand="block" color="primary" (click)="onImport()">
-          Importar desde galería
-        </ion-button>
-        <ion-button expand="block" fill="outline" color="tertiary" (click)="onScan()">
-          Escanear con cámara
-        </ion-button>
-      </ion-col>
-    </ion-row>
+  <!-- Botones principales -->
+  <div class="action-buttons">
+    <ion-button 
+      expand="block" 
+      class="primary-action" 
+      (click)="onImport()"
+      fill="solid">
+      <ion-icon name="images-outline" slot="start"></ion-icon>
+      Importar desde galería
+    </ion-button>
+    
+    <ion-button 
+      expand="block" 
+      class="secondary-action" 
+      (click)="onScan()"
+      fill="outline">
+      <ion-icon name="camera-outline" slot="start"></ion-icon>
+      Escanear con cámara
+    </ion-button>
+  </div>
 
-    <!-- PREVISUALIZACIÓN -->
-    <ion-row *ngIf="imgDataUrl()" class="ion-margin-top ion-justify-content-center">
-      <ion-col size="12">
-        <img
-          [src]="imgDataUrl()"
-          alt="Vista previa del documento"
-          class="preview-img"
-        />
-      </ion-col>
-    </ion-row>
+  <!-- Vista previa de imagen -->
+  <div class="preview-section" *ngIf="imgDataUrl()">
+    <div class="preview-container">
+      <img
+        [src]="imgDataUrl()"
+        alt="Vista previa del documento"
+        class="preview-image"
+      />
+      <div class="preview-overlay">
+        <ion-icon name="checkmark-circle" class="preview-check"></ion-icon>
+      </div>
+    </div>
+  </div>
 
-    <!-- BOTONES DE ACCIÓN -->
-    <ion-row class="ion-margin-top" *ngIf="imgDataUrl()">
-      <ion-col size="12">
-        <ion-button expand="block" color="warning" (click)="onOcr()">
-          Extraer texto (OCR)
-        </ion-button>
-        <ion-button expand="block" color="success" (click)="onSavePdf()">
-          Guardar como PDF
-        </ion-button>
-      </ion-col>
-    </ion-row>
+  <!-- Botones de procesamiento -->
+  <div class="process-buttons" *ngIf="imgDataUrl()">
+    <ion-button 
+      expand="block" 
+      class="process-btn ocr-btn" 
+      (click)="onOcr()"
+      fill="solid">
+      <ion-icon name="text-outline" slot="start"></ion-icon>
+      Extraer texto (OCR)
+    </ion-button>
+    
+    <ion-button 
+      expand="block" 
+      class="process-btn save-btn" 
+      (click)="onSavePdf()"
+      fill="solid">
+      <ion-icon name="download-outline" slot="start"></ion-icon>
+      Guardar como PDF
+    </ion-button>
+  </div>
 
-    <!-- RESULTADO DE OCR -->
-    <ion-row *ngIf="ocrText()" class="ion-margin-top">
-      <ion-col size="12">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>Texto detectado</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <pre class="ocr-result">{{ ocrText() }}</pre>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <!-- Resultado de OCR -->
+  <div class="ocr-section" *ngIf="ocrText()">
+    <div class="ocr-card">
+      <div class="ocr-header">
+        <ion-icon name="document-text" class="ocr-icon"></ion-icon>
+        <h3 class="ocr-title">Texto detectado</h3>
+      </div>
+      <div class="ocr-content">
+        <pre class="ocr-text">{{ ocrText() }}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fecha detectada -->
+  <div class="date-section" *ngIf="selectedDate()">
+    <div class="date-card">
+      <div class="date-header">
+        <ion-icon name="calendar-outline" class="date-icon"></ion-icon>
+        <h3 class="date-title">Fecha de Expiración Detectada</h3>
+      </div>
+      <div class="date-content">
+        <span class="date-value">{{ formatDate(selectedDate()) }}</span>
+      </div>
+    </div>
+  </div>
 </ion-content>
-
-<ion-row *ngIf="selectedDate()" class="ion-margin-top">
-  <ion-col size="12">
-    <ion-card color="light">
-      <ion-card-header>
-        <ion-card-title>📅 Fecha de Expiración Detectada</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p style="font-size: 1.2em; color: #ece7e7; font-weight: bold;">
-          {{ formatDate(selectedDate()) }}
-        </p>
-      </ion-card-content>
-    </ion-card>
-  </ion-col>
-</ion-row>

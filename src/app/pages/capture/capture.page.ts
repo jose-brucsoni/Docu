@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {IonContent,IonHeader,IonTitle,IonToolbar,IonGrid,IonRow,IonCol,IonButton,IonCard,IonCardHeader,IonCardTitle,IonCardContent,ToastController} from '@ionic/angular/standalone';
+import {IonContent,IonHeader,IonTitle,IonToolbar,IonGrid,IonRow,IonCol,IonButton,IonCard,IonCardHeader,IonCardTitle,IonCardContent,IonIcon,ToastController} from '@ionic/angular/standalone';
 import { CaptureOcrService } from 'src/app/services/capture-io';
 import { extractExpiryDates, pickBestExpiryDate } from 'src/app/utils/date-detector';
 import { text } from 'stream/consumers';
@@ -9,7 +9,6 @@ import { text } from 'stream/consumers';
 @Component({
   selector: 'app-capture',
   templateUrl: './capture.page.html',
-  styleUrls: ['./capture.page.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -25,7 +24,8 @@ import { text } from 'stream/consumers';
     IonCard,
     IonCardHeader,
     IonCardTitle,
-    IonCardContent
+    IonCardContent,
+    IonIcon
   ],
 })
 

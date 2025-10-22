@@ -560,6 +560,432 @@ ion-fab-button:hover {
 }
 
 /* ========================================
+   PÁGINA DE CAPTURA - DISEÑO MINIMALISTA
+   ======================================== */
+
+.capture-screen {
+  --background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 100vh;
+  padding: 0;
+}
+
+/* Header minimalista */
+.capture-header {
+  background: linear-gradient(135deg, var(--docu-orange-dark) 0%, var(--docu-orange) 100%);
+  padding: 2rem 1.5rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.capture-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+}
+
+.header-content {
+  position: relative;
+  z-index: 1;
+}
+
+.header-icon {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.header-icon ion-icon {
+  font-size: 2.5rem;
+  color: var(--docu-white);
+}
+
+.header-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--docu-white);
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Botones de acción principales */
+.action-buttons {
+  padding: 2rem 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Sección de vista previa */
+.preview-section {
+  padding: 0 1.5rem 1rem;
+}
+
+/* Botones de procesamiento */
+.process-buttons {
+  padding: 0 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Sección de OCR */
+.ocr-section {
+  padding: 0 1.5rem 1rem;
+}
+
+.ocr-card {
+  background: var(--docu-white);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 1px solid rgba(216, 106, 19, 0.1);
+}
+
+.ocr-header {
+  background: linear-gradient(135deg, rgba(216, 106, 19, 0.1), rgba(216, 106, 19, 0.05));
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid rgba(216, 106, 19, 0.1);
+}
+
+.ocr-icon {
+  font-size: 1.5rem;
+  color: var(--docu-orange);
+}
+
+.ocr-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--docu-text);
+  margin: 0;
+}
+
+.ocr-content {
+  padding: 1.5rem;
+}
+
+/* Sección de fecha */
+.date-section {
+  padding: 0 1.5rem 2rem;
+}
+
+.date-header {
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.date-icon {
+  font-size: 1.5rem;
+  color: var(--docu-white);
+}
+
+.date-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--docu-white);
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.date-content {
+  padding: 0 1.5rem 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Animaciones específicas para captura */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.preview-section,
+.process-buttons,
+.ocr-section,
+.date-section {
+  animation: slideInUp 0.5s ease-out;
+}
+
+/* ========================================
+   ESTILOS ESPECÍFICOS PARA PÁGINA DE CAPTURA
+   ======================================== */
+
+/* Variables específicas para captura */
+:root {
+  --capture-gradient: linear-gradient(135deg, var(--docu-orange-dark) 0%, var(--docu-orange) 100%);
+  --capture-shadow: 0 8px 24px rgba(216, 106, 19, 0.3);
+  --capture-shadow-hover: 0 12px 32px rgba(216, 106, 19, 0.4);
+  --capture-border-radius: 16px;
+  --capture-border-radius-large: 20px;
+}
+
+/* Estilos globales para botones de captura */
+ion-button.primary-action {
+  --background: var(--docu-orange);
+  --background-hover: var(--docu-orange-hover);
+  --background-activated: var(--docu-orange-dark);
+  --color: var(--docu-white);
+  --border-radius: var(--capture-border-radius);
+  --box-shadow: var(--capture-shadow);
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+ion-button.primary-action:hover {
+  transform: translateY(-2px);
+  --box-shadow: var(--capture-shadow-hover);
+}
+
+ion-button.secondary-action {
+  --color: var(--docu-orange);
+  --border-color: var(--docu-orange);
+  --border-width: 2px;
+  --border-radius: var(--capture-border-radius);
+  background: rgba(216, 106, 19, 0.05);
+  transition: all 0.3s ease;
+}
+
+ion-button.secondary-action:hover {
+  --background: rgba(216, 106, 19, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Estilos para tarjetas de captura */
+.capture-card {
+  background: var(--docu-white);
+  border-radius: var(--capture-border-radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(216, 106, 19, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.capture-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para iconos de captura */
+.capture-icon {
+  font-size: 1.5rem;
+  color: var(--docu-orange);
+}
+
+.capture-icon-large {
+  font-size: 2.5rem;
+  color: var(--docu-white);
+}
+
+/* Estilos para texto de captura */
+.capture-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--docu-text);
+  margin: 0;
+}
+
+.capture-title-large {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--docu-white);
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.capture-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Estilos para secciones de captura */
+.capture-section {
+  padding: 0 1.5rem 1rem;
+}
+
+.capture-section-header {
+  background: linear-gradient(135deg, rgba(216, 106, 19, 0.1), rgba(216, 106, 19, 0.05));
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid rgba(216, 106, 19, 0.1);
+}
+
+.capture-section-content {
+  padding: 1.5rem;
+}
+
+/* Estilos para botones de procesamiento */
+.process-btn {
+  --border-radius: 14px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  height: 50px;
+  transition: all 0.3s ease;
+}
+
+.process-btn:hover {
+  transform: translateY(-1px);
+}
+
+.ocr-btn {
+  --background: var(--docu-primary);
+  --background-hover: #4c8dff;
+  --background-activated: #2c5aa0;
+  --color: var(--docu-white);
+  --box-shadow: 0 6px 20px rgba(56, 128, 255, 0.3);
+}
+
+.save-btn {
+  --background: var(--docu-success);
+  --background-hover: #26c55a;
+  --background-activated: #1e9e4a;
+  --color: var(--docu-white);
+  --box-shadow: 0 6px 20px rgba(45, 211, 111, 0.3);
+}
+
+/* Estilos para vista previa de imagen */
+.preview-container {
+  position: relative;
+  border-radius: var(--capture-border-radius-large);
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  background: var(--docu-white);
+  padding: 8px;
+}
+
+.preview-image {
+  width: 100%;
+  height: auto;
+  border-radius: var(--capture-border-radius);
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.preview-overlay {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--docu-success);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(45, 211, 111, 0.3);
+}
+
+.preview-check {
+  font-size: 1.5rem;
+  color: var(--docu-white);
+}
+
+/* Estilos para texto OCR */
+.ocr-text {
+  white-space: pre-wrap;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--docu-text);
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  margin: 0;
+  overflow-x: auto;
+}
+
+/* Estilos para fecha detectada */
+.date-card {
+  background: linear-gradient(135deg, var(--docu-warning), #ffd54f);
+  border-radius: var(--capture-border-radius);
+  box-shadow: 0 8px 24px rgba(255, 196, 9, 0.3);
+  overflow: hidden;
+  position: relative;
+}
+
+.date-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+  pointer-events: none;
+}
+
+.date-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--docu-white);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: block;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Animaciones específicas para captura */
+@keyframes captureSlideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.capture-section,
+.process-buttons,
+.ocr-section,
+.date-section {
+  animation: captureSlideInUp 0.5s ease-out;
+}
+
+/* ========================================
    RESPONSIVE DESIGN
    ======================================== */
 @media (max-width: 768px) {
@@ -613,5 +1039,68 @@ ion-fab-button:hover {
   .pagination-section .pagination-controls ion-button {
     width: 100%;
     max-width: 200px;
+  }
+  
+  /* Responsive específico para página de captura */
+  .capture-header {
+    padding: 1.5rem 1rem 2rem;
+  }
+  
+  .header-icon {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .header-icon ion-icon {
+    font-size: 2rem;
+  }
+  
+  .header-title {
+    font-size: 1.75rem;
+  }
+  
+  .action-buttons,
+  .preview-section,
+  .process-buttons,
+  .ocr-section,
+  .date-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .primary-action,
+  .secondary-action {
+    height: 52px;
+    font-size: 0.95rem;
+  }
+  
+  .process-btn {
+    height: 48px;
+    font-size: 0.9rem;
+  }
+  
+  .preview-container {
+    padding: 6px;
+  }
+  
+  .preview-overlay {
+    width: 36px;
+    height: 36px;
+    top: 12px;
+    right: 12px;
+  }
+  
+  .preview-check {
+    font-size: 1.25rem;
+  }
+  
+  .ocr-text {
+    font-size: 0.85rem;
+    padding: 0.75rem;
+  }
+  
+  .date-value {
+    font-size: 1.25rem;
+    padding: 0.5rem 0.75rem;
   }
 }
