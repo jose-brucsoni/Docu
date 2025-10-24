@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { PDFDocument, StandardFonts } from 'pdf-lib';
-import { createWorker } from 'tesseract.js';
+import { createWorker, PSM } from 'tesseract.js';
 
 
 @Injectable({
@@ -35,24 +35,54 @@ export class CaptureOcrService {
     return photo.dataUrl;
   }
 
-  // OCR básico con Tesseract.js (funciona en Web y móvil)
+  // OCR optimizado para móvil con Tesseract.js
   async runOcrFromDataUrl(dataUrl: string): Promise<string> {
-     try {
-    const { createWorker } = await import('tesseract.js');
+    try {
+      console.log('Iniciando OCR...');
+      const { createWorker } = await import('tesseract.js');
 
-    const worker = await createWorker('spa', 1, {
-      logger: (m: any) => console.log(m), // opcional: muestra el progreso
-    });
+      // Configuración optimizada para móvil
+      const worker = await createWorker('spa', 1, {
+        logger: (m: any) => {
+          console.log('OCR Progress:', m);
+        },
+        // Configuraciones específicas para móvil
+        gzip: false, // Deshabilitar compresión para mejor rendimiento en móvil
+        cachePath: undefined, // No usar cache para evitar problemas de memoria
+      });
 
-    const result = await worker.recognize(dataUrl);
-    console.log('Texto detectado:', result.data.text);
+      // Configurar parámetros de reconocimiento para mejor precisión en móvil
+      await worker.setParameters({
+        tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,/-: ',
+        tessedit_pageseg_mode: 6 as any, // Modo de segmentación de página uniforme (SINGLE_UNIFORM_BLOCK)
+      });
 
-    await worker.terminate();
-    return result.data.text || '';
-  } catch (err) {
-    console.error('Error en OCR:', err);
-    throw err;
+      console.log('Procesando imagen con OCR...');
+      const result = await worker.recognize(dataUrl);
+      
+      console.log('OCR completado. Texto detectado:', result.data.text);
+      console.log('Confianza promedio:', result.data.confidence);
+
+      await worker.terminate();
+      
+      // Limpiar el texto detectado para mejor procesamiento
+      const cleanedText = this.cleanOcrText(result.data.text);
+      console.log('Texto limpio:', cleanedText);
+      
+      return cleanedText;
+    } catch (err) {
+      console.error('Error en OCR:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Error desconocido en OCR';
+      throw new Error(`Error en el reconocimiento de texto: ${errorMessage}`);
+    }
   }
+
+  // Limpiar texto OCR para mejor detección de fechas
+  private cleanOcrText(text: string): string {
+    return text
+      .replace(/\s+/g, ' ') // Normalizar espacios
+      .replace(/\n+/g, '\n') // Normalizar saltos de línea
+      .trim();
   }
 
   // Crear PDF a partir de la imagen

@@ -83,12 +83,33 @@
     </div>
   </div>
 
-  <!-- Fecha detectada -->
-  <div class="date-section" *ngIf="selectedDate()">
+  <!-- Fechas detectadas -->
+  <div class="date-section" *ngIf="detectedDates().length > 0">
     <div class="date-card">
       <div class="date-header">
         <ion-icon name="calendar-outline" class="date-icon"></ion-icon>
-        <h3 class="date-title">Fecha de Expiración Detectada</h3>
+        <h3 class="date-title">Fechas Detectadas ({{ detectedDates().length }})</h3>
+      </div>
+      <div class="date-content">
+        <div class="date-list">
+          <div 
+            *ngFor="let date of detectedDates()" 
+            class="date-item"
+            [class.selected]="selectedDate() === date.iso">
+            <span class="date-raw">{{ date.raw }}</span>
+            <span class="date-formatted">{{ formatDate(date.iso) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fecha seleccionada -->
+  <div class="date-section" *ngIf="selectedDate()">
+    <div class="date-card selected-date">
+      <div class="date-header">
+        <ion-icon name="checkmark-circle" class="date-icon"></ion-icon>
+        <h3 class="date-title">Fecha de Expiración Seleccionada</h3>
       </div>
       <div class="date-content">
         <span class="date-value">{{ formatDate(selectedDate()) }}</span>

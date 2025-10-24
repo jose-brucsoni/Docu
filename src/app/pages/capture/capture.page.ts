@@ -56,24 +56,45 @@ export class CapturePage {
   }
 
   async onOcr() {
-    if (!this.imgDataUrl()) return;
+    if (!this.imgDataUrl()) {
+      this.notify('Primero selecciona una imagen');
+      return;
+    }
 
-  const text = await this.ocrService.runOcrFromDataUrl(this.imgDataUrl()!);
-  this.ocrText.set(text);
+    try {
+      this.notify('Procesando imagen...');
+      console.log('Iniciando procesamiento OCR...');
+      
+      const text = await this.ocrService.runOcrFromDataUrl(this.imgDataUrl()!);
+      console.log('Texto extraído:', text);
+      
+      this.ocrText.set(text);
 
-  const dates = extractExpiryDates(text);
-  this.detectedDates.set(dates);
+      if (!text || text.trim().length === 0) {
+        this.notify('No se pudo extraer texto de la imagen. Intenta con otra imagen más clara.');
+        return;
+      }
 
-  const best = pickBestExpiryDate(text, dates);
-  this.selectedDate.set(best?.iso ?? null);
+      console.log('Extrayendo fechas del texto...');
+      const dates = extractExpiryDates(text);
+      console.log('Fechas detectadas:', dates);
+      this.detectedDates.set(dates);
 
-  this.notify(
-    best
-      ? `Fecha de expiración detectada: ${new Date(best.iso).toLocaleDateString()}`
-      : (dates.length
-          ? `Fechas detectadas: ${dates.length} (elige una)`
-          : 'No se encontraron fechas')
-  );
+      const best = pickBestExpiryDate(text, dates);
+      console.log('Mejor fecha seleccionada:', best);
+      this.selectedDate.set(best?.iso ?? null);
+
+      if (best) {
+        this.notify(`✅ Fecha de expiración detectada: ${new Date(best.iso).toLocaleDateString('es-BO')}`);
+      } else if (dates.length > 0) {
+        this.notify(`⚠️ Se detectaron ${dates.length} fechas, pero ninguna parece ser de expiración`);
+      } else {
+        this.notify('❌ No se encontraron fechas en el documento');
+      }
+    } catch (error) {
+      console.error('Error en procesamiento OCR:', error);
+      this.notify('Error al procesar la imagen. Verifica que la imagen sea clara y legible.');
+    }
   }
 
   async onSavePdf() {
