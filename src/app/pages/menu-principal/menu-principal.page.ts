@@ -291,7 +291,7 @@ export class MenuPrincipalPage implements OnInit {
   }
 
   agregarDocumento() {
-    this.router.navigateByUrl('/capture');
+    this.router.navigateByUrl('/gestion-docu');
   }
 
   verDocumento(documento: Documento) {
