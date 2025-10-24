@@ -1,10 +1,6 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Gestión de Documentos</ion-title>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content [fullscreen]="true">
+
+<ion-content class="minimal-content" [fullscreen]="true">
   
 
   <div class="container">
@@ -19,9 +15,9 @@
       <ion-card-content>
         <p>Utiliza la cámara para capturar un documento y extraer su texto automáticamente.</p>
         <ion-button 
+          class="primary-action"
           expand="block" 
           fill="solid" 
-          color="primary" 
           (click)="takePicture()"
           [disabled]="isProcessing">
           <ion-icon name="camera" slot="start"></ion-icon>
@@ -32,9 +28,6 @@
 
     <!-- Imagen capturada -->
     <ion-card *ngIf="capturedImage" class="image-card">
-      <ion-card-header>
-        <ion-card-title>Imagen Capturada</ion-card-title>
-      </ion-card-header>
       <ion-card-content>
         <ion-img [src]="capturedImage" alt="Documento capturado" class="captured-image"></ion-img>
       </ion-card-content>
@@ -52,127 +45,74 @@
 
     <!-- Card de edición de datos extraídos -->
     <ion-card *ngIf="showEditCard && documentoExtraido" class="edit-card">
-      <ion-card-header>
-        <ion-card-title>
+      <ion-card-header class="edit-header">
+        <ion-card-title class="edit-title">
           <ion-icon name="create" class="title-icon"></ion-icon>
           Datos Extraídos del Documento
         </ion-card-title>
+        <p class="edit-subtitle">Revisa y edita la información extraída automáticamente</p>
       </ion-card-header>
-      <ion-card-content>
-        <form>
+      <ion-card-content class="edit-content">
+        <form class="edit-form">
           <!-- Fechas principales -->
           <div class="fechas-section">
-            <h3>Fechas del Documento</h3>
-            <p class="fechas-info">Orden cronológico: Nacimiento → Emisión → Expiración</p>
+            <div class="section-header">
+              <ion-icon name="calendar" class="section-icon"></ion-icon>
+              <h3 class="section-title">Fechas del Documento</h3>
+            </div>
+            <div class="fechas-info">
+              <p>Las fechas han sido detectadas automáticamente. Verifica que sean correctas.</p>
+            </div>
             
-            <ion-item>
-              <ion-label position="stacked">Fecha de Nacimiento</ion-label>
-              <ion-input 
-                type="text" 
-                [(ngModel)]="documentoExtraido.fechaNacimiento"
-                placeholder="DD/MM/YYYY"
-                name="fechaNacimiento">
-              </ion-input>
-            </ion-item>
+            <div class="input-group">
+              <ion-item class="modern-input-item">
+                <ion-label position="stacked" class="input-label">
+                  <ion-icon name="calendar-outline" class="label-icon"></ion-icon>
+                  Fecha de Emisión *
+                </ion-label>
+                <ion-input 
+                  type="text" 
+                  [(ngModel)]="documentoExtraido.fechaEmision"
+                  placeholder="DD/MM/YYYY"
+                  name="fechaEmision"
+                  class="modern-input">
+                </ion-input>
+              </ion-item>
+            </div>
             
-            <ion-item>
-              <ion-label position="stacked">Fecha de Emisión *</ion-label>
-              <ion-input 
-                type="text" 
-                [(ngModel)]="documentoExtraido.fechaEmision"
-                placeholder="DD/MM/YYYY"
-                name="fechaEmision">
-              </ion-input>
-            </ion-item>
-            
-            <ion-item>
-              <ion-label position="stacked">Fecha de Expiración *</ion-label>
-              <ion-input 
-                type="text" 
-                [(ngModel)]="documentoExtraido.fechaExpiracion"
-                placeholder="DD/MM/YYYY"
-                name="fechaExpiracion">
-              </ion-input>
-            </ion-item>
+            <div class="input-group">
+              <ion-item class="modern-input-item">
+                <ion-label position="stacked" class="input-label">
+                  <ion-icon name="time-outline" class="label-icon"></ion-icon>
+                  Fecha de Expiración *
+                </ion-label>
+                <ion-input 
+                  type="text" 
+                  [(ngModel)]="documentoExtraido.fechaExpiracion"
+                  placeholder="DD/MM/YYYY"
+                  name="fechaExpiracion"
+                  class="modern-input">
+                </ion-input>
+              </ion-item>
+            </div>
           </div>
-
-          <!-- Datos personales -->
-          <div class="datos-section">
-            <h3>Datos Personales</h3>
-            <ion-item>
-              <ion-label position="stacked">Número de Documento</ion-label>
-              <ion-input 
-                type="text" 
-                [(ngModel)]="documentoExtraido.numeroDocumento"
-                name="numeroDocumento">
-              </ion-input>
-            </ion-item>
-            
-            <ion-item>
-              <ion-label position="stacked">Nombres</ion-label>
-              <ion-input 
-                type="text" 
-                [(ngModel)]="documentoExtraido.nombres"
-                name="nombres">
-              </ion-input>
-            </ion-item>
-            
-            <ion-item>
-              <ion-label position="stacked">Fecha de Nacimiento</ion-label>
-              <ion-input 
-                type="text" 
-                [(ngModel)]="documentoExtraido.fechaNacimiento"
-                placeholder="DD/MM/YYYY"
-                name="fechaNacimiento">
-              </ion-input>
-            </ion-item>
-            
-            <ion-item>
-              <ion-label position="stacked">Domicilio</ion-label>
-              <ion-textarea 
-                [(ngModel)]="documentoExtraido.domicilio"
-                name="domicilio"
-                rows="2">
-              </ion-textarea>
-            </ion-item>
-            
-            <ion-item>
-              <ion-label position="stacked">Estado Civil</ion-label>
-              <ion-input 
-                type="text" 
-                [(ngModel)]="documentoExtraido.estadoCivil"
-                name="estadoCivil">
-              </ion-input>
-            </ion-item>
-            
-            <ion-item>
-              <ion-label position="stacked">Grupo Sanguíneo</ion-label>
-              <ion-input 
-                type="text" 
-                [(ngModel)]="documentoExtraido.grupoSanguineo"
-                name="grupoSanguineo">
-              </ion-input>
-            </ion-item>
-          </div>
-
+          
           <!-- Botones de acción -->
           <div class="action-buttons">
             <ion-button 
+              class="save-btn primary-action"
               expand="block" 
               fill="solid" 
-              color="success" 
-              (click)="guardarDocumento()"
-              class="save-button">
+              (click)="guardarDocumento()">
               <ion-icon name="save" slot="start"></ion-icon>
               Guardar Documento
             </ion-button>
             
             <ion-button 
+              class="secondary-action"
               expand="block" 
               fill="outline" 
-              color="medium" 
-              (click)="cancelarEdicion()"
-              class="cancel-button">
+              (click)="cancelarEdicion()">
               <ion-icon name="close" slot="start"></ion-icon>
               Cancelar
             </ion-button>
@@ -180,92 +120,10 @@
         </form>
       </ion-card-content>
     </ion-card>
-
-    <!-- Texto extraído -->
-    <ion-card *ngIf="extractedText && !isProcessing" class="text-card">
-      <ion-card-header>
-        <ion-card-title>
-          Texto Extraído
-          <span class="confidence-badge" [class.low-confidence]="ocrConfidence < 50" [class.medium-confidence]="ocrConfidence >= 50 && ocrConfidence < 80" [class.high-confidence]="ocrConfidence >= 80">
-            {{ ocrConfidence.toFixed(1) }}% confianza
-          </span>
-        </ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <div class="extracted-text">
-          {{ extractedText }}
-        </div>
-        
-        <!-- Opciones avanzadas -->
-        <div class="advanced-options" *ngIf="showAdvancedOptions">
-          <ion-button 
-            expand="block" 
-            fill="outline" 
-            color="primary" 
-            (click)="retryWithBetterSettings()"
-            class="retry-button">
-            <ion-icon name="refresh" slot="start"></ion-icon>
-            Re-procesar con mejores ajustes
-          </ion-button>
-          
-          <ion-button 
-            expand="block" 
-            fill="outline" 
-            color="tertiary" 
-            (click)="extractTextWithFallback(capturedImage!)"
-            class="fallback-button">
-            <ion-icon name="settings" slot="start"></ion-icon>
-            Procesar con configuración alternativa
-          </ion-button>
-          
-          <ion-button 
-            expand="block" 
-            fill="outline" 
-            color="warning" 
-            (click)="diagnoseOCR()"
-            class="diagnose-button">
-            <ion-icon name="bug" slot="start"></ion-icon>
-            Diagnosticar problemas
-          </ion-button>
-          
-          <ion-button 
-            expand="block" 
-            fill="outline" 
-            color="success" 
-            (click)="extractTextSimple(capturedImage!)"
-            class="simple-button">
-            <ion-icon name="checkmark" slot="start"></ion-icon>
-            Procesar con configuración ultra-simple
-          </ion-button>
-        </div>
-
-        <div class="action-buttons">
-          <ion-button 
-            expand="block" 
-            fill="outline" 
-            color="secondary" 
-            (click)="toggleAdvancedOptions()"
-            class="toggle-button">
-            <ion-icon name="settings" slot="start"></ion-icon>
-            {{ showAdvancedOptions ? 'Ocultar' : 'Mostrar' }} opciones avanzadas
-          </ion-button>
-          
-          <ion-button 
-            expand="block" 
-            fill="outline" 
-            color="secondary" 
-            (click)="clearData()"
-            class="clear-button">
-            <ion-icon name="refresh" slot="start"></ion-icon>
-            Capturar Nuevo Documento
-          </ion-button>
-        </div>
-      </ion-card-content>
-    </ion-card>
-
+    
     <!-- Botón flotante para nueva captura -->
     <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="capturedImage && !isProcessing">
-      <ion-fab-button (click)="takePicture()" color="primary">
+      <ion-fab-button class="minimal-fab" (click)="takePicture()">
         <ion-icon name="camera"></ion-icon>
       </ion-fab-button>
     </ion-fab>
