@@ -1,268 +1,128 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    
-    <ion-title>
-      <ion-icon name="document-text" slot="start"></ion-icon>
-      Mis Documentos
-    </ion-title>
-    
-    <ion-buttons slot="end">
-      <ion-button (click)="cambiarVista()">
-        <ion-icon [name]="vistaGrid ? 'grid' : 'list'"></ion-icon>
-      </ion-button>
-      <ion-button (click)="agregarDocumento()">
-        <ion-icon name="add"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content [fullscreen]="true">
+
+<ion-content [fullscreen]="true" class="minimal-content">
   <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <!-- Header Section -->
-  <div class="page-header">
-    <div class="header-content">
-      <div class="header-left">
-        <h1 class="page-title">Mis Documentos</h1>
-        <p class="page-subtitle">Gestiona y organiza todos tus documentos</p>
+  
+  <!-- Búsqueda minimalista -->
+  <div class="minimal-search-section">
+    <div class="search-container">
+      <ion-searchbar 
+        placeholder="Buscar documentos..." 
+        (ionInput)="onBuscar($event)"
+        [value]="terminoBusqueda"
+        class="minimal-searchbar">
+      </ion-searchbar>
+    </div>
+  </div>
+
+
+  <!-- Estadísticas minimalistas -->
+  <div class="minimal-stats-section">
+    <div class="stats-container">
+      <div class="stat-item">
+        <div class="stat-number">{{ totalDocumentos }}</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-item active">
+        <div class="stat-number">{{ documentosActivos }}</div>
+        <div class="stat-label">Activos</div>
+      </div>
+      <div class="stat-item warning">
+        <div class="stat-number">{{ documentosPorVencer }}</div>
+        <div class="stat-label">Por vencer</div>
+      </div>
+      <div class="stat-item danger">
+        <div class="stat-number">{{ documentosVencidos }}</div> 
+        <div class="stat-label">Vencidos</div>
       </div>
     </div>
   </div>
 
-  <!-- Search Bar -->
-  <div class="search-section">
-    <ion-searchbar 
-      placeholder="Buscar documentos..." 
-      (ionInput)="onBuscar($event)"
-      [value]="terminoBusqueda">
-    </ion-searchbar>
-  </div>
-
-  <!-- Filters Section -->
-  <div class="filters-section">
-    <ion-grid>
-      <ion-row>
-        <ion-col size="12" size-md="3">
-          <ion-item>
-            <ion-label>Categoría</ion-label>
-            <ion-select 
-              [(ngModel)]="categoriaFiltro" 
-              (ionChange)="onFiltroCambio()"
-              placeholder="Todas las categorías">
-              <ion-select-option value="">Todas las categorías</ion-select-option>
-              <ion-select-option value="identification">Identificación</ion-select-option>
-              <ion-select-option value="legal">Legales</ion-select-option>
-              <ion-select-option value="medical">Médicos</ion-select-option>
-              <ion-select-option value="financial">Financieros</ion-select-option>
-              <ion-select-option value="education">Educación</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </ion-col>
+  <!-- Documentos minimalistas -->
+  <div class="minimal-documents-section">
+    <div class="documents-container">
+      <div 
+        *ngFor="let documento of getDocumentosPaginados()" 
+        class="minimal-document-card"
+        [class.list-view]="!vistaGrid">
         
-        <ion-col size="12" size-md="3">
-          <ion-item>
-            <ion-label>Estado</ion-label>
-            <ion-select 
-              [(ngModel)]="estadoFiltro" 
-              (ionChange)="onFiltroCambio()"
-              placeholder="Todos los estados">
-              <ion-select-option value="">Todos los estados</ion-select-option>
-              <ion-select-option value="active">Activos</ion-select-option>
-              <ion-select-option value="expiring_soon">Próximos a vencer</ion-select-option>
-              <ion-select-option value="expired">Vencidos</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </ion-col>
-        
-        <ion-col size="12" size-md="3">
-          <ion-item>
-            <ion-label>Ordenar por</ion-label>
-            <ion-select 
-              [(ngModel)]="ordenarPor" 
-              (ionChange)="onFiltroCambio()">
-              <ion-select-option value="name">Nombre</ion-select-option>
-              <ion-select-option value="date_added">Fecha de agregado</ion-select-option>
-              <ion-select-option value="expiration_date">Fecha de vencimiento</ion-select-option>
-              <ion-select-option value="category">Categoría</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </ion-col>
-        
-        <ion-col size="12" size-md="3">
-          <ion-item>
-            <ion-label>Orden</ion-label>
-            <ion-select 
-              [(ngModel)]="orden" 
-              (ionChange)="onFiltroCambio()">
-              <ion-select-option value="asc">Ascendente</ion-select-option>
-              <ion-select-option value="desc">Descendente</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-      
-      <ion-row>
-        <ion-col size="12" class="text-center">
-          <ion-button fill="outline" (click)="limpiarFiltros()">
-            <ion-icon name="close" slot="start"></ion-icon>
-            Limpiar Filtros
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </div>
-
-  <!-- Statistics Cards -->
-  <div class="stats-section">
-    <ion-grid>
-      <ion-row>
-        <ion-col size="6" size-md="3">
-          <ion-card class="stat-card">
-            <ion-card-content>
-              <div class="stat-number">{{ totalDocumentos }}</div>
-              <div class="stat-label">Total</div>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-        
-        <ion-col size="6" size-md="3">
-          <ion-card class="stat-card">
-            <ion-card-content>
-              <div class="stat-number">{{ documentosActivos }}</div>
-              <div class="stat-label">Activos</div>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-        
-        <ion-col size="6" size-md="3">
-          <ion-card class="stat-card urgent">
-            <ion-card-content>
-              <div class="stat-number">{{ documentosPorVencer }}</div>
-              <div class="stat-label">Por vencer</div>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-        
-        <ion-col size="6" size-md="3">
-          <ion-card class="stat-card expired">
-            <ion-card-content>
-              <div class="stat-number">{{ documentosVencidos }}</div>
-              <div class="stat-label">Vencidos</div>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </div>
-
-  <!-- Documents Grid/List -->
-  <div class="documents-section">
-    <ion-grid>
-      <ion-row>
-        <ion-col 
-          *ngFor="let documento of getDocumentosPaginados()" 
-          size="12" 
-          size-md="4"
-          size-lg="3">
+        <div class="document-main">
+          <div class="document-icon">
+            <ion-icon [name]="getIconoCategoria(documento.categoria)"></ion-icon>
+          </div>
           
-          <ion-card class="document-card" [class.list-view]="!vistaGrid">
-            <ion-card-header>
-              <div class="document-header">
-                <div class="document-icon">
-                  <ion-icon [name]="getIconoCategoria(documento.categoria)"></ion-icon>
-                </div>
-                <div class="document-info">
-                  <ion-card-title class="document-title">{{ documento.nombre }}</ion-card-title>
-                  <div class="document-meta">
-                    <span class="document-category">{{ documento.categoria }}</span>
-                    <span class="document-type">{{ documento.tipo }}</span>
-                  </div>
-                </div>
-                <div class="document-actions">
-                  <ion-button fill="clear" size="small" (click)="verDocumento(documento)">
-                    <ion-icon name="eye"></ion-icon>
-                  </ion-button>
-                  <ion-button fill="clear" size="small" (click)="editarDocumento(documento)">
-                    <ion-icon name="create"></ion-icon>
-                  </ion-button>
-                  <ion-button fill="clear" size="small" color="danger" (click)="eliminarDocumento(documento)">
-                    <ion-icon name="trash"></ion-icon>
-                  </ion-button>
-                </div>
-              </div>
-            </ion-card-header>
-            
-            <ion-card-content>
-              <div class="document-details">
-                <div class="detail-item">
-                  <ion-icon name="calendar" slot="start"></ion-icon>
-                  <span>Agregado: {{ documento.fechaAgregado | date:'short' }}</span>
-                </div>
-                
-                <div class="detail-item" *ngIf="documento.fechaVencimiento">
-                  <ion-icon name="time" slot="start"></ion-icon>
-                  <span>Vence: {{ documento.fechaVencimiento | date:'short' }}</span>
-                </div>
-                
-                <div class="detail-item">
-                  <ion-icon name="document" slot="start"></ion-icon>
-                  <span>{{ documento.tamano }}</span>
-                </div>
-                
-                <div class="document-status">
-                  <ion-badge [color]="getColorEstado(documento.estado)">
-                    {{ getTextoEstado(documento.estado) }}
-                  </ion-badge>
-                </div>
-              </div>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </div>
-
-  <!-- Pagination -->
-  <div class="pagination-section" *ngIf="getTotalPaginas() > 1">
-    <ion-grid>
-      <ion-row>
-        <ion-col size="12" class="text-center">
-          <div class="pagination-controls">
-            <ion-button 
-              fill="outline" 
-              (click)="paginaAnterior()" 
-              [disabled]="paginaActual === 1">
-              <ion-icon name="chevron-back" slot="start"></ion-icon>
-              Anterior
-            </ion-button>
-            
-            <div class="pagination-info">
-              Página {{ paginaActual }} de {{ getTotalPaginas() }}
+          <div class="document-info">
+            <h3 class="document-title">{{ documento.nombre }}</h3>
+            <div class="document-meta">
+              <span class="document-category">{{ documento.categoria }}</span>
+              <span class="document-type">{{ documento.tipo }}</span>
             </div>
-            
-            <ion-button 
-              fill="outline" 
-              (click)="paginaSiguiente()" 
-              [disabled]="paginaActual === getTotalPaginas()">
-              Siguiente
-              <ion-icon name="chevron-forward" slot="end"></ion-icon>
+            <div class="document-dates">
+              <span class="date-item">
+                <ion-icon name="calendar-outline"></ion-icon>
+                {{ documento.fechaAgregado | date:'short' }}
+              </span>
+              <span class="date-item" *ngIf="documento.fechaVencimiento">
+                <ion-icon name="time-outline"></ion-icon>
+                {{ documento.fechaVencimiento | date:'short' }}
+              </span>
+            </div>
+          </div>
+          
+          <div class="document-actions">
+            <ion-button fill="clear" size="small" (click)="verDocumento(documento)" class="action-btn">
+              <ion-icon name="eye-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" size="small" (click)="editarDocumento(documento)" class="action-btn">
+              <ion-icon name="create-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" size="small" color="danger" (click)="eliminarDocumento(documento)" class="action-btn">
+              <ion-icon name="trash-outline"></ion-icon>
             </ion-button>
           </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+        </div>
+        
+        <div class="document-status">
+          <ion-badge [color]="getColorEstado(documento.estado)" class="status-badge">
+            {{ getTextoEstado(documento.estado) }}
+          </ion-badge>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Floating Action Button -->
+  <!-- Paginación minimalista -->
+  <div class="minimal-pagination" *ngIf="getTotalPaginas() > 1">
+    <div class="pagination-container">
+      <ion-button 
+        fill="clear" 
+        (click)="paginaAnterior()" 
+        [disabled]="paginaActual === 1"
+        class="pagination-btn">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+      
+      <div class="pagination-info">
+        {{ paginaActual }} / {{ getTotalPaginas() }}
+      </div>
+      
+      <ion-button 
+        fill="clear" 
+        (click)="paginaSiguiente()" 
+        [disabled]="paginaActual === getTotalPaginas()"
+        class="pagination-btn">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- FAB minimalista -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="agregarDocumento()">
-      <ion-icon name="add"></ion-icon>
+    <ion-fab-button (click)="agregarDocumento()" class="minimal-fab">
+      <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>
