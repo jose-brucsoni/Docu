@@ -20,13 +20,15 @@ import {
   IonItem,
   IonLabel,
   IonInput,
-  IonTextarea
+  IonTextarea,
+  IonSelect,
+  IonSelectOption
 } from '@ionic/angular/standalone';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { createWorker, PSM } from 'tesseract.js';
 import { addIcons } from 'ionicons';
-import { camera, documentText, refresh, save, create } from 'ionicons/icons';
-import { DocumentoGeneral, DocumentoGeneralForm, FechasExtraidas } from '../../models/documento-general.model';
+import { camera, documentText, refresh, save, create, card, car, document, arrowBack } from 'ionicons/icons';
+import { DocumentoGeneral, DocumentoGeneralForm, FechasExtraidas, TipoDocumento, OPCIONES_TIPO_DOCUMENTO } from '../../models/documento-general.model';
 
 @Component({
   selector: 'app-gestion-docu',
@@ -53,6 +55,8 @@ import { DocumentoGeneral, DocumentoGeneralForm, FechasExtraidas } from '../../m
     IonLabel,
     IonInput,
     IonTextarea,
+    IonSelect,
+    IonSelectOption,
     CommonModule, 
     FormsModule
   ]
@@ -68,15 +72,26 @@ export class GestionDocuPage implements OnInit {
   documentoExtraido: DocumentoGeneralForm | null = null;
   fechasExtraidas: FechasExtraidas | null = null;
   showEditCard: boolean = false;
+  
+  // Propiedades para el selector de tipo de documento
+  tipoDocumentoSeleccionado: TipoDocumento | null = null;
+  opcionesTipoDocumento = OPCIONES_TIPO_DOCUMENTO;
+  showTipoSelector: boolean = true;
 
   constructor() {
-    addIcons({ camera, documentText, refresh, save, create });
+    addIcons({ camera, documentText, refresh, save, create, card, car, document, arrowBack });
   }
 
   ngOnInit() {
   }
 
   async takePicture() {
+    // Verificar que se haya seleccionado un tipo de documento
+    if (!this.tipoDocumentoSeleccionado) {
+      this.showAlertMessage('Por favor, selecciona un tipo de documento antes de capturar');
+      return;
+    }
+
     try {
       const image = await Camera.getPhoto({
         quality: 100, // Máxima calidad
@@ -89,6 +104,7 @@ export class GestionDocuPage implements OnInit {
 
       if (image.dataUrl) {
         this.capturedImage = image.dataUrl;
+        this.showTipoSelector = false; // Ocultar el selector después de capturar
         await this.extractTextWithFallback(image.dataUrl);
       }
     } catch (error) {
@@ -236,6 +252,24 @@ export class GestionDocuPage implements OnInit {
     this.documentoExtraido = null;
     this.fechasExtraidas = null;
     this.showEditCard = false;
+    this.tipoDocumentoSeleccionado = null;
+    this.showTipoSelector = true;
+  }
+
+  // Método para seleccionar tipo de documento
+  seleccionarTipoDocumento(tipo: TipoDocumento) {
+    this.tipoDocumentoSeleccionado = tipo;
+  }
+
+  // Método para volver al selector de tipo
+  volverASeleccionarTipo() {
+    this.showTipoSelector = true;
+    this.capturedImage = null;
+    this.extractedText = '';
+    this.ocrConfidence = 0;
+    this.documentoExtraido = null;
+    this.fechasExtraidas = null;
+    this.showEditCard = false;
   }
 
   toggleAdvancedOptions() {
@@ -334,6 +368,12 @@ export class GestionDocuPage implements OnInit {
   // Método para preprocesar la imagen
   async preprocessImage(imageDataUrl: string): Promise<string> {
     return new Promise((resolve, reject) => {
+      // Verificar que estamos en el navegador
+      if (typeof window === 'undefined' || !window.document) {
+        resolve(imageDataUrl);
+        return;
+      }
+      
       const img = new Image();
       img.crossOrigin = 'anonymous';
       
@@ -342,7 +382,7 @@ export class GestionDocuPage implements OnInit {
           console.log('Dimensiones originales:', img.width, 'x', img.height);
           
           // Crear canvas para redimensionar la imagen
-          const canvas = document.createElement('canvas');
+          const canvas = window.document.createElement('canvas');
           const ctx = canvas.getContext('2d');
           
           if (!ctx) {
@@ -595,7 +635,7 @@ export class GestionDocuPage implements OnInit {
     const documento: DocumentoGeneralForm = {
       fechaEmision: this.fechasExtraidas?.fechaEmision || '',
       fechaExpiracion: this.fechasExtraidas?.fechaExpiracion || '',
-      tipoDocumento: 'Cédula de Identidad',
+      tipoDocumento: this.tipoDocumentoSeleccionado || 'Otros',
       numeroDocumento: '',
       nombres: '',
       apellidos: '',

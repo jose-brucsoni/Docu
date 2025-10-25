@@ -2,7 +2,7 @@ export interface DocumentoGeneral {
   id?: string;
   fechaEmision: string;
   fechaExpiracion: string;
-  tipoDocumento: string;
+  tipoDocumento: TipoDocumento;
   numeroDocumento?: string;
   nombres?: string;
   apellidos?: string;
@@ -19,7 +19,7 @@ export interface DocumentoGeneral {
 export interface DocumentoGeneralForm {
   fechaEmision: string;
   fechaExpiracion: string;
-  tipoDocumento: string;
+  tipoDocumento: TipoDocumento;
   numeroDocumento: string;
   nombres: string;
   apellidos: string;
@@ -37,3 +37,13 @@ export interface FechasExtraidas {
   esValida: boolean;
   mensajeError?: string;
 }
+
+// Tipos de documento disponibles
+export type TipoDocumento = 'Cedula de identidad' | 'Licencia de Conducir' | 'Otros';
+
+// Opciones de tipo de documento para el selector
+export const OPCIONES_TIPO_DOCUMENTO: { value: TipoDocumento; label: string; icon: string }[] = [
+  { value: 'Cedula de identidad', label: 'Cédula de Identidad', icon: 'card' },
+  { value: 'Licencia de Conducir', label: 'Licencia de Conducir', icon: 'car' },
+  { value: 'Otros', label: 'Otros', icon: 'document' }
+];

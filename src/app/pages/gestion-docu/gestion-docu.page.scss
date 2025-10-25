@@ -630,3 +630,145 @@ ion-fab-button:hover {
     }
   }
 }
+
+// ========================================
+// SELECTOR DE TIPO DE DOCUMENTO
+// ========================================
+
+.tipo-selector-card {
+  background: var(--docu-white);
+  border: 1px solid #e9ecef;
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  position: relative;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.3s ease-in;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  
+  ion-card-header {
+    padding: 0 0 16px 0;
+    text-align: center;
+    
+    ion-card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--docu-text);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+  }
+  
+  ion-card-content {
+    padding: 0;
+    
+    p {
+      font-size: 1rem;
+      color: var(--docu-text-secondary);
+      margin: 0 0 24px 0;
+      text-align: center;
+      line-height: 1.5;
+    }
+  }
+}
+
+.tipo-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.tipo-option-btn {
+  --background: #f8f9fa;
+  --background-hover: rgba(216, 106, 19, 0.1);
+  --background-activated: rgba(216, 106, 19, 0.2);
+  --color: var(--docu-text);
+  --color-hover: var(--docu-orange);
+  --border-color: #e9ecef;
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  font-weight: 600;
+  font-size: 1rem;
+  height: 56px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  
+  ion-icon {
+    font-size: 1.25rem;
+    margin-right: 12px;
+  }
+  
+  &:hover:not([disabled]) {
+    transform: translateY(-1px);
+    --background: rgba(216, 106, 19, 0.05);
+    --border-color: var(--docu-orange);
+    box-shadow: 0 4px 12px rgba(216, 106, 19, 0.15);
+  }
+  
+  &.selected {
+    --background: var(--docu-orange);
+    --color: var(--docu-white);
+    --border-color: var(--docu-orange);
+    box-shadow: 0 4px 16px rgba(216, 106, 19, 0.3);
+    transform: translateY(-1px);
+    
+    ion-icon {
+      color: var(--docu-white);
+    }
+  }
+  
+  &:active:not([disabled]) {
+    transform: translateY(0);
+  }
+}
+
+// Responsive para selector de tipo
+@media (max-width: 768px) {
+  .tipo-selector-card {
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    
+    ion-card-header {
+      padding: 0 0 12px 0;
+      
+      ion-card-title {
+        font-size: 1.3rem;
+      }
+    }
+    
+    ion-card-content {
+      p {
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+      }
+    }
+  }
+  
+  .tipo-options {
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .tipo-option-btn {
+    height: 52px;
+    font-size: 0.95rem;
+    --padding-top: 14px;
+    --padding-bottom: 14px;
+    
+    ion-icon {
+      font-size: 1.1rem;
+      margin-right: 10px;
+    }
+  }
+}

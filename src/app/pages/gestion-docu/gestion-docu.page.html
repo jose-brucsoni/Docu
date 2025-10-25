@@ -4,16 +4,52 @@
   
 
   <div class="container">
-    <!-- Botón principal para capturar documento -->
-    <ion-card *ngIf="!capturedImage" class="main-card">
+    <!-- Selector de tipo de documento -->
+    <ion-card *ngIf="showTipoSelector" class="tipo-selector-card">
       <ion-card-header>
         <ion-card-title>
           <ion-icon name="document-text" class="title-icon"></ion-icon>
-          Capturar Documento
+          Seleccionar Tipo de Documento
         </ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <p>Utiliza la cámara para capturar un documento y extraer su texto automáticamente.</p>
+        <p>Antes de capturar, selecciona el tipo de documento que vas a escanear:</p>
+        
+        <div class="tipo-options">
+          <ion-button 
+            *ngFor="let opcion of opcionesTipoDocumento"
+            class="tipo-option-btn"
+            [class.selected]="tipoDocumentoSeleccionado === opcion.value"
+            fill="outline"
+            expand="block"
+            (click)="seleccionarTipoDocumento(opcion.value)">
+            <ion-icon [name]="opcion.icon" slot="start"></ion-icon>
+            {{ opcion.label }}
+          </ion-button>
+        </div>
+        
+        <ion-button 
+          class="primary-action"
+          expand="block" 
+          fill="solid" 
+          (click)="takePicture()"
+          [disabled]="!tipoDocumentoSeleccionado || isProcessing">
+          <ion-icon name="camera" slot="start"></ion-icon>
+          Capturar Documento
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Botón principal para capturar documento (cuando ya se seleccionó el tipo) -->
+    <ion-card *ngIf="!capturedImage && !showTipoSelector" class="main-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="document-text" class="title-icon"></ion-icon>
+          Capturar {{ tipoDocumentoSeleccionado }}
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>Utiliza la cámara para capturar el documento y extraer su texto automáticamente.</p>
         <ion-button 
           class="primary-action"
           expand="block" 
@@ -22,6 +58,15 @@
           [disabled]="isProcessing">
           <ion-icon name="camera" slot="start"></ion-icon>
           Capturar Documento
+        </ion-button>
+        
+        <ion-button 
+          class="secondary-action"
+          expand="block" 
+          fill="outline" 
+          (click)="volverASeleccionarTipo()">
+          <ion-icon name="arrow-back" slot="start"></ion-icon>
+          Cambiar Tipo de Documento
         </ion-button>
       </ion-card-content>
     </ion-card>
