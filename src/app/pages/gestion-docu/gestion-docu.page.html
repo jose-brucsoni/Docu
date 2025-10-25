@@ -3,7 +3,7 @@
 <ion-content class="minimal-content" [fullscreen]="true">
   
 
-  <div class="container">
+  <div class="container page-container">
     <!-- Selector de tipo de documento -->
     <ion-card *ngIf="showTipoSelector" class="tipo-selector-card">
       <ion-card-header>
@@ -41,7 +41,7 @@
     </ion-card>
 
     <!-- Botón principal para capturar documento (cuando ya se seleccionó el tipo) -->
-    <ion-card *ngIf="!capturedImage && !showTipoSelector" class="main-card">
+    <ion-card *ngIf="!capturedImage && !showTipoSelector" class="main-card minimal-card">
       <ion-card-header>
         <ion-card-title>
           <ion-icon name="document-text" class="title-icon"></ion-icon>
@@ -72,14 +72,14 @@
     </ion-card>
 
     <!-- Imagen capturada -->
-    <ion-card *ngIf="capturedImage" class="image-card">
+    <ion-card *ngIf="capturedImage" class="image-card minimal-card">
       <ion-card-content>
         <ion-img [src]="capturedImage" alt="Documento capturado" class="captured-image"></ion-img>
       </ion-card-content>
     </ion-card>
 
     <!-- Procesamiento OCR -->
-    <ion-card *ngIf="isProcessing" class="processing-card">
+    <ion-card *ngIf="isProcessing" class="processing-card minimal-card">
       <ion-card-content>
         <div class="processing-content">
           <ion-spinner name="crescent"></ion-spinner>
@@ -89,7 +89,7 @@
     </ion-card>
 
     <!-- Card de edición de datos extraídos -->
-    <ion-card *ngIf="showEditCard && documentoExtraido" class="edit-card">
+    <ion-card *ngIf="showEditCard && documentoExtraido" class="edit-card minimal-card">
       <ion-card-header class="edit-header">
         <ion-card-title class="edit-title">
           <ion-icon name="create" class="title-icon"></ion-icon>

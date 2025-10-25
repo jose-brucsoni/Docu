@@ -50,11 +50,11 @@
   }
 
   .stat-number {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 
   .stat-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
   }
 
   .minimal-documents-section {
@@ -87,17 +87,9 @@
     font-size: 1rem;
   }
 
-  .document-meta {
-    gap: 6px;
-  }
-
-  .document-category,
-  .document-type {
-    font-size: 0.7rem;
-  }
-
-  .date-item {
-    font-size: 0.75rem;
+  .document-actions {
+    flex-wrap: wrap;
+    gap: 4px;
   }
 
   .action-btn {
@@ -105,11 +97,16 @@
     width: 28px;
   }
 
+  .action-btn ion-icon {
+    font-size: 14px;
+  }
+
   .minimal-pagination {
     padding: 16px;
   }
 
   .pagination-container {
+    flex-direction: column;
     gap: 12px;
   }
 
@@ -121,166 +118,5 @@
   .pagination-info {
     font-size: 0.8rem;
     padding: 6px 12px;
-    min-width: 60px;
   }
 }
-
-/* Ajustes para pantallas muy pequeñas */
-@media (max-width: 480px) {
-  .minimal-header-section {
-    padding: 12px;
-  }
-
-  .main-title {
-    font-size: 1.3rem;
-  }
-
-  .main-subtitle {
-    font-size: 0.85rem;
-  }
-
-  .minimal-search-section,
-  .minimal-filters-section {
-    padding: 10px 12px;
-  }
-
-  .minimal-stats-section {
-    padding: 12px;
-  }
-
-  .stats-container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-  }
-
-  .stat-item {
-    padding: 10px 6px;
-  }
-
-  .stat-number {
-    font-size: 1.2rem;
-  }
-
-  .stat-label {
-    font-size: 0.7rem;
-  }
-
-  .minimal-documents-section {
-    padding: 12px;
-  }
-
-  .minimal-document-card {
-    padding: 12px;
-  }
-
-  .document-main {
-    gap: 10px;
-  }
-
-  .document-icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .document-icon ion-icon {
-    font-size: 18px;
-  }
-
-  .document-title {
-    font-size: 0.95rem;
-  }
-
-  .document-meta {
-    gap: 4px;
-  }
-
-  .document-category,
-  .document-type {
-    font-size: 0.65rem;
-  }
-
-  .date-item {
-    font-size: 0.7rem;
-  }
-
-  .action-btn {
-    height: 24px;
-    width: 24px;
-  }
-
-  .action-btn ion-icon {
-    font-size: 14px;
-  }
-
-  .minimal-pagination {
-    padding: 12px;
-  }
-
-  .pagination-container {
-    gap: 8px;
-  }
-
-  .pagination-btn {
-    height: 32px;
-    width: 32px;
-  }
-
-  .pagination-info {
-    font-size: 0.75rem;
-    padding: 4px 8px;
-    min-width: 50px;
-  }
-}
-
-/* Estados de hover mejorados para móviles */
-@media (hover: hover) {
-  .minimal-document-card:hover {
-    transform: translateY(-1px);
-  }
-
-  .stat-item:hover {
-    transform: translateY(-1px);
-  }
-
-  .action-btn:hover {
-    transform: scale(1.05);
-  }
-
-  .pagination-btn:hover:not([disabled]) {
-    transform: scale(1.05);
-  }
-}
-
-/* Mejoras de accesibilidad */
-.minimal-document-card:focus-within {
-  outline: 2px solid var(--docu-orange);
-  outline-offset: 2px;
-}
-
-.action-btn:focus-visible {
-  outline: 2px solid var(--docu-orange);
-  outline-offset: 2px;
-}
-
-/* Animaciones específicas del menú principal */
-@keyframes slideInFromTop {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.minimal-document-card {
-  animation: slideInFromTop 0.3s ease-out;
-}
-
-.minimal-document-card:nth-child(1) { animation-delay: 0.1s; }
-.minimal-document-card:nth-child(2) { animation-delay: 0.2s; }
-.minimal-document-card:nth-child(3) { animation-delay: 0.3s; }
-.minimal-document-card:nth-child(4) { animation-delay: 0.4s; }
-.minimal-document-card:nth-child(5) { animation-delay: 0.5s; }
-.minimal-document-card:nth-child(6) { animation-delay: 0.6s; }

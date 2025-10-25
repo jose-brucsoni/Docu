@@ -3,9 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { 
   IonContent, 
-  IonHeader, 
-  IonTitle, 
-  IonToolbar, 
   IonButton, 
   IonCard, 
   IonCardContent, 
@@ -19,10 +16,7 @@ import {
   IonFabButton,
   IonItem,
   IonLabel,
-  IonInput,
-  IonTextarea,
-  IonSelect,
-  IonSelectOption
+  IonInput
 } from '@ionic/angular/standalone';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { createWorker, PSM } from 'tesseract.js';
@@ -37,9 +31,6 @@ import { DocumentoGeneral, DocumentoGeneralForm, FechasExtraidas, TipoDocumento,
   standalone: true,
   imports: [
     IonContent, 
-    IonHeader, 
-    IonTitle, 
-    IonToolbar, 
     IonButton, 
     IonCard, 
     IonCardContent, 
@@ -54,9 +45,6 @@ import { DocumentoGeneral, DocumentoGeneralForm, FechasExtraidas, TipoDocumento,
     IonItem,
     IonLabel,
     IonInput,
-    IonTextarea,
-    IonSelect,
-    IonSelectOption,
     CommonModule, 
     FormsModule
   ]

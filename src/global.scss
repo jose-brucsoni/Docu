@@ -1393,6 +1393,162 @@ ion-button.secondary-action:hover {
 }
 
 /* ========================================
+   ESTILOS COMUNES PARA PÁGINAS
+   ======================================== */
+
+// Container común para páginas
+.page-container {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    padding: 0;
+    max-width: 100%;
+    margin: 0;
+  }
+}
+
+// Cards minimalistas comunes
+.minimal-card {
+  background: var(--docu-white);
+  border: 1px solid #e9ecef;
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  position: relative;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.3s ease-in;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Título común
+.title-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title-icon {
+  font-size: 1.2rem;
+  color: var(--docu-orange);
+}
+
+// Botones de acción comunes
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+// Procesamiento común
+.processing-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+  
+  p {
+    margin: 0;
+    color: var(--docu-text-secondary);
+    font-size: 1rem;
+  }
+}
+
+// Imagen capturada común
+.captured-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+// Formulario de edición común
+.edit-form {
+  .input-group {
+    margin-bottom: 20px;
+  }
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    
+    .section-icon {
+      font-size: 1.2rem;
+      color: var(--docu-orange);
+    }
+    
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--docu-text);
+      margin: 0;
+    }
+  }
+  
+  .fechas-info {
+    background: #f8f9fa;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--docu-text-secondary);
+      line-height: 1.4;
+    }
+  }
+}
+
+// Input moderno común
+.modern-input-item {
+  --background: #f8f9fa;
+  --border-radius: 12px;
+  --border-color: #e9ecef;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  margin-bottom: 16px;
+  
+  &:focus-within {
+    --border-color: var(--docu-orange);
+    --box-shadow: 0 0 0 2px rgba(216, 106, 19, 0.1);
+  }
+}
+
+.input-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--docu-text);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  
+  .label-icon {
+    font-size: 1rem;
+    color: var(--docu-orange);
+  }
+}
+
+.modern-input {
+  --color: var(--docu-text);
+  --placeholder-color: var(--docu-text-secondary);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* ========================================
    RESPONSIVE DESIGN
    ======================================== */
 @media (max-width: 768px) {
