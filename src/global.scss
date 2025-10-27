@@ -2213,6 +2213,13 @@ ion-button.secondary-action:hover {
   }
 }
 
+.gest-input-hint {
+  font-size: 0.8rem;
+  color: #999;
+  margin: 0.25rem 0 0 0;
+  font-style: italic;
+}
+
 .gest-input-label {
   display: flex;
   align-items: center;

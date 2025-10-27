@@ -169,10 +169,16 @@ export class MenuPrincipalPage implements OnInit {
       }
     }
 
-    // Generar nombre descriptivo
-    let nombre = docGeneral.tipoDocumento;
-    if (docGeneral.numeroDocumento && docGeneral.numeroDocumento !== '') {
-      nombre += ' - ' + docGeneral.numeroDocumento;
+    // Usar el nombre del documento si existe, si no generar uno basado en el tipo
+    let nombre: string;
+    if (docGeneral.nombre && docGeneral.nombre.trim() !== '') {
+      nombre = docGeneral.nombre;
+    } else {
+      // Fallback: generar nombre como antes si no existe
+      nombre = docGeneral.tipoDocumento;
+      if (docGeneral.numeroDocumento && docGeneral.numeroDocumento !== '') {
+        nombre += ' - ' + docGeneral.numeroDocumento;
+      }
     }
 
     // Convertir fecha de creación a string ISO si es necesario

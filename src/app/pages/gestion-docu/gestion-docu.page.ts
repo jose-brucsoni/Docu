@@ -118,6 +118,7 @@ export class GestionDocuPage implements OnInit {
         
         // Convertir a formulario
         this.documentoExtraido = {
+          nombre: documento.nombre || '',
           fechaEmision: documento.fechaEmision || '',
           fechaExpiracion: documento.fechaExpiracion || '',
           tipoDocumento: documento.tipoDocumento,
@@ -606,6 +607,7 @@ export class GestionDocuPage implements OnInit {
     }
     
     const documento: DocumentoGeneralForm = {
+      nombre: '', // Se generará automáticamente si está vacío
       fechaEmision: this.fechasExtraidas?.fechaEmision || '',
       fechaExpiracion: this.fechasExtraidas?.fechaExpiracion || '',
       tipoDocumento: this.tipoDocumentoSeleccionado || 'Otros',
@@ -664,6 +666,44 @@ export class GestionDocuPage implements OnInit {
     return documento;
   }
 
+  // Método para generar nombre único automáticamente
+  private async generarNombreUnico(tipoDocumento: string): Promise<string> {
+    const documentos = await this.documentStorageService.obtenerTodosLosDocumentos();
+    
+    // Filtrar documentos del mismo tipo
+    const documentosDelMismoTipo = documentos.filter(doc => doc.tipoDocumento === tipoDocumento);
+    
+    // Contar cuántos hay sin nombre o con nombres que empiezan con el tipo
+    let contador = 1;
+    const nombresExistentes = new Set<string>();
+    
+    documentosDelMismoTipo.forEach(doc => {
+      if (doc.nombre) {
+        nombresExistentes.add(doc.nombre);
+        // Extraer número si existe (ej: "Cedula de identidad 2")
+        const match = doc.nombre.match(/^(.+?)\s*(\d+)$/);
+        if (match && match[1] === tipoDocumento) {
+          const num = parseInt(match[2]);
+          if (num >= contador) {
+            contador = num + 1;
+          }
+        }
+      }
+    });
+    
+    // Generar nombre único
+    let nombreBase = tipoDocumento;
+    while (nombresExistentes.has(nombreBase)) {
+      if (contador === 1) {
+        contador = 2; // El primer duplicado sería "Tipo 2"
+      }
+      nombreBase = `${tipoDocumento} ${contador}`;
+      contador++;
+    }
+    
+    return nombreBase;
+  }
+
   // Método para guardar documento
   async guardarDocumento() {
     if (!this.documentoExtraido || !this.capturedImage) {
@@ -676,9 +716,17 @@ export class GestionDocuPage implements OnInit {
       console.log('Imagen capturada:', !!this.capturedImage);
       console.log('Datos del documento:', this.documentoExtraido);
 
+      // Generar nombre único si está vacío
+      let nombreFinal = this.documentoExtraido.nombre?.trim() || '';
+      if (!nombreFinal) {
+        nombreFinal = await this.generarNombreUnico(this.documentoExtraido.tipoDocumento);
+        console.log('Nombre generado automáticamente:', nombreFinal);
+      }
+
       // Convertir el formulario a DocumentoGeneral
       const documento: DocumentoGeneral = {
         id: this.modoEdicion ? this.documentoEditando?.id : undefined, // Mantener ID en edición
+        nombre: nombreFinal,
         fechaEmision: this.documentoExtraido.fechaEmision,
         fechaExpiracion: this.documentoExtraido.fechaExpiracion,
         tipoDocumento: this.documentoExtraido.tipoDocumento,

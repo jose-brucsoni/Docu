@@ -108,6 +108,24 @@
         </div>
 
         <form class="gest-edit-form">
+          
+          <!-- Nombre del documento -->
+          <div class="gest-input-wrapper">
+            <label class="gest-input-label">
+              <ion-icon name="create"></ion-icon>
+              Nombre del documento
+            </label>
+            <div class="gest-input-container">
+              <ion-input 
+                type="text" 
+                [(ngModel)]="documentoExtraido.nombre"
+                placeholder="Dejar vacío para nombre automático"
+                name="nombre"
+                class="gest-modern-input"></ion-input>
+            </div>
+            <p class="gest-input-hint">Si lo dejas vacío, se generará automáticamente</p>
+          </div>
+          
           <!-- Fechas -->
           <div class="gest-fechas-card">
             <div class="gest-fechas-header">
@@ -121,12 +139,14 @@
                 <ion-icon name="calendar-outline"></ion-icon>
                 Fecha de Emisión *
               </label>
-              <ion-input 
-                type="text" 
-                [(ngModel)]="documentoExtraido.fechaEmision"
-                placeholder="DD/MM/YYYY"
-                name="fechaEmision"
-                class="gest-modern-input"></ion-input>
+              <div class="gest-input-container">
+                <ion-input 
+                  type="text" 
+                  [(ngModel)]="documentoExtraido.fechaEmision"
+                  placeholder="DD/MM/YYYY"
+                  name="fechaEmision"
+                  class="gest-modern-input"></ion-input>
+              </div>
             </div>
             
             <div class="gest-input-wrapper">
@@ -134,12 +154,14 @@
                 <ion-icon name="time-outline"></ion-icon>
                 Fecha de Expiración *
               </label>
-              <ion-input 
-                type="text" 
-                [(ngModel)]="documentoExtraido.fechaExpiracion"
-                placeholder="DD/MM/YYYY"
-                name="fechaExpiracion"
-                class="gest-modern-input"></ion-input>
+              <div class="gest-input-container">
+                <ion-input 
+                  type="text" 
+                  [(ngModel)]="documentoExtraido.fechaExpiracion"
+                  placeholder="DD/MM/YYYY"
+                  name="fechaExpiracion"
+                  class="gest-modern-input"></ion-input>
+              </div>
             </div>
           </div>
           

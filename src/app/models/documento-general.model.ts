@@ -1,5 +1,6 @@
 export interface DocumentoGeneral {
   id?: string;
+  nombre?: string; // Nombre/título del documento
   fechaEmision: string;
   fechaExpiracion: string;
   tipoDocumento: TipoDocumento;
@@ -18,6 +19,7 @@ export interface DocumentoGeneral {
 }
 
 export interface DocumentoGeneralForm {
+  nombre?: string; // Nombre/título del documento
   fechaEmision: string;
   fechaExpiracion: string;
   tipoDocumento: TipoDocumento;
