@@ -346,13 +346,15 @@ export class MenuPrincipalPage implements OnInit {
   }
 
   verDocumento(documento: Documento) {
+    // Navegar a gestión con el ID del documento
     console.log('Ver documento:', documento);
-    // Aquí iría la lógica para ver el documento
+    this.router.navigate(['/gestion-docu', documento.id]);
   }
 
   editarDocumento(documento: Documento) {
+    // Navegar a gestión con el ID del documento
     console.log('Editar documento:', documento);
-    // Aquí iría la lógica para editar el documento
+    this.router.navigate(['/gestion-docu', documento.id]);
   }
 
   async eliminarDocumento(documento: Documento) {

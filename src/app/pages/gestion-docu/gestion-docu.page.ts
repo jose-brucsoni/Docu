@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { 
   IonContent, 
   IonButton, 
@@ -20,10 +20,9 @@ import {
   IonInput
 } from '@ionic/angular/standalone';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { Filesystem } from '@capacitor/filesystem';
 import { createWorker, PSM } from 'tesseract.js';
 import { addIcons } from 'ionicons';
-import { camera, documentText, refresh, save, create, card, car, document, arrowBack } from 'ionicons/icons';
+import { camera, documentText, save, card, car, document, arrowBack, trashOutline } from 'ionicons/icons';
 import { DocumentoGeneral, DocumentoGeneralForm, FechasExtraidas, TipoDocumento, OPCIONES_TIPO_DOCUMENTO } from '../../models/documento-general.model';
 import { DocumentStorageService } from '../../services/document-storage.service';
 
@@ -54,12 +53,9 @@ import { DocumentStorageService } from '../../services/document-storage.service'
 })
 export class GestionDocuPage implements OnInit {
   capturedImage: string | null = null;
-  extractedText: string = '';
   isProcessing: boolean = false;
   showAlert: boolean = false;
   alertMessage: string = '';
-  ocrConfidence: number = 0;
-  showAdvancedOptions: boolean = false;
   documentoExtraido: DocumentoGeneralForm | null = null;
   fechasExtraidas: FechasExtraidas | null = null;
   showEditCard: boolean = false;
@@ -68,16 +64,83 @@ export class GestionDocuPage implements OnInit {
   tipoDocumentoSeleccionado: TipoDocumento | null = null;
   opcionesTipoDocumento = OPCIONES_TIPO_DOCUMENTO;
   showTipoSelector: boolean = true;
+  
+  // Propiedades para edición
+  modoEdicion: boolean = false;
+  documentoEditando: DocumentoGeneral | null = null;
 
   constructor(
     private documentStorageService: DocumentStorageService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
-    addIcons({ camera, documentText, refresh, save, create, card, car, document, arrowBack });
+    addIcons({ camera, documentText, save, card, car, document, arrowBack, trashOutline });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     console.log('Página de gestión de documentos inicializada');
+    
+    // Verificar si hay un ID en la ruta (modo edición)
+    this.route.params.subscribe(async params => {
+      const id = params['id'];
+      if (id) {
+        this.modoEdicion = true;
+        await this.cargarDocumentoParaEdicion(id);
+      }
+    });
+  }
+
+  async cargarDocumentoParaEdicion(id: string) {
+    try {
+      console.log('Cargando documento para edición:', id);
+      
+      // Obtener todos los documentos
+      const documentos = await this.documentStorageService.obtenerTodosLosDocumentos();
+      const documento = documentos.find(doc => doc.id?.replace('doc_', '') === id);
+      
+      if (documento) {
+        console.log('Documento encontrado:', documento);
+        this.documentoEditando = documento;
+        
+        // Cargar la imagen del documento
+        if (documento.imagenPath) {
+          try {
+            const imagen = await this.documentStorageService.obtenerImagenDocumento(documento.imagenPath);
+            this.capturedImage = imagen;
+          } catch (error) {
+            console.error('Error al cargar imagen:', error);
+          }
+        }
+        
+        // Convertir a formulario
+        this.documentoExtraido = {
+          fechaEmision: documento.fechaEmision || '',
+          fechaExpiracion: documento.fechaExpiracion || '',
+          tipoDocumento: documento.tipoDocumento,
+          numeroDocumento: documento.numeroDocumento || '',
+          nombres: documento.nombres || '',
+          apellidos: documento.apellidos || '',
+          fechaNacimiento: documento.fechaNacimiento || '',
+          lugarNacimiento: documento.lugarNacimiento || '',
+          domicilio: documento.domicilio || '',
+          estadoCivil: documento.estadoCivil || '',
+          grupoSanguineo: documento.grupoSanguineo || '',
+          profesion: documento.profesion || ''
+        };
+        
+        this.tipoDocumentoSeleccionado = documento.tipoDocumento;
+        this.showTipoSelector = false;
+        this.showEditCard = true;
+        
+        console.log('Documento cargado para edición');
+      } else {
+        console.error('Documento no encontrado');
+        this.modoEdicion = false;
+      }
+    } catch (error) {
+      console.error('Error al cargar documento:', error);
+      this.modoEdicion = false;
+    }
   }
 
   async takePicture() {
@@ -110,7 +173,6 @@ export class GestionDocuPage implements OnInit {
 
   async extractTextFromImage(imageDataUrl: string) {
     this.isProcessing = true;
-    this.extractedText = '';
 
     try {
       // Validar que la imagen existe y es válida
@@ -148,11 +210,9 @@ export class GestionDocuPage implements OnInit {
       const { data: { text, confidence } } = await worker.recognize(processedImageDataUrl);
       
       console.log('Confianza del OCR:', confidence);
-      this.ocrConfidence = confidence;
       
       // Post-procesamiento del texto para mejorar legibilidad
       let processedText = this.postProcessText(text.trim());
-      this.extractedText = processedText;
       
       // Extraer fechas específicas del documento
       this.fechasExtraidas = this.extraerFechasDocumento(processedText);
@@ -166,9 +226,7 @@ export class GestionDocuPage implements OnInit {
       // Terminar el worker
       await worker.terminate();
 
-      if (this.extractedText.length === 0) {
-        this.showAlertMessage('No se pudo extraer texto de la imagen');
-      } else if (confidence < 30) {
+      if (confidence < 30) {
         this.showAlertMessage('La calidad de la imagen puede ser baja. Intenta capturar nuevamente con mejor iluminación.');
       }
     } catch (error) {
@@ -242,13 +300,12 @@ export class GestionDocuPage implements OnInit {
 
   clearData() {
     this.capturedImage = null;
-    this.extractedText = '';
-    this.ocrConfidence = 0;
     this.documentoExtraido = null;
-    this.fechasExtraidas = null;
     this.showEditCard = false;
     this.tipoDocumentoSeleccionado = null;
     this.showTipoSelector = true;
+    this.modoEdicion = false;
+    this.documentoEditando = null;
   }
 
   // Método para seleccionar tipo de documento
@@ -260,21 +317,8 @@ export class GestionDocuPage implements OnInit {
   volverASeleccionarTipo() {
     this.showTipoSelector = true;
     this.capturedImage = null;
-    this.extractedText = '';
-    this.ocrConfidence = 0;
     this.documentoExtraido = null;
-    this.fechasExtraidas = null;
     this.showEditCard = false;
-  }
-
-  toggleAdvancedOptions() {
-    this.showAdvancedOptions = !this.showAdvancedOptions;
-  }
-
-  async retryWithBetterSettings() {
-    if (this.capturedImage) {
-      await this.extractTextFromImage(this.capturedImage);
-    }
   }
 
   async extractTextWithFallback(imageDataUrl: string) {
@@ -297,16 +341,9 @@ export class GestionDocuPage implements OnInit {
 
         const { data: { text, confidence } } = await worker.recognize(imageDataUrl);
         
-        this.extractedText = text.trim();
-        this.ocrConfidence = confidence;
-        
         await worker.terminate();
 
-        if (this.extractedText.length === 0) {
-          this.showAlertMessage('No se pudo extraer texto con ninguna configuración');
-        } else {
-          console.log('✅ Procesamiento exitoso con configuración alternativa');
-        }
+        console.log('✅ Procesamiento exitoso con configuración alternativa');
       } catch (fallbackError) {
         console.error('Error en configuración alternativa:', fallbackError);
         this.showAlertMessage('Error crítico: No se pudo procesar la imagen con ninguna configuración');
@@ -314,42 +351,6 @@ export class GestionDocuPage implements OnInit {
     }
   }
 
-  // Método con configuración ultra-simple
-  async extractTextSimple(imageDataUrl: string) {
-    this.isProcessing = true;
-    this.extractedText = '';
-
-    try {
-      console.log('Usando configuración ultra-simple...');
-      
-      // Preprocesar la imagen también en configuración simple
-      const processedImageDataUrl = await this.preprocessImage(imageDataUrl);
-      
-      // Configuración mínima sin parámetros avanzados
-      const worker = await createWorker('spa', 1, {
-        logger: m => console.log('Simple Tesseract:', m)
-      });
-
-      // Sin parámetros adicionales - usar configuración por defecto
-      const { data: { text, confidence } } = await worker.recognize(processedImageDataUrl);
-      
-      this.extractedText = text.trim();
-      this.ocrConfidence = confidence;
-      
-      await worker.terminate();
-
-      if (this.extractedText.length === 0) {
-        this.showAlertMessage('No se pudo extraer texto con configuración simple');
-      } else {
-        console.log('✅ Procesamiento exitoso con configuración simple');
-      }
-    } catch (error) {
-      console.error('Error en configuración simple:', error);
-      this.showAlertMessage('Error: No se pudo procesar la imagen ni siquiera con configuración simple');
-    } finally {
-      this.isProcessing = false;
-    }
-  }
 
   showAlertMessage(message: string) {
     this.alertMessage = message;
@@ -433,33 +434,6 @@ export class GestionDocuPage implements OnInit {
       
       img.src = imageDataUrl;
     });
-  }
-
-  // Método para diagnosticar problemas
-  async diagnoseOCR() {
-    console.log('=== DIAGNÓSTICO OCR ===');
-    console.log('Navegador:', navigator.userAgent);
-    console.log('Web Workers disponibles:', typeof Worker !== 'undefined');
-    console.log('Tesseract disponible:', typeof createWorker !== 'undefined');
-    console.log('Imagen capturada:', !!this.capturedImage);
-    
-    if (this.capturedImage) {
-      console.log('Tamaño de imagen:', this.capturedImage.length);
-      console.log('Formato:', this.capturedImage.substring(0, 50));
-    }
-    
-    // Probar carga de Tesseract
-    try {
-      const worker = await createWorker('spa', 1, {
-        logger: m => console.log('Test Tesseract:', m)
-      });
-      console.log('✅ Tesseract se inicializa correctamente');
-      await worker.terminate();
-    } catch (error) {
-      console.error('❌ Error al inicializar Tesseract:', error);
-    }
-    
-    console.log('=== FIN DIAGNÓSTICO ===');
   }
 
   // Método para extraer fechas de emisión y expiración
@@ -700,7 +674,7 @@ export class GestionDocuPage implements OnInit {
 
       // Convertir el formulario a DocumentoGeneral
       const documento: DocumentoGeneral = {
-        id: undefined, // Se generará en el servicio
+        id: this.modoEdicion ? this.documentoEditando?.id : undefined, // Mantener ID en edición
         fechaEmision: this.documentoExtraido.fechaEmision,
         fechaExpiracion: this.documentoExtraido.fechaExpiracion,
         tipoDocumento: this.documentoExtraido.tipoDocumento,
@@ -718,13 +692,17 @@ export class GestionDocuPage implements OnInit {
       console.log('Documento a guardar:', documento);
       console.log('Tamaño de imagen base64:', this.capturedImage.length, 'caracteres');
 
-      // Guardar documento con imagen
-      await this.documentStorageService.guardarDocumento(documento, this.capturedImage);
-
-      console.log('Documento guardado exitosamente');
-
-      // Mostrar mensaje de éxito
-      this.showAlertMessage('Documento guardado exitosamente');
+      if (this.modoEdicion && documento.id) {
+        // Actualizar documento existente
+        await this.documentStorageService.actualizarDocumento(documento);
+        console.log('Documento actualizado exitosamente');
+        this.showAlertMessage('Documento actualizado exitosamente');
+      } else {
+        // Guardar nuevo documento con imagen
+        await this.documentStorageService.guardarDocumento(documento, this.capturedImage);
+        console.log('Documento guardado exitosamente');
+        this.showAlertMessage('Documento guardado exitosamente');
+      }
 
       // Esperar un momento para mostrar el mensaje
       await new Promise(resolve => setTimeout(resolve, 1500));
@@ -749,7 +727,30 @@ export class GestionDocuPage implements OnInit {
 
   // Método para cancelar edición
   cancelarEdicion() {
-    this.showEditCard = false;
-    this.documentoExtraido = null;
+    this.clearData();
+    this.router.navigateByUrl('/menu-principal');
+  }
+
+  // Método para eliminar documento
+  async eliminarDocumento() {
+    if (!this.documentoEditando || !this.documentoEditando.id) {
+      this.showAlertMessage('No se puede eliminar el documento');
+      return;
+    }
+
+    try {
+      await this.documentStorageService.eliminarDocumento(this.documentoEditando.id);
+      console.log('Documento eliminado exitosamente');
+      this.showAlertMessage('Documento eliminado exitosamente');
+      
+      // Esperar un momento
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Navegar al menú principal
+      this.router.navigateByUrl('/menu-principal');
+    } catch (error) {
+      console.error('Error al eliminar documento:', error);
+      this.showAlertMessage('Error al eliminar el documento');
+    }
   }
 }

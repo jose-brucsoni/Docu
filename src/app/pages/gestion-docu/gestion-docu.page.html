@@ -150,7 +150,18 @@
               fill="solid" 
               (click)="guardarDocumento()">
               <ion-icon name="save" slot="start"></ion-icon>
-              Guardar Documento
+              {{ modoEdicion ? 'Actualizar Documento' : 'Guardar Documento' }}
+            </ion-button>
+            
+            <ion-button 
+              *ngIf="modoEdicion"
+              class="gestion-delete-btn"
+              expand="block" 
+              fill="outline" 
+              color="danger"
+              (click)="eliminarDocumento()">
+              <ion-icon name="trash-outline" slot="start"></ion-icon>
+              Eliminar Documento
             </ion-button>
             
             <ion-button 
