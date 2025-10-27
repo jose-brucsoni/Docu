@@ -15,14 +15,12 @@ import {
   IonIcon,
   IonFab,
   IonFabButton,
-  IonItem,
-  IonLabel,
   IonInput
 } from '@ionic/angular/standalone';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { createWorker, PSM } from 'tesseract.js';
 import { addIcons } from 'ionicons';
-import { camera, documentText, save, card, car, document, arrowBack, trashOutline, informationCircle, create } from 'ionicons/icons';
+import { camera, documentText, save, card, car, document, arrowBack, trashOutline, informationCircle, create, close, calendarOutline, timeOutline, calendar } from 'ionicons/icons';
 import { DocumentoGeneral, DocumentoGeneralForm, FechasExtraidas, TipoDocumento, OPCIONES_TIPO_DOCUMENTO } from '../../models/documento-general.model';
 import { DocumentStorageService } from '../../services/document-storage.service';
 
@@ -44,8 +42,6 @@ import { DocumentStorageService } from '../../services/document-storage.service'
     IonIcon,
     IonFab,
     IonFabButton,
-    IonItem,
-    IonLabel,
     IonInput,
     CommonModule, 
     FormsModule
@@ -74,7 +70,7 @@ export class GestionDocuPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    addIcons({ camera, documentText, save, card, car, document, arrowBack, trashOutline, informationCircle, create });
+    addIcons({ camera, documentText, save, card, car, document, arrowBack, trashOutline, informationCircle, create, close, calendarOutline, timeOutline, calendar });
   }
 
   async ngOnInit() {

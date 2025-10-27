@@ -1,197 +1,191 @@
 
-
-<ion-content class="minimal-content" [fullscreen]="true">
+<ion-content [fullscreen]="true" class="gest-docu-content">
   
+  <!-- Header con gradiente -->
+  <div class="gest-header">
+    <div class="gest-header-icon">
+      <ion-icon name="document-text"></ion-icon>
+    </div>
+    <h1 class="gest-header-title">Gestión de Documentos</h1>
+    <p class="gest-header-subtitle" *ngIf="!capturedImage && !showTipoSelector">Captura y gestiona tus documentos</p>
+  </div>
 
-  <div class="gestion-container page-container">
-    <!-- Selector de tipo de documento -->
-    <ion-card *ngIf="showTipoSelector" class="gestion-tipo-selector-card">
-      <ion-card-header>
-        <ion-card-title>
-          <ion-icon name="document-text" class="title-icon"></ion-icon>
-          Seleccionar Tipo de Documento
-        </ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p>Antes de capturar, selecciona el tipo de documento que vas a escanear:</p>
+  <div class="gest-content">
+    
+    <!-- Sección: Selector de tipo de documento -->
+    <div *ngIf="showTipoSelector" class="gest-section">
+      <div class="gest-card">
+        <div class="gest-card-header">
+          <ion-icon name="document-text" class="gest-card-icon"></ion-icon>
+          <h2 class="gest-card-title">Tipo de Documento</h2>
+        </div>
+        <p class="gest-card-description">Selecciona el tipo de documento que vas a escanear</p>
         
-        <div class="gestion-tipo-options">
-          <ion-button 
+        <div class="gest-tipo-options">
+          <button 
             *ngFor="let opcion of opcionesTipoDocumento"
-            class="gestion-tipo-option-btn"
+            class="gest-tipo-btn"
             [class.selected]="tipoDocumentoSeleccionado === opcion.value"
-            fill="outline"
-            expand="block"
             (click)="seleccionarTipoDocumento(opcion.value)">
-            <ion-icon [name]="opcion.icon" slot="start"></ion-icon>
-            {{ opcion.label }}
-          </ion-button>
+            <ion-icon [name]="opcion.icon" class="gest-tipo-icon"></ion-icon>
+            <span class="gest-tipo-label">{{ opcion.label }}</span>
+          </button>
         </div>
         
         <ion-button 
-          class="primary-action"
+          class="gest-primary-btn"
           expand="block" 
-          fill="solid" 
           (click)="takePicture()"
           [disabled]="!tipoDocumentoSeleccionado || isProcessing">
           <ion-icon name="camera" slot="start"></ion-icon>
           Capturar Documento
         </ion-button>
-      </ion-card-content>
-    </ion-card>
+      </div>
+    </div>
 
-    <!-- Botón principal para capturar documento (cuando ya se seleccionó el tipo) -->
-    <ion-card *ngIf="!capturedImage && !showTipoSelector" class="gestion-main-card minimal-card">
-      <ion-card-header>
-        <ion-card-title>
-          <ion-icon name="document-text" class="title-icon"></ion-icon>
-          Capturar {{ tipoDocumentoSeleccionado }}
-        </ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p>Utiliza la cámara para capturar el documento y extraer su texto automáticamente.</p>
-        <ion-button 
-          class="primary-action"
-          expand="block" 
-          fill="solid" 
-          (click)="takePicture()"
-          [disabled]="isProcessing">
-          <ion-icon name="camera" slot="start"></ion-icon>
-          Capturar Documento
-        </ion-button>
+    <!-- Sección: Botón de captura principal -->
+    <div *ngIf="!capturedImage && !showTipoSelector" class="gest-section">
+      <div class="gest-card">
+        <div class="gest-card-header">
+          <ion-icon name="camera" class="gest-card-icon"></ion-icon>
+          <h2 class="gest-card-title">Capturar {{ tipoDocumentoSeleccionado }}</h2>
+        </div>
+        <p class="gest-card-description">Haz una foto del documento para extraer su información automáticamente</p>
         
-        <ion-button 
-          class="secondary-action"
-          expand="block" 
-          fill="outline" 
-          (click)="volverASeleccionarTipo()">
-          <ion-icon name="arrow-back" slot="start"></ion-icon>
-          Cambiar Tipo de Documento
-        </ion-button>
-      </ion-card-content>
-    </ion-card>
-
-    <!-- Imagen capturada -->
-    <ion-card *ngIf="capturedImage" class="gestion-image-card minimal-card">
-      <ion-card-content>
-        <ion-img [src]="capturedImage" alt="Documento capturado" class="captured-image"></ion-img>
-      </ion-card-content>
-    </ion-card>
-
-    <!-- Procesamiento OCR -->
-    <ion-card *ngIf="isProcessing" class="gestion-processing-card minimal-card">
-      <ion-card-content>
-        <div class="processing-content">
-          <ion-spinner name="crescent"></ion-spinner>
-          <p>Procesando imagen y extrayendo texto...</p>
+        <div class="gest-action-buttons">
+          <ion-button 
+            class="gest-primary-btn"
+            expand="block" 
+            (click)="takePicture()"
+            [disabled]="isProcessing">
+            <ion-icon name="camera" slot="start"></ion-icon>
+            Abrir Cámara
+          </ion-button>
+          
+          <ion-button 
+            class="gest-secondary-btn"
+            expand="block" 
+            fill="outline"
+            (click)="volverASeleccionarTipo()">
+            <ion-icon name="arrow-back" slot="start"></ion-icon>
+            Cambiar Tipo
+          </ion-button>
         </div>
-      </ion-card-content>
-    </ion-card>
+      </div>
+    </div>
 
-    <!-- Card de edición de datos extraídos -->
-    <ion-card *ngIf="showEditCard && documentoExtraido" class="gestion-edit-card minimal-card">
-      <ion-card-header class="gestion-edit-header">
-        <ion-card-title class="edit-title">
-          <ion-icon [name]="modoEdicion ? 'create' : 'document-text'" class="title-icon"></ion-icon>
-          {{ modoEdicion ? 'Editar Documento' : 'Datos Extraídos del Documento' }}
-        </ion-card-title>
-        <p class="edit-subtitle">
-          {{ modoEdicion ? 'Modifica la información del documento' : 'Revisa y edita la información extraída automáticamente' }}
-        </p>
-        <div *ngIf="modoEdicion" class="edit-mode-indicator">
-          <ion-icon name="information-circle"></ion-icon>
-          Modo de edición: Modificando documento existente
+    <!-- Sección: Imagen capturada -->
+    <div *ngIf="capturedImage" class="gest-section">
+      <div class="gest-image-card">
+        <div class="gest-image-container">
+          <img [src]="capturedImage" alt="Documento capturado" class="gest-captured-image">
         </div>
-      </ion-card-header>
-      <ion-card-content class="gestion-edit-content">
-        <form class="gestion-edit-form">
-          <!-- Fechas principales -->
-          <div class="gestion-fechas-section">
-            <div class="gestion-section-header">
-              <ion-icon name="calendar" class="section-icon"></ion-icon>
-              <h3 class="section-title">Fechas del Documento</h3>
+      </div>
+    </div>
+
+    <!-- Sección: Procesando OCR -->
+    <div *ngIf="isProcessing" class="gest-section">
+      <div class="gest-processing-card">
+        <div class="gest-spinner-container">
+          <ion-spinner name="circular"></ion-spinner>
+        </div>
+        <h3 class="gest-processing-title">Procesando...</h3>
+        <p class="gest-processing-text">Extrayendo información del documento</p>
+      </div>
+    </div>
+
+    <!-- Sección: Formulario de edición -->
+    <div *ngIf="showEditCard && documentoExtraido" class="gest-section">
+      <div class="gest-card">
+        <div class="gest-card-header gest-edit-header">
+          <ion-icon [name]="modoEdicion ? 'create' : 'document-text'" class="gest-card-icon"></ion-icon>
+          <h2 class="gest-card-title">{{ modoEdicion ? 'Editar Documento' : 'Datos Extraídos' }}</h2>
+          <p class="gest-edit-subtitle">{{ modoEdicion ? 'Modifica la información del documento' : 'Revisa y edita los datos' }}</p>
+          <div *ngIf="modoEdicion" class="gest-edit-badge">
+            <ion-icon name="information-circle"></ion-icon>
+            <span>Modo edición</span>
+          </div>
+        </div>
+
+        <form class="gest-edit-form">
+          <!-- Fechas -->
+          <div class="gest-fechas-card">
+            <div class="gest-fechas-header">
+              <ion-icon name="calendar" class="gest-fechas-icon"></ion-icon>
+              <h3 class="gest-fechas-title">Fechas del Documento</h3>
             </div>
-            <div class="gestion-fechas-info">
-              <p>Las fechas han sido detectadas automáticamente. Verifica que sean correctas.</p>
+            <p class="gest-fechas-info">Las fechas fueron detectadas automáticamente. Verifica que sean correctas.</p>
+            
+            <div class="gest-input-wrapper">
+              <label class="gest-input-label">
+                <ion-icon name="calendar-outline"></ion-icon>
+                Fecha de Emisión *
+              </label>
+              <ion-input 
+                type="text" 
+                [(ngModel)]="documentoExtraido.fechaEmision"
+                placeholder="DD/MM/YYYY"
+                name="fechaEmision"
+                class="gest-modern-input"></ion-input>
             </div>
             
-            <div class="gestion-input-group">
-              <ion-item class="gestion-modern-input-item">
-                <ion-label position="stacked" class="gestion-input-label">
-                  <ion-icon name="calendar-outline" class="label-icon"></ion-icon>
-                  Fecha de Emisión *
-                </ion-label>
-                <ion-input 
-                  type="text" 
-                  [(ngModel)]="documentoExtraido.fechaEmision"
-                  placeholder="DD/MM/YYYY"
-                  name="fechaEmision"
-                  class="gestion-modern-input">
-                </ion-input>
-              </ion-item>
-            </div>
-            
-            <div class="gestion-input-group">
-              <ion-item class="gestion-modern-input-item">
-                <ion-label position="stacked" class="gestion-input-label">
-                  <ion-icon name="time-outline" class="label-icon"></ion-icon>
-                  Fecha de Expiración *
-                </ion-label>
-                <ion-input 
-                  type="text" 
-                  [(ngModel)]="documentoExtraido.fechaExpiracion"
-                  placeholder="DD/MM/YYYY"
-                  name="fechaExpiracion"
-                  class="gestion-modern-input">
-                </ion-input>
-              </ion-item>
+            <div class="gest-input-wrapper">
+              <label class="gest-input-label">
+                <ion-icon name="time-outline"></ion-icon>
+                Fecha de Expiración *
+              </label>
+              <ion-input 
+                type="text" 
+                [(ngModel)]="documentoExtraido.fechaExpiracion"
+                placeholder="DD/MM/YYYY"
+                name="fechaExpiracion"
+                class="gest-modern-input"></ion-input>
             </div>
           </div>
           
           <!-- Botones de acción -->
-          <div class="gestion-action-buttons">
+          <div class="gest-action-buttons gest-edit-actions">
             <ion-button 
-              class="gestion-save-btn primary-action"
+              class="gest-primary-btn"
               expand="block" 
-              fill="solid" 
               (click)="guardarDocumento()">
               <ion-icon name="save" slot="start"></ion-icon>
-              {{ modoEdicion ? 'Actualizar Documento' : 'Guardar Documento' }}
+              {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
             </ion-button>
             
             <ion-button 
               *ngIf="modoEdicion"
-              class="gestion-delete-btn"
+              class="gest-danger-btn"
               expand="block" 
-              fill="outline" 
+              fill="outline"
               color="danger"
               (click)="eliminarDocumento()">
               <ion-icon name="trash-outline" slot="start"></ion-icon>
-              Eliminar Documento
+              Eliminar
             </ion-button>
             
             <ion-button 
-              class="gestion-secondary-action"
+              class="gest-secondary-btn"
               expand="block" 
-              fill="outline" 
+              fill="outline"
               (click)="cancelarEdicion()">
               <ion-icon name="close" slot="start"></ion-icon>
               Cancelar
             </ion-button>
           </div>
         </form>
-      </ion-card-content>
-    </ion-card>
-    
-    <!-- Botón flotante para nueva captura -->
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="capturedImage && !isProcessing">
-      <ion-fab-button class="minimal-fab" (click)="takePicture()">
-        <ion-icon name="camera"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
+      </div>
+    </div>
   </div>
+  
+  <!-- FAB para nueva captura -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="capturedImage && !isProcessing">
+    <ion-fab-button (click)="takePicture()" class="gest-fab">
+      <ion-icon name="camera"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
-  <!-- Alert para mostrar mensajes -->
+  <!-- Alert para mensajes -->
   <ion-alert
     [isOpen]="showAlert"
     [header]="'Información'"

@@ -1,17 +1,4 @@
 // ========================================
-// PÁGINA DE GESTIÓN DE DOCUMENTOS - ESTILOS TRANSFERIDOS A GLOBAL.SCSS
+// ESTILOS CONSOLIDADOS EN GLOBAL.SCSS
 // ========================================
-// Todos los estilos han sido movidos al archivo global.scss para evitar
-// el error de presupuesto de CSS. Los estilos están disponibles con el
-// prefijo 'gestion-' para mantener la organización.
-
-// Ejemplo de uso de las clases globales:
-// - .gestion-container (en lugar de .container)
-// - .gestion-main-card (en lugar de .main-card)
-// - .gestion-edit-card (en lugar de .edit-card)
-// - .gestion-action-buttons (en lugar de .action-buttons)
-// etc.
-
-// Si necesitas estilos específicos adicionales para esta página,
-// puedes agregarlos aquí, pero mantén el archivo pequeño para evitar
-// problemas de presupuesto de CSS.
+// Todos los estilos se encuentran en src/global.scss

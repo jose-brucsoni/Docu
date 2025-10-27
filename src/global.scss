@@ -59,6 +59,67 @@
    ESTILOS COMUNES DE AUTENTICACIÓN - DISEÑO MINIMALISTA
    ======================================== */
 
+/* Animaciones específicas de login */
+.login-container {
+  animation: loginSlideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Efectos de hover mejorados */
+.login-button:hover:not([disabled]) {
+  transform: translateY(-3px);
+  --box-shadow: 0 16px 40px rgba(216, 106, 19, 0.4);
+}
+
+.input-container:hover {
+  border-color: #d0d7de;
+  background: #f6f8fa;
+}
+
+/* Estados de focus mejorados */
+.modern-input:focus {
+  --color: var(--docu-text);
+  font-weight: 600;
+}
+
+/* Estados de validación específicos */
+.input-container.error {
+  border-color: #d32f2f;
+  background: #ffebee;
+}
+
+.input-container.error .input-icon {
+  color: #d32f2f;
+}
+
+.input-container.success {
+  border-color: var(--docu-success);
+  background: #f1f8e9;
+}
+
+.input-container.success .input-icon {
+  color: var(--docu-success);
+}
+
+/* Mejoras de accesibilidad */
+.login-button:focus-visible {
+  outline: 3px solid rgba(216, 106, 19, 0.3);
+  outline-offset: 2px;
+}
+
+.forgot-link:focus-visible,
+.register-link:focus-visible {
+  outline: 2px solid var(--docu-orange);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Ajuste específico de la tarjeta de registro */
+.register-card {
+  width: min(92vw, 430px);
+  border-radius: 22px;
+  box-shadow: 0 18px 44px rgba(0,0,0,.28);
+}
+
 /* Fondo minimalista con gradiente sutil */
 ion-content.login-screen,
 ion-content.register-screen {
@@ -149,6 +210,16 @@ ion-content.register-screen {
 
 /* Ajustes para móviles - Header simplificado */
 @media (max-width: 768px) {
+  .login-container {
+    margin: 0;
+    padding: 32px 20px;
+    border-radius: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
   .login-header {
     margin-bottom: 24px;
   }
@@ -165,13 +236,88 @@ ion-content.register-screen {
   }
 
   .login-title {
-    font-size: 2.2rem;
+    font-size: 2rem;
     margin: 0 0 6px 0;
   }
 
   .login-subtitle {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     line-height: 1.4;
+  }
+
+  .input-container {
+    min-height: 48px;
+    padding: 0 12px;
+  }
+
+  .modern-input {
+    font-size: 14px;
+  }
+
+  .login-button {
+    height: 48px;
+    font-size: 0.9rem;
+  }
+
+  .form-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .forgot-link {
+    align-self: flex-end;
+    font-size: 0.8rem;
+  }
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media (max-width: 360px) {
+  .login-container {
+    margin: 0;
+    padding: 24px 16px;
+    border-radius: 0;
+    height: 100vh;
+  }
+
+  .login-title {
+    font-size: 1.8rem;
+  }
+
+  .login-logo {
+    width: 56px;
+    height: 56px;
+  }
+
+  .input-group {
+    margin-bottom: 16px;
+  }
+
+  .input-container {
+    min-height: 44px;
+    padding: 0 10px;
+  }
+
+  .input-icon {
+    font-size: 16px;
+    margin-right: 8px;
+  }
+
+  .modern-input {
+    font-size: 13px;
+  }
+
+  .login-button {
+    height: 44px;
+    font-size: 0.85rem;
+  }
+
+  .form-options {
+    gap: 10px;
+  }
+
+  .forgot-link {
+    font-size: 0.75rem;
   }
 }
 
@@ -441,6 +587,123 @@ ion-content.register-screen {
   .login-footer {
     font-size: 0.9rem;
   }
+
+  /* Estilos específicos del menú principal para móviles */
+  .minimal-header-section {
+    padding: 16px;
+  }
+
+  .main-title {
+    font-size: 1.5rem;
+  }
+
+  .main-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .minimal-search-section,
+  .minimal-filters-section {
+    padding: 12px 16px;
+  }
+
+  .filters-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .minimal-select {
+    min-width: auto;
+  }
+
+  .clear-filters {
+    align-self: flex-end;
+    margin-top: 8px;
+  }
+
+  .minimal-stats-section {
+    padding: 16px;
+  }
+
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .stat-item {
+    padding: 12px 8px;
+  }
+
+  .stat-number {
+    font-size: 1.2rem;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+  }
+
+  .minimal-documents-section {
+    padding: 16px;
+  }
+
+  .documents-container {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .minimal-document-card {
+    padding: 16px;
+  }
+
+  .document-main {
+    gap: 12px;
+  }
+
+  .document-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .document-icon ion-icon {
+    font-size: 20px;
+  }
+
+  .document-title {
+    font-size: 1rem;
+  }
+
+  .document-actions {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .action-btn {
+    height: 28px;
+    width: 28px;
+  }
+
+  .action-btn ion-icon {
+    font-size: 14px;
+  }
+
+  .minimal-pagination {
+    padding: 16px;
+  }
+
+  .pagination-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pagination-btn {
+    height: 36px;
+    width: 36px;
+  }
+
+  .pagination-info {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
 }
 
 .footer-text {
@@ -475,6 +738,21 @@ ion-content.register-screen {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-5px); }
   75% { transform: translateX(5px); }
+}
+
+@keyframes loginSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(20px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* ========================================
@@ -1549,6 +1827,437 @@ ion-button.secondary-action:hover {
 }
 
 /* ========================================
+   ESTILOS HOME PAGE
+   ======================================== */
+
+#container {
+  text-align: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#container strong {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+#container p {
+  font-size: 16px;
+  line-height: 22px;
+  color: #8c8c8c;
+  margin: 0;
+}
+
+#container a {
+  text-decoration: none;
+}
+
+/* ========================================
+   PÁGINA DE GESTIÓN DE DOCUMENTOS - REDISEÑO MÓVIL
+   ======================================== */
+
+// Fondo y contenido general
+.gest-docu-content {
+  --background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
+  --color: #1e1e1e;
+}
+
+// Header con gradiente
+.gest-header {
+  background: linear-gradient(135deg, var(--docu-orange-dark) 0%, var(--docu-orange) 100%);
+  padding: 2rem 1.5rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  color: white;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+}
+
+.gest-header-icon {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  
+  ion-icon {
+    font-size: 2rem;
+    color: white;
+  }
+}
+
+.gest-header-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.gest-header-subtitle {
+  font-size: 0.95rem;
+  margin: 0;
+  opacity: 0.95;
+  position: relative;
+  z-index: 1;
+}
+
+// Contenido principal
+.gest-content {
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.gest-section {
+  margin-bottom: 1.5rem;
+}
+
+// Cards generales
+.gest-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(216, 106, 19, 0.1);
+}
+
+.gest-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  
+  &.gest-edit-header {
+    background: linear-gradient(135deg, rgba(216, 106, 19, 0.05), rgba(216, 106, 19, 0.02));
+    padding: 1rem;
+    border-radius: 12px;
+    margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+  }
+}
+
+.gest-card-icon {
+  font-size: 2rem;
+  color: var(--docu-orange);
+  margin-bottom: 0.5rem;
+}
+
+.gest-card-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e1e1e;
+  margin: 0;
+}
+
+.gest-card-description {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+}
+
+// Botones de tipo
+.gest-tipo-options {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.gest-tipo-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  
+  .gest-tipo-icon {
+    font-size: 1.5rem;
+    color: var(--docu-orange);
+  }
+  
+  .gest-tipo-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e1e1e;
+    flex: 1;
+    text-align: left;
+  }
+  
+  &:hover {
+    background: rgba(216, 106, 19, 0.05);
+    border-color: var(--docu-orange);
+    transform: translateY(-2px);
+  }
+  
+  &.selected {
+    background: var(--docu-orange);
+    border-color: var(--docu-orange);
+    color: white;
+    
+    .gest-tipo-icon,
+    .gest-tipo-label {
+      color: white;
+    }
+  }
+}
+
+// Botones principales
+.gest-primary-btn {
+  --background: var(--docu-orange);
+  --background-hover: var(--docu-orange-hover);
+  --background-activated: var(--docu-orange-dark);
+  --color: white;
+  --border-radius: 16px;
+  --box-shadow: 0 6px 20px rgba(216, 106, 19, 0.3);
+  font-weight: 700;
+  font-size: 1rem;
+  height: 56px;
+  margin-bottom: 0.75rem;
+  
+  &:hover {
+    transform: translateY(-2px);
+    --box-shadow: 0 8px 24px rgba(216, 106, 19, 0.4);
+  }
+}
+
+.gest-secondary-btn {
+  --color: var(--docu-orange);
+  --border-color: var(--docu-orange);
+  --border-width: 2px;
+  --border-radius: 16px;
+  --background: rgba(216, 106, 19, 0.05);
+  font-weight: 600;
+  font-size: 1rem;
+  height: 52px;
+  
+  &:hover {
+    --background: rgba(216, 106, 19, 0.1);
+    transform: translateY(-1px);
+  }
+}
+
+.gest-danger-btn {
+  --color: #eb445a;
+  --border-color: #eb445a;
+  --border-width: 2px;
+  --border-radius: 16px;
+  --background: rgba(235, 68, 90, 0.05);
+  font-weight: 600;
+  font-size: 1rem;
+  height: 52px;
+  margin-bottom: 0.75rem;
+  
+  &:hover {
+    --background: rgba(235, 68, 90, 0.1);
+  }
+}
+
+// Cards de acción
+.gest-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  
+  &.gest-edit-actions {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+  }
+}
+
+// Card de imagen
+.gest-image-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(216, 106, 19, 0.1);
+}
+
+.gest-image-container {
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.gest-captured-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+// Card de procesamiento
+.gest-processing-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.gest-spinner-container {
+  margin-bottom: 1rem;
+  
+  ion-spinner {
+    --color: var(--docu-orange);
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.gest-processing-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1e1e1e;
+  margin: 0 0 0.5rem 0;
+}
+
+.gest-processing-text {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0;
+}
+
+// Edición
+.gest-edit-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(56, 128, 255, 0.1);
+  border-radius: 8px;
+  color: #3880ff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0.75rem;
+  
+  ion-icon {
+    font-size: 1.1rem;
+  }
+}
+
+.gest-edit-subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.gest-edit-form {
+  // Estilos del formulario
+}
+
+// Card de fechas
+.gest-fechas-card {
+  background: linear-gradient(135deg, rgba(45, 211, 111, 0.08), rgba(45, 211, 111, 0.03));
+  border: 1px solid rgba(45, 211, 111, 0.2);
+  border-radius: 16px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.gest-fechas-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.gest-fechas-icon {
+  font-size: 1.3rem;
+  color: #2dd36f;
+}
+
+.gest-fechas-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e1e1e;
+  margin: 0;
+}
+
+.gest-fechas-info {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0 0 1rem 0;
+  line-height: 1.4;
+}
+
+// Inputs modernos
+.gest-input-wrapper {
+  margin-bottom: 1.25rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.gest-input-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e1e1e;
+  margin-bottom: 0.5rem;
+  
+  ion-icon {
+    font-size: 1rem;
+    color: var(--docu-orange);
+  }
+}
+
+.gest-modern-input {
+  --background: #f8f9fa;
+  --color: #1e1e1e;
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+  --border-radius: 12px;
+  --border: 2px solid #e9ecef;
+  font-size: 1rem;
+  font-weight: 500;
+  height: 52px;
+  
+  &:focus {
+    --border-color: var(--docu-orange);
+  }
+}
+
+// FAB
+.gest-fab {
+  --background: var(--docu-orange);
+  --background-hover: var(--docu-orange-hover);
+  --background-activated: var(--docu-orange-dark);
+  --box-shadow: 0 8px 24px rgba(216, 106, 19, 0.3);
+  
+  &:hover {
+    transform: scale(1.1);
+    --box-shadow: 0 12px 32px rgba(216, 106, 19, 0.4);
+  }
+}
+
+/* ========================================
    PÁGINA DE GESTIÓN DE DOCUMENTOS - DISEÑO MINIMALISTA
    ======================================== */
 
@@ -2376,4 +3085,5 @@ ion-button.secondary-action:hover {
       margin-right: 10px;
     }
   }
+
 }
