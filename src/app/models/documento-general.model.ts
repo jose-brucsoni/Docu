@@ -12,6 +12,7 @@ export interface DocumentoGeneral {
   estadoCivil?: string;
   grupoSanguineo?: string;
   profesion?: string;
+  imagenPath?: string; // Ruta de la imagen guardada localmente
   fechaCreacion?: Date;
   fechaActualizacion?: Date;
 }

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DocumentStorageService } from '../../services/document-storage.service';
+import { DocumentoGeneral } from '../../models/documento-general.model';
 import { 
   IonContent, 
   IonButton,
@@ -46,68 +48,9 @@ interface Documento {
 })
 export class MenuPrincipalPage implements OnInit {
   
-  // Datos hardcodeados
-  documentos: Documento[] = [
-    {
-      id: 1,
-      nombre: 'Cédula de Identidad',
-      categoria: 'identification',
-      fechaAgregado: '2024-01-15',
-      fechaVencimiento: '2029-01-15',
-      estado: 'active',
-      tipo: 'PDF',
-      tamano: '2.3 MB'
-    },
-    {
-      id: 2,
-      nombre: 'Pasaporte',
-      categoria: 'identification',
-      fechaAgregado: '2024-02-10',
-      fechaVencimiento: '2024-12-10',
-      estado: 'expiring_soon',
-      tipo: 'PDF',
-      tamano: '1.8 MB'
-    },
-    {
-      id: 3,
-      nombre: 'Contrato de Trabajo',
-      categoria: 'legal',
-      fechaAgregado: '2023-12-01',
-      fechaVencimiento: '2024-12-01',
-      estado: 'expired',
-      tipo: 'PDF',
-      tamano: '3.2 MB'
-    },
-    {
-      id: 4,
-      nombre: 'Examen Médico',
-      categoria: 'medical',
-      fechaAgregado: '2024-03-05',
-      fechaVencimiento: '2025-03-05',
-      estado: 'active',
-      tipo: 'PDF',
-      tamano: '1.5 MB'
-    },
-    {
-      id: 5,
-      nombre: 'Estado de Cuenta Bancario',
-      categoria: 'financial',
-      fechaAgregado: '2024-03-20',
-      fechaVencimiento: '2024-04-20',
-      estado: 'expiring_soon',
-      tipo: 'PDF',
-      tamano: '0.8 MB'
-    },
-    {
-      id: 6,
-      nombre: 'Título Universitario',
-      categoria: 'education',
-      fechaAgregado: '2023-06-15',
-      estado: 'active',
-      tipo: 'PDF',
-      tamano: '4.1 MB'
-    }
-  ];
+  // Datos cargados desde almacenamiento local
+  documentos: Documento[] = [];
+  documentosCargados: boolean = false;
 
   // Filtros
   categoriaFiltro: string = '';
@@ -130,11 +73,120 @@ export class MenuPrincipalPage implements OnInit {
   documentosPorPagina: number = 6;
   totalPaginas: number = 1;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private documentStorageService: DocumentStorageService
+  ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.cargarDocumentos();
     this.calcularEstadisticas();
     this.totalPaginas = Math.ceil(this.documentos.length / this.documentosPorPagina);
+  }
+
+  async ionViewWillEnter() {
+    // Recargar documentos cada vez que se entra a la página
+    await this.cargarDocumentos();
+    this.calcularEstadisticas();
+    this.totalPaginas = Math.ceil(this.documentos.length / this.documentosPorPagina);
+  }
+
+  async cargarDocumentos() {
+    try {
+      console.log('Cargando documentos desde almacenamiento...');
+      const documentosGuardados = await this.documentStorageService.obtenerTodosLosDocumentos();
+      
+      console.log('Documentos obtenidos del storage:', documentosGuardados);
+      console.log('Cantidad de documentos:', documentosGuardados.length);
+      
+      this.documentos = documentosGuardados.map((doc: DocumentoGeneral) => this.convertirADocumentoVista(doc));
+      this.documentosCargados = true;
+      
+      console.log('Documentos convertidos para vista:', this.documentos.length);
+      console.log('Documentos en vista:', this.documentos);
+      
+      // Recalcular paginación
+      this.totalPaginas = Math.ceil(this.documentos.length / this.documentosPorPagina);
+    } catch (error) {
+      console.error('Error al cargar documentos:', error);
+      this.documentos = [];
+    }
+  }
+
+  private convertirADocumentoVista(docGeneral: DocumentoGeneral): Documento {
+    console.log('Convirtiendo documento:', docGeneral);
+    
+    // Determinar estado basado en fechas
+    let estado: 'active' | 'expiring_soon' | 'expired' = 'active';
+    
+    if (docGeneral.fechaExpiracion) {
+      const fechaExpiracion = this.convertirFechaADate(docGeneral.fechaExpiracion);
+      if (fechaExpiracion) {
+        const hoy = new Date();
+        const diasRestantes = Math.ceil((fechaExpiracion.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24));
+        
+        if (diasRestantes < 0) {
+          estado = 'expired';
+        } else if (diasRestantes <= 30) {
+          estado = 'expiring_soon';
+        } else {
+          estado = 'active';
+        }
+      }
+    }
+
+    // Generar nombre descriptivo
+    let nombre = docGeneral.tipoDocumento;
+    if (docGeneral.numeroDocumento && docGeneral.numeroDocumento !== '') {
+      nombre += ' - ' + docGeneral.numeroDocumento;
+    }
+
+    // Convertir fecha de creación a string ISO si es necesario
+    let fechaAgregado: string;
+    if (docGeneral.fechaCreacion) {
+      if (docGeneral.fechaCreacion instanceof Date) {
+        fechaAgregado = docGeneral.fechaCreacion.toISOString();
+      } else if (typeof docGeneral.fechaCreacion === 'string') {
+        fechaAgregado = docGeneral.fechaCreacion;
+      } else {
+        // Si viene de JSON puede ser un objeto con propiedades
+        fechaAgregado = new Date().toISOString();
+      }
+    } else {
+      fechaAgregado = new Date().toISOString();
+    }
+
+    const documento = {
+      id: parseInt(docGeneral.id?.replace('doc_', '') || '0'),
+      nombre,
+      categoria: this.mapearTipoACategoria(docGeneral.tipoDocumento),
+      fechaAgregado,
+      fechaVencimiento: docGeneral.fechaExpiracion,
+      estado,
+      tipo: 'IMAGEN',
+      tamano: 'N/A'
+    };
+    
+    console.log('Documento convertido:', documento);
+    return documento;
+  }
+
+  private mapearTipoACategoria(tipoDocumento: string): string {
+    const mapeo: { [key: string]: string } = {
+      'Cedula de identidad': 'identification',
+      'Licencia de Conducir': 'identification',
+      'Otros': 'general'
+    };
+    return mapeo[tipoDocumento] || 'general';
+  }
+
+  private convertirFechaADate(fecha: string): Date | null {
+    try {
+      const [dia, mes, año] = fecha.split('/').map(Number);
+      return new Date(año, mes - 1, dia);
+    } catch (error) {
+      return null;
+    }
   }
 
   calcularEstadisticas() {
@@ -283,11 +335,10 @@ export class MenuPrincipalPage implements OnInit {
     return textos[estado] || 'Desconocido';
   }
 
-  onRefresh(event: any) {
-    setTimeout(() => {
-      this.calcularEstadisticas();
-      event.target.complete();
-    }, 1000);
+  async onRefresh(event: any) {
+    await this.cargarDocumentos();
+    this.calcularEstadisticas();
+    event.target.complete();
   }
 
   agregarDocumento() {
@@ -304,8 +355,25 @@ export class MenuPrincipalPage implements OnInit {
     // Aquí iría la lógica para editar el documento
   }
 
-  eliminarDocumento(documento: Documento) {
-    console.log('Eliminar documento:', documento);
-    // Aquí iría la lógica para eliminar el documento
+  async eliminarDocumento(documento: Documento) {
+    try {
+      // Buscar el ID real del documento en el almacenamiento
+      const documentosGuardados = await this.documentStorageService.obtenerTodosLosDocumentos();
+      const documentoEliminar = documentosGuardados.find((doc: DocumentoGeneral) => 
+        parseInt(doc.id?.replace('doc_', '') || '0') === documento.id
+      );
+
+      if (documentoEliminar && documentoEliminar.id) {
+        await this.documentStorageService.eliminarDocumento(documentoEliminar.id);
+        
+        // Recargar documentos
+        await this.cargarDocumentos();
+        this.calcularEstadisticas();
+        
+        console.log('Documento eliminado exitosamente');
+      }
+    } catch (error) {
+      console.error('Error al eliminar documento:', error);
+    }
   }
 }

@@ -3,9 +3,9 @@
 <ion-content class="minimal-content" [fullscreen]="true">
   
 
-  <div class="container page-container">
+  <div class="gestion-container page-container">
     <!-- Selector de tipo de documento -->
-    <ion-card *ngIf="showTipoSelector" class="tipo-selector-card">
+    <ion-card *ngIf="showTipoSelector" class="gestion-tipo-selector-card">
       <ion-card-header>
         <ion-card-title>
           <ion-icon name="document-text" class="title-icon"></ion-icon>
@@ -15,10 +15,10 @@
       <ion-card-content>
         <p>Antes de capturar, selecciona el tipo de documento que vas a escanear:</p>
         
-        <div class="tipo-options">
+        <div class="gestion-tipo-options">
           <ion-button 
             *ngFor="let opcion of opcionesTipoDocumento"
-            class="tipo-option-btn"
+            class="gestion-tipo-option-btn"
             [class.selected]="tipoDocumentoSeleccionado === opcion.value"
             fill="outline"
             expand="block"
@@ -41,7 +41,7 @@
     </ion-card>
 
     <!-- Botón principal para capturar documento (cuando ya se seleccionó el tipo) -->
-    <ion-card *ngIf="!capturedImage && !showTipoSelector" class="main-card minimal-card">
+    <ion-card *ngIf="!capturedImage && !showTipoSelector" class="gestion-main-card minimal-card">
       <ion-card-header>
         <ion-card-title>
           <ion-icon name="document-text" class="title-icon"></ion-icon>
@@ -72,14 +72,14 @@
     </ion-card>
 
     <!-- Imagen capturada -->
-    <ion-card *ngIf="capturedImage" class="image-card minimal-card">
+    <ion-card *ngIf="capturedImage" class="gestion-image-card minimal-card">
       <ion-card-content>
         <ion-img [src]="capturedImage" alt="Documento capturado" class="captured-image"></ion-img>
       </ion-card-content>
     </ion-card>
 
     <!-- Procesamiento OCR -->
-    <ion-card *ngIf="isProcessing" class="processing-card minimal-card">
+    <ion-card *ngIf="isProcessing" class="gestion-processing-card minimal-card">
       <ion-card-content>
         <div class="processing-content">
           <ion-spinner name="crescent"></ion-spinner>
@@ -89,29 +89,29 @@
     </ion-card>
 
     <!-- Card de edición de datos extraídos -->
-    <ion-card *ngIf="showEditCard && documentoExtraido" class="edit-card minimal-card">
-      <ion-card-header class="edit-header">
+    <ion-card *ngIf="showEditCard && documentoExtraido" class="gestion-edit-card minimal-card">
+      <ion-card-header class="gestion-edit-header">
         <ion-card-title class="edit-title">
           <ion-icon name="create" class="title-icon"></ion-icon>
           Datos Extraídos del Documento
         </ion-card-title>
         <p class="edit-subtitle">Revisa y edita la información extraída automáticamente</p>
       </ion-card-header>
-      <ion-card-content class="edit-content">
-        <form class="edit-form">
+      <ion-card-content class="gestion-edit-content">
+        <form class="gestion-edit-form">
           <!-- Fechas principales -->
-          <div class="fechas-section">
-            <div class="section-header">
+          <div class="gestion-fechas-section">
+            <div class="gestion-section-header">
               <ion-icon name="calendar" class="section-icon"></ion-icon>
               <h3 class="section-title">Fechas del Documento</h3>
             </div>
-            <div class="fechas-info">
+            <div class="gestion-fechas-info">
               <p>Las fechas han sido detectadas automáticamente. Verifica que sean correctas.</p>
             </div>
             
-            <div class="input-group">
-              <ion-item class="modern-input-item">
-                <ion-label position="stacked" class="input-label">
+            <div class="gestion-input-group">
+              <ion-item class="gestion-modern-input-item">
+                <ion-label position="stacked" class="gestion-input-label">
                   <ion-icon name="calendar-outline" class="label-icon"></ion-icon>
                   Fecha de Emisión *
                 </ion-label>
@@ -120,14 +120,14 @@
                   [(ngModel)]="documentoExtraido.fechaEmision"
                   placeholder="DD/MM/YYYY"
                   name="fechaEmision"
-                  class="modern-input">
+                  class="gestion-modern-input">
                 </ion-input>
               </ion-item>
             </div>
             
-            <div class="input-group">
-              <ion-item class="modern-input-item">
-                <ion-label position="stacked" class="input-label">
+            <div class="gestion-input-group">
+              <ion-item class="gestion-modern-input-item">
+                <ion-label position="stacked" class="gestion-input-label">
                   <ion-icon name="time-outline" class="label-icon"></ion-icon>
                   Fecha de Expiración *
                 </ion-label>
@@ -136,16 +136,16 @@
                   [(ngModel)]="documentoExtraido.fechaExpiracion"
                   placeholder="DD/MM/YYYY"
                   name="fechaExpiracion"
-                  class="modern-input">
+                  class="gestion-modern-input">
                 </ion-input>
               </ion-item>
             </div>
           </div>
           
           <!-- Botones de acción -->
-          <div class="action-buttons">
+          <div class="gestion-action-buttons">
             <ion-button 
-              class="save-btn primary-action"
+              class="gestion-save-btn primary-action"
               expand="block" 
               fill="solid" 
               (click)="guardarDocumento()">
@@ -154,7 +154,7 @@
             </ion-button>
             
             <ion-button 
-              class="secondary-action"
+              class="gestion-secondary-action"
               expand="block" 
               fill="outline" 
               (click)="cancelarEdicion()">

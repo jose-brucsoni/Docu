@@ -25,17 +25,6 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
-
 /* ========================================
    VARIABLES GLOBALES
    ======================================== */
@@ -1549,6 +1538,520 @@ ion-button.secondary-action:hover {
 }
 
 /* ========================================
+   PÁGINA DE GESTIÓN DE DOCUMENTOS - DISEÑO MINIMALISTA
+   ======================================== */
+
+// Container común para páginas
+.gestion-container {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  
+  // En móviles, usar todo el ancho disponible
+  @media (max-width: 768px) {
+    padding: 0;
+    max-width: 100%;
+    margin: 0;
+  }
+}
+
+// Cards minimalistas para gestión de documentos
+.gestion-main-card,
+.gestion-image-card,
+.gestion-processing-card,
+.gestion-edit-card,
+.gestion-text-card {
+  background: var(--docu-white);
+  border: 1px solid #e9ecef;
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  position: relative;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.3s ease-in;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  color: var(--docu-text);
+  
+  // En móviles, adaptar a pantalla completa
+  @media (max-width: 768px) {
+    border-radius: 0;
+    margin-bottom: 0;
+    border-left: none;
+    border-right: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.gestion-main-card:hover,
+.gestion-image-card:hover,
+.gestion-processing-card:hover,
+.gestion-edit-card:hover,
+.gestion-text-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  border-color: var(--docu-orange);
+}
+
+// Card principal de captura
+.gestion-main-card {
+  text-align: center;
+  
+  ion-card-content p {
+    color: var(--docu-text-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+}
+
+// Card de imagen capturada
+.gestion-image-card {
+  .captured-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: var(--capture-border-radius);
+    box-shadow: var(--docu-shadow);
+  }
+}
+
+// Card de procesamiento
+.gestion-processing-card {
+  text-align: center;
+  
+  .processing-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    animation: pulse 1.5s ease-in-out infinite;
+    
+    ion-spinner {
+      --color: var(--docu-orange);
+    }
+    
+    p {
+      color: var(--docu-text-secondary);
+      margin: 0;
+    }
+  }
+}
+
+// Card de edición de datos - Diseño minimalista
+.gestion-edit-card {
+  background: var(--docu-white);
+  border: 1px solid #e9ecef;
+  border-radius: 20px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+    border-color: var(--docu-orange);
+  }
+  
+  // En móviles, pantalla completa
+  @media (max-width: 768px) {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    
+    &:hover {
+      transform: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+// Header de edición
+.gestion-edit-header {
+  background: linear-gradient(135deg, rgba(216, 106, 19, 0.05), rgba(216, 106, 19, 0.02));
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid rgba(216, 106, 19, 0.1);
+  
+  .edit-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--docu-text);
+    margin: 0 0 0.5rem 0;
+    
+    .title-icon {
+      font-size: 1.4rem;
+      color: var(--docu-orange);
+    }
+  }
+  
+  .edit-subtitle {
+    font-size: 0.9rem;
+    color: var(--docu-text-secondary);
+    margin: 0;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  
+  // En móviles, ajustar padding
+  @media (max-width: 768px) {
+    padding: 1.25rem 1rem 0.75rem;
+  }
+}
+
+// Contenido de edición
+.gestion-edit-content {
+  padding: 0;
+}
+
+.gestion-edit-form {
+  padding: 1.5rem;
+  
+  // En móviles, ajustar padding
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+// Sección de fechas
+.gestion-fechas-section {
+  background: linear-gradient(135deg, rgba(45, 211, 111, 0.08), rgba(45, 211, 111, 0.03));
+  border: 1px solid rgba(45, 211, 111, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, var(--docu-success), #4caf50);
+  }
+  
+  // En móviles, ajustar para pantalla completa
+  @media (max-width: 768px) {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    margin-bottom: 0;
+    padding: 1rem;
+    
+    &::before {
+      width: 3px;
+    }
+  }
+}
+
+.gestion-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  
+  .section-icon {
+    font-size: 1.2rem;
+    color: var(--docu-success);
+  }
+  
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--docu-text);
+    margin: 0;
+  }
+}
+
+.gestion-fechas-info {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(45, 211, 111, 0.2);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  
+  p {
+    font-size: 0.9rem;
+    color: var(--docu-text-secondary);
+    margin: 0;
+    text-align: center;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+}
+
+// Grupos de input para gestión
+.gestion-input-group {
+  margin-bottom: 1.25rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.gestion-modern-input-item {
+  --background: transparent;
+  --border-color: #e9ecef;
+  --border-radius: 12px;
+  --padding-start: 0;
+  --padding-end: 0;
+  --inner-padding-end: 0;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background: var(--docu-white);
+  
+  &:focus-within {
+    border-color: var(--docu-orange);
+    box-shadow: 0 0 0 3px rgba(216, 106, 19, 0.1);
+    transform: translateY(-1px);
+  }
+}
+
+.gestion-input-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--docu-text);
+  margin-bottom: 0.5rem;
+  
+  .label-icon {
+    font-size: 1rem;
+    color: var(--docu-orange);
+  }
+}
+
+.gestion-modern-input {
+  --background: transparent;
+  --color: var(--docu-text);
+  --placeholder-color: var(--docu-text-secondary);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  
+  &:focus {
+    --color: var(--docu-text);
+  }
+}
+
+// Botones de acción para gestión
+.gestion-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.gestion-save-btn {
+  --background: var(--docu-success);
+  --background-hover: #26c55a;
+  --background-activated: #1e9e4a;
+  --color: var(--docu-white);
+  --border-radius: 12px;
+  --box-shadow: 0 6px 20px rgba(45, 211, 111, 0.3);
+  font-weight: 700;
+  font-size: 1rem;
+  height: 52px;
+  transition: all 0.3s ease;
+  
+  &:hover:not([disabled]) {
+    transform: translateY(-2px);
+    --box-shadow: 0 8px 24px rgba(45, 211, 111, 0.4);
+  }
+}
+
+.gestion-secondary-action {
+  --color: var(--docu-orange);
+  --border-color: var(--docu-orange);
+  --border-width: 2px;
+  --border-radius: 12px;
+  background: rgba(216, 106, 19, 0.05);
+  font-weight: 600;
+  font-size: 1rem;
+  height: 52px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    --background: rgba(216, 106, 19, 0.1);
+    transform: translateY(-1px);
+  }
+}
+
+// Card de texto extraído
+.gestion-text-card {
+  .confidence-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-left: 0.5rem;
+    
+    &.low-confidence {
+      background: linear-gradient(135deg, var(--docu-danger), #f44336);
+      color: var(--docu-white);
+    }
+    
+    &.medium-confidence {
+      background: linear-gradient(135deg, var(--docu-warning), #ffb74d);
+      color: var(--docu-white);
+    }
+    
+    &.high-confidence {
+      background: linear-gradient(135deg, var(--docu-success), #4caf50);
+      color: var(--docu-white);
+    }
+  }
+  
+  .extracted-text {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: var(--capture-border-radius);
+    border-left: 4px solid var(--docu-orange);
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+  }
+  
+  .advanced-options {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: var(--docu-light);
+    border-radius: var(--capture-border-radius);
+    border: 1px solid var(--docu-border);
+    
+    .retry-button, .fallback-button, .diagnose-button, .simple-button {
+      margin-bottom: 0.5rem;
+    }
+    
+    .diagnose-button {
+      --color: var(--docu-warning);
+    }
+    
+    .simple-button {
+      --color: var(--docu-success);
+    }
+  }
+  
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+// Selector de tipo de documento
+.gestion-tipo-selector-card {
+  background: var(--docu-white);
+  border: 1px solid #e9ecef;
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  position: relative;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.3s ease-in;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  
+  ion-card-header {
+    padding: 0 0 16px 0;
+    text-align: center;
+    
+    ion-card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--docu-text);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+  }
+  
+  ion-card-content {
+    padding: 0;
+    
+    p {
+      font-size: 1rem;
+      color: var(--docu-text-secondary);
+      margin: 0 0 24px 0;
+      text-align: center;
+      line-height: 1.5;
+    }
+  }
+}
+
+.gestion-tipo-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.gestion-tipo-option-btn {
+  --background: #f8f9fa;
+  --background-hover: rgba(216, 106, 19, 0.1);
+  --background-activated: rgba(216, 106, 19, 0.2);
+  --color: var(--docu-text);
+  --color-hover: var(--docu-orange);
+  --border-color: #e9ecef;
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  font-weight: 600;
+  font-size: 1rem;
+  height: 56px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  
+  ion-icon {
+    font-size: 1.25rem;
+    margin-right: 12px;
+  }
+  
+  &:hover:not([disabled]) {
+    transform: translateY(-1px);
+    --background: rgba(216, 106, 19, 0.05);
+    --border-color: var(--docu-orange);
+    box-shadow: 0 4px 12px rgba(216, 106, 19, 0.15);
+  }
+  
+  &.selected {
+    --background: var(--docu-orange);
+    --color: var(--docu-white);
+    --border-color: var(--docu-orange);
+    box-shadow: 0 4px 16px rgba(216, 106, 19, 0.3);
+    transform: translateY(-1px);
+    
+    ion-icon {
+      color: var(--docu-white);
+    }
+  }
+  
+  &:active:not([disabled]) {
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
    RESPONSIVE DESIGN
    ======================================== */
 @media (max-width: 768px) {
@@ -1665,5 +2168,184 @@ ion-button.secondary-action:hover {
   .date-value {
     font-size: 1.25rem;
     padding: 0.5rem 0.75rem;
+  }
+  
+  /* Responsive para gestión de documentos */
+  .gestion-container {
+    padding: 0;
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .gestion-main-card,
+  .gestion-image-card,
+  .gestion-processing-card,
+  .gestion-edit-card,
+  .gestion-text-card {
+    border-radius: 0;
+    margin-bottom: 0;
+    border-left: none;
+    border-right: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .gestion-main-card {
+    text-align: center;
+    padding: 2rem 1rem;
+    
+    ion-card-content p {
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+  }
+  
+  .gestion-image-card {
+    .captured-image {
+      width: 100%;
+      max-height: 250px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+  }
+  
+  .gestion-processing-card {
+    text-align: center;
+    padding: 2rem 1rem;
+    
+    .processing-content {
+      gap: 0.75rem;
+      
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  }
+  
+  .gestion-edit-header {
+    padding: 1.25rem 1rem 0.75rem;
+    
+    .edit-title {
+      font-size: 1.2rem;
+      gap: 0.5rem;
+      
+      .title-icon {
+        font-size: 1.3rem;
+      }
+    }
+    
+    .edit-subtitle {
+      font-size: 0.85rem;
+    }
+  }
+  
+  .gestion-edit-form {
+    padding: 1rem;
+  }
+  
+  .gestion-fechas-section {
+    padding: 1rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    margin-bottom: 0;
+  }
+  
+  .gestion-section-header {
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    
+    .section-icon {
+      font-size: 1.1rem;
+    }
+    
+    .section-title {
+      font-size: 1rem;
+    }
+  }
+  
+  .gestion-fechas-info {
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    
+    p {
+      font-size: 0.85rem;
+    }
+  }
+  
+  .gestion-input-group {
+    margin-bottom: 1rem;
+  }
+  
+  .gestion-modern-input-item {
+    border-radius: 8px;
+  }
+  
+  .gestion-input-label {
+    font-size: 0.85rem;
+    gap: 0.4rem;
+    
+    .label-icon {
+      font-size: 0.9rem;
+    }
+  }
+  
+  .gestion-modern-input {
+    font-size: 0.95rem;
+    --padding-start: 14px;
+    --padding-end: 14px;
+  }
+  
+  .gestion-action-buttons {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    gap: 0.75rem;
+  }
+  
+  .gestion-save-btn,
+  .gestion-secondary-action {
+    height: 48px;
+    font-size: 0.95rem;
+  }
+  
+  .gestion-tipo-selector-card {
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    
+    ion-card-header {
+      padding: 0 0 12px 0;
+      
+      ion-card-title {
+        font-size: 1.3rem;
+      }
+    }
+    
+    ion-card-content {
+      p {
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+      }
+    }
+  }
+  
+  .gestion-tipo-options {
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .gestion-tipo-option-btn {
+    height: 52px;
+    font-size: 0.95rem;
+    --padding-top: 14px;
+    --padding-bottom: 14px;
+    
+    ion-icon {
+      font-size: 1.1rem;
+      margin-right: 10px;
+    }
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { 
   IonContent, 
   IonButton, 
@@ -19,10 +20,12 @@ import {
   IonInput
 } from '@ionic/angular/standalone';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Filesystem } from '@capacitor/filesystem';
 import { createWorker, PSM } from 'tesseract.js';
 import { addIcons } from 'ionicons';
 import { camera, documentText, refresh, save, create, card, car, document, arrowBack } from 'ionicons/icons';
 import { DocumentoGeneral, DocumentoGeneralForm, FechasExtraidas, TipoDocumento, OPCIONES_TIPO_DOCUMENTO } from '../../models/documento-general.model';
+import { DocumentStorageService } from '../../services/document-storage.service';
 
 @Component({
   selector: 'app-gestion-docu',
@@ -66,11 +69,15 @@ export class GestionDocuPage implements OnInit {
   opcionesTipoDocumento = OPCIONES_TIPO_DOCUMENTO;
   showTipoSelector: boolean = true;
 
-  constructor() {
+  constructor(
+    private documentStorageService: DocumentStorageService,
+    private router: Router
+  ) {
     addIcons({ camera, documentText, refresh, save, create, card, car, document, arrowBack });
   }
 
   ngOnInit() {
+    console.log('Página de gestión de documentos inicializada');
   }
 
   async takePicture() {
@@ -680,12 +687,63 @@ export class GestionDocuPage implements OnInit {
   }
 
   // Método para guardar documento
-  guardarDocumento() {
-    if (this.documentoExtraido) {
-      console.log('Guardando documento:', this.documentoExtraido);
-      // Aquí implementarías la lógica para guardar en base de datos
+  async guardarDocumento() {
+    if (!this.documentoExtraido || !this.capturedImage) {
+      this.showAlertMessage('No hay datos para guardar');
+      return;
+    }
+
+    try {
+      console.log('Iniciando guardado de documento...');
+      console.log('Imagen capturada:', !!this.capturedImage);
+      console.log('Datos del documento:', this.documentoExtraido);
+
+      // Convertir el formulario a DocumentoGeneral
+      const documento: DocumentoGeneral = {
+        id: undefined, // Se generará en el servicio
+        fechaEmision: this.documentoExtraido.fechaEmision,
+        fechaExpiracion: this.documentoExtraido.fechaExpiracion,
+        tipoDocumento: this.documentoExtraido.tipoDocumento,
+        numeroDocumento: this.documentoExtraido.numeroDocumento || '',
+        nombres: this.documentoExtraido.nombres || '',
+        apellidos: this.documentoExtraido.apellidos || '',
+        fechaNacimiento: this.documentoExtraido.fechaNacimiento || '',
+        lugarNacimiento: this.documentoExtraido.lugarNacimiento || '',
+        domicilio: this.documentoExtraido.domicilio || '',
+        estadoCivil: this.documentoExtraido.estadoCivil || '',
+        grupoSanguineo: this.documentoExtraido.grupoSanguineo || '',
+        profesion: this.documentoExtraido.profesion || ''
+      };
+
+      console.log('Documento a guardar:', documento);
+      console.log('Tamaño de imagen base64:', this.capturedImage.length, 'caracteres');
+
+      // Guardar documento con imagen
+      await this.documentStorageService.guardarDocumento(documento, this.capturedImage);
+
+      console.log('Documento guardado exitosamente');
+
+      // Mostrar mensaje de éxito
       this.showAlertMessage('Documento guardado exitosamente');
-      this.showEditCard = false;
+
+      // Esperar un momento para mostrar el mensaje
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Limpiar datos de la vista
+      this.clearData();
+
+      // Navegar al menú principal
+      this.router.navigateByUrl('/menu-principal');
+    } catch (error) {
+      console.error('Error detallado al guardar documento:', error);
+      
+      let mensajeError = 'Error al guardar el documento';
+      if (error instanceof Error) {
+        mensajeError += ': ' + error.message;
+        console.error('Stack trace:', error.stack);
+      }
+      
+      this.showAlertMessage(mensajeError);
     }
   }
 

@@ -166,46 +166,6 @@
   outline-offset: 2px;
   border-radius: 4px;
 }
-
 /* Mejoras para modo oscuro (si se implementa) */
-@media (prefers-color-scheme: dark) {
-  .login-container {
-    background: #1a1a1a;
-    border-color: rgba(255, 255, 255, 0.1);
-  }
 
-  .input-container {
-    background: #2d2d2d;
-    border-color: #404040;
-  }
-
-  .input-container:focus-within {
-    background: #333333;
-    border-color: var(--docu-orange);
-  }
-
-  .modern-input {
-    --color: #ffffff;
-    --placeholder-color: #a0a0a0;
-  }
-
-  .login-title {
-    color: #ffffff;
-  }
-
-  .login-subtitle {
-    color: #b0b0b0;
-  }
-
-  .input-label {
-    color: #e0e0e0;
-  }
-
-  .checkbox-label {
-    color: #e0e0e0;
-  }
-
-  .footer-text {
-    color: #b0b0b0;
-  }
-}
+// Estilos de modo oscuro eliminados - solo modo claro
