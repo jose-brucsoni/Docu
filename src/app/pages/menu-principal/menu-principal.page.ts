@@ -38,6 +38,7 @@ interface Documento {
   nombre: string;
   categoria: string;
   fechaAgregado: string;
+  fechaEmision?: string;
   fechaVencimiento?: string;
   estado: 'active' | 'expiring_soon' | 'expired';
   tipo: string;
@@ -210,6 +211,7 @@ export class MenuPrincipalPage implements OnInit {
       nombre,
       categoria: this.mapearTipoACategoria(docGeneral.tipoDocumento),
       fechaAgregado,
+      fechaEmision: docGeneral.fechaEmision,
       fechaVencimiento,
       estado,
       tipo: 'IMAGEN',

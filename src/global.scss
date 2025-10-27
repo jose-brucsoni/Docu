@@ -2537,40 +2537,36 @@ ion-button.secondary-action:hover {
   font-size: 1.1rem;
   font-weight: 700;
   color: #1e1e1e;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.75rem 0;
 }
 
-.menu-doc-meta {
-  margin-bottom: 0.5rem;
-}
-
-.menu-doc-category {
-  background: #f8f9fa;
-  color: #666;
-  padding: 0.25rem 0.75rem;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: capitalize;
-}
-
-.menu-doc-dates {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.menu-doc-date {
+.menu-doc-date-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  margin-bottom: 0.5rem;
   font-size: 0.85rem;
-  color: #666;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
   
   ion-icon {
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: var(--docu-orange);
+    flex-shrink: 0;
   }
+}
+
+.menu-doc-date-label {
+  font-weight: 600;
+  color: #666;
+  margin-right: 0.25rem;
+}
+
+.menu-doc-date-value {
+  color: #1e1e1e;
+  font-weight: 500;
 }
 
 .menu-doc-status {

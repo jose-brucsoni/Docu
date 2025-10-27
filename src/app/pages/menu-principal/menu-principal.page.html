@@ -86,18 +86,26 @@
           
           <div class="menu-doc-content">
             <h3 class="menu-doc-title">{{ documento.nombre }}</h3>
-            <div class="menu-doc-meta">
-              <span class="menu-doc-category">{{ documento.categoria }}</span>
+            
+            <!-- Fecha de registro -->
+            <div class="menu-doc-date-item">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span class="menu-doc-date-label">Fecha de registro:</span>
+              <span class="menu-doc-date-value">{{ documento.fechaAgregado | date:'short' }}</span>
             </div>
-            <div class="menu-doc-dates">
-              <span class="menu-doc-date">
-                <ion-icon name="calendar-outline"></ion-icon>
-                {{ documento.fechaAgregado | date:'short' }}
-              </span>
-              <span class="menu-doc-date" *ngIf="documento.fechaVencimiento">
-                <ion-icon name="time-outline"></ion-icon>
-                {{ documento.fechaVencimiento | date:'short' }}
-              </span>
+            
+            <!-- Fecha de emisión -->
+            <div class="menu-doc-date-item" *ngIf="documento.fechaEmision">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span class="menu-doc-date-label">Emisión:</span>
+              <span class="menu-doc-date-value">{{ documento.fechaEmision }}</span>
+            </div>
+            
+            <!-- Fecha de expiración -->
+            <div class="menu-doc-date-item" *ngIf="documento.fechaVencimiento">
+              <ion-icon name="time-outline"></ion-icon>
+              <span class="menu-doc-date-label">Expiración:</span>
+              <span class="menu-doc-date-value">{{ documento.fechaVencimiento | date:'short' }}</span>
             </div>
           </div>
           
