@@ -15,6 +15,23 @@ import {
   IonFab,
   IonFabButton
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { 
+  documentText, 
+  documents, 
+  checkmarkCircle, 
+  warning, 
+  alertCircle,
+  search,
+  calendarOutline,
+  timeOutline,
+  createOutline,
+  trashOutline,
+  chevronBackOutline,
+  chevronForwardOutline,
+  camera,
+  add
+} from 'ionicons/icons';
 
 interface Documento {
   id: number;
@@ -76,7 +93,24 @@ export class MenuPrincipalPage implements OnInit {
   constructor(
     private router: Router,
     private documentStorageService: DocumentStorageService
-  ) { }
+  ) {
+    addIcons({ 
+      documentText, 
+      documents, 
+      checkmarkCircle, 
+      warning, 
+      alertCircle,
+      search,
+      calendarOutline,
+      timeOutline,
+      createOutline,
+      trashOutline,
+      chevronBackOutline,
+      chevronForwardOutline,
+      camera,
+      add
+    });
+  }
 
   async ngOnInit() {
     await this.cargarDocumentos();
