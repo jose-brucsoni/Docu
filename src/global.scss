@@ -715,6 +715,17 @@ ion-content.register-screen {
   border-color: var(--docu-orange);
 }
 
+.clickable-card {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clickable-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-color: var(--docu-orange);
+}
+
 .minimal-document-card.list-view {
   display: flex;
   align-items: center;
@@ -1692,6 +1703,23 @@ ion-button.secondary-action:hover {
     margin: 0;
     font-weight: 500;
     line-height: 1.4;
+  }
+  
+  .edit-mode-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(56, 128, 255, 0.1);
+    border-radius: 8px;
+    color: var(--docu-primary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    
+    ion-icon {
+      font-size: 1.1rem;
+    }
   }
   
   // En móviles, ajustar padding

@@ -92,10 +92,16 @@
     <ion-card *ngIf="showEditCard && documentoExtraido" class="gestion-edit-card minimal-card">
       <ion-card-header class="gestion-edit-header">
         <ion-card-title class="edit-title">
-          <ion-icon name="create" class="title-icon"></ion-icon>
-          Datos Extraídos del Documento
+          <ion-icon [name]="modoEdicion ? 'create' : 'document-text'" class="title-icon"></ion-icon>
+          {{ modoEdicion ? 'Editar Documento' : 'Datos Extraídos del Documento' }}
         </ion-card-title>
-        <p class="edit-subtitle">Revisa y edita la información extraída automáticamente</p>
+        <p class="edit-subtitle">
+          {{ modoEdicion ? 'Modifica la información del documento' : 'Revisa y edita la información extraída automáticamente' }}
+        </p>
+        <div *ngIf="modoEdicion" class="edit-mode-indicator">
+          <ion-icon name="information-circle"></ion-icon>
+          Modo de edición: Modificando documento existente
+        </div>
       </ion-card-header>
       <ion-card-content class="gestion-edit-content">
         <form class="gestion-edit-form">

@@ -22,7 +22,7 @@ import {
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { createWorker, PSM } from 'tesseract.js';
 import { addIcons } from 'ionicons';
-import { camera, documentText, save, card, car, document, arrowBack, trashOutline } from 'ionicons/icons';
+import { camera, documentText, save, card, car, document, arrowBack, trashOutline, informationCircle, create } from 'ionicons/icons';
 import { DocumentoGeneral, DocumentoGeneralForm, FechasExtraidas, TipoDocumento, OPCIONES_TIPO_DOCUMENTO } from '../../models/documento-general.model';
 import { DocumentStorageService } from '../../services/document-storage.service';
 
@@ -74,7 +74,7 @@ export class GestionDocuPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    addIcons({ camera, documentText, save, card, car, document, arrowBack, trashOutline });
+    addIcons({ camera, documentText, save, card, car, document, arrowBack, trashOutline, informationCircle, create });
   }
 
   async ngOnInit() {
@@ -96,7 +96,15 @@ export class GestionDocuPage implements OnInit {
       
       // Obtener todos los documentos
       const documentos = await this.documentStorageService.obtenerTodosLosDocumentos();
-      const documento = documentos.find(doc => doc.id?.replace('doc_', '') === id);
+      
+      // Convertir id a número para comparación
+      const idNumero = parseInt(id);
+      
+      // Buscar el documento por ID (compara el número extraído del ID con el ID de la ruta)
+      const documento = documentos.find(doc => {
+        const docIdNumero = parseInt(doc.id?.replace('doc_', '') || '0');
+        return docIdNumero === idNumero;
+      });
       
       if (documento) {
         console.log('Documento encontrado:', documento);

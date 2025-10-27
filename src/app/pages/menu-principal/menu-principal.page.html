@@ -46,8 +46,9 @@
     <div class="documents-container">
       <div 
         *ngFor="let documento of getDocumentosPaginados()" 
-        class="minimal-document-card"
-        [class.list-view]="!vistaGrid">
+        class="minimal-document-card clickable-card"
+        [class.list-view]="!vistaGrid"
+        (click)="verDocumento(documento)">
         
         <div class="document-main">
           <div class="document-icon">
@@ -73,13 +74,10 @@
           </div>
           
           <div class="document-actions">
-            <ion-button fill="clear" size="small" (click)="verDocumento(documento)" class="action-btn">
-              <ion-icon name="eye-outline"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" size="small" (click)="editarDocumento(documento)" class="action-btn">
+            <ion-button fill="clear" size="small" (click)="editarDocumento(documento); $event.stopPropagation()" class="action-btn">
               <ion-icon name="create-outline"></ion-icon>
             </ion-button>
-            <ion-button fill="clear" size="small" color="danger" (click)="eliminarDocumento(documento)" class="action-btn">
+            <ion-button fill="clear" size="small" color="danger" (click)="eliminarDocumento(documento); $event.stopPropagation()" class="action-btn">
               <ion-icon name="trash-outline"></ion-icon>
             </ion-button>
           </div>
