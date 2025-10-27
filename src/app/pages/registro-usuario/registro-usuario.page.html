@@ -1,60 +1,120 @@
-<ion-content class="register-screen" [fullscreen]="true">
-  <div class="register-wrapper">
-    <div class="register-card">
-      <div class="header">
-        <img src="assets/icon/COPU.png" alt="Logo Docu" class="logo" />
-        <h2>Crea tu cuenta</h2>
-        <p>Solo unos datos para comenzar</p>
+
+<ion-content class="registro-content" [fullscreen]="true">
+  
+  <!-- Header con gradiente -->
+  <div class="registro-header">
+    <div class="registro-header-icon">
+      <ion-icon name="person-add"></ion-icon>
+    </div>
+    <h1 class="registro-header-title">Crea tu cuenta</h1>
+    <p class="registro-header-subtitle">Solo unos datos para comenzar</p>
+  </div>
+
+  <div class="registro-content-area">
+    
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="registro-form">
+      
+      <!-- Nombre -->
+      <div class="registro-input-group">
+        <label class="registro-input-label">
+          <ion-icon name="person-outline"></ion-icon>
+          Nombre
+        </label>
+        <div class="registro-input-container">
+          <ion-input 
+            formControlName="nombre" 
+            type="text" 
+            placeholder="Ingresa tu nombre"
+            class="registro-modern-input">
+          </ion-input>
+        </div>
       </div>
 
-      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <!-- Apellido -->
+      <div class="registro-input-group">
+        <label class="registro-input-label">
+          <ion-icon name="id-card-outline"></ion-icon>
+          Apellido
+        </label>
+        <div class="registro-input-container">
+          <ion-input 
+            formControlName="apellido" 
+            type="text" 
+            placeholder="Ingresa tu apellido"
+            class="registro-modern-input">
+          </ion-input>
+        </div>
+      </div>
 
-        <!-- Nombre -->
-        <ion-item lines="none" class="field" mode="md">
-          <ion-icon name="person-outline" slot="start" class="icon"></ion-icon>
-          <ion-input formControlName="nombre" type="text" placeholder="Nombre"></ion-input>
-        </ion-item>
+      <!-- Email -->
+      <div class="registro-input-group">
+        <label class="registro-input-label">
+          <ion-icon name="mail-outline"></ion-icon>
+          Correo electrónico
+        </label>
+        <div class="registro-input-container">
+          <ion-input 
+            formControlName="email" 
+            type="email" 
+            placeholder="correo@ejemplo.com"
+            class="registro-modern-input">
+          </ion-input>
+        </div>
+      </div>
 
-        <!-- Apellido -->
-        <ion-item lines="none" class="field" mode="md">
-          <ion-icon name="id-card-outline" slot="start" class="icon"></ion-icon>
-          <ion-input formControlName="apellido" type="text" placeholder="Apellido"></ion-input>
-        </ion-item>
-
-        <!-- Email -->
-        <ion-item lines="none" class="field" mode="md">
-          <ion-icon name="mail-outline" slot="start" class="icon"></ion-icon>
-          <ion-input formControlName="email" type="email" placeholder="Correo electrónico"></ion-input>
-        </ion-item>
-
-        <!-- Password con ojo -->
-        <ion-item lines="none" class="field" mode="md">
-          <ion-icon name="lock-closed-outline" slot="start" class="icon"></ion-icon>
+      <!-- Password con ojo -->
+      <div class="registro-input-group">
+        <label class="registro-input-label">
+          <ion-icon name="lock-closed-outline"></ion-icon>
+          Contraseña
+        </label>
+        <div class="registro-input-container">
           <ion-input
             formControlName="password"
             [type]="showPwd() ? 'text' : 'password'"
-            placeholder="Contraseña (mín. 6 caracteres)">
+            placeholder="Mínimo 6 caracteres"
+            class="registro-modern-input">
           </ion-input>
-          <ion-button fill="clear" size="small" slot="end" class="eye" type="button" (click)="togglePwd()">
+          <ion-button 
+            fill="clear" 
+            size="small" 
+            type="button" 
+            (click)="togglePwd()" 
+            class="registro-toggle-pwd">
             <ion-icon [name]="showPwd() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
           </ion-button>
-        </ion-item>
-
-        <!-- Error visual (opcional) -->
-        <div *ngIf="error()" class="error">{{ error() }}</div>
-
-        <!-- Botón registrar -->
-        <ion-button expand="block" type="submit" class="primary" [disabled]="form.invalid || loading()">
-          {{ loading() ? 'Creando cuenta…' : 'Crear cuenta →' }}
-        </ion-button>
-
-        <hr class="divider" />
-
-        <div class="footer">
-          ¿Ya tienes cuenta?
-          <a routerLink="/login"> Inicia sesión</a>
         </div>
-      </form>
-    </div>
+      </div>
+
+      <!-- Error visual -->
+      <div *ngIf="error()" class="registro-error-message">
+        <ion-icon name="alert-circle"></ion-icon>
+        <span>{{ error() }}</span>
+      </div>
+
+      <!-- Botón registrar -->
+      <ion-button 
+        type="submit" 
+        class="registro-primary-btn"
+        expand="block" 
+        [disabled]="form.invalid || loading()">
+        <ion-icon name="person-add" slot="start"></ion-icon>
+        {{ loading() ? 'Creando cuenta…' : 'Crear cuenta' }}
+      </ion-button>
+
+      <!-- Divider -->
+      <div class="registro-divider">
+        <span class="registro-divider-text">¿Ya tienes cuenta?</span>
+      </div>
+
+      <!-- Link a login -->
+      <div class="registro-footer">
+        <a routerLink="/login" class="registro-login-link">
+          <ion-icon name="log-in"></ion-icon>
+          Iniciar sesión
+        </a>
+      </div>
+
+    </form>
   </div>
 </ion-content>

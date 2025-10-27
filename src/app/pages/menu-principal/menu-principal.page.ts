@@ -190,12 +190,21 @@ export class MenuPrincipalPage implements OnInit {
       fechaAgregado = new Date().toISOString();
     }
 
+    // Convertir fecha de vencimiento a Date si existe
+    let fechaVencimiento: string | undefined;
+    if (docGeneral.fechaExpiracion) {
+      const fechaConvertida = this.convertirFechaADate(docGeneral.fechaExpiracion);
+      if (fechaConvertida) {
+        fechaVencimiento = fechaConvertida.toISOString();
+      }
+    }
+
     const documento = {
       id: parseInt(docGeneral.id?.replace('doc_', '') || '0'),
       nombre,
       categoria: this.mapearTipoACategoria(docGeneral.tipoDocumento),
       fechaAgregado,
-      fechaVencimiento: docGeneral.fechaExpiracion,
+      fechaVencimiento,
       estado,
       tipo: 'IMAGEN',
       tamano: 'N/A'
