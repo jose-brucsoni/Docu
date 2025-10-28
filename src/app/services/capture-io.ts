@@ -12,7 +12,15 @@ import { createWorker, PSM } from 'tesseract.js';
 export class CaptureOcrService {
   constructor() {}
 
-  // Importar imagen desde la galería
+  /**
+   * Abre la galería de imágenes del dispositivo para seleccionar una imagen
+   * @returns Data URL de la imagen seleccionada (formato base64)
+   * @throws Error si no se seleccionó ninguna imagen o se canceló la operación
+   * 
+   * @description
+   * Permite al usuario elegir una imagen desde su galería de fotos.
+   * Retorna la imagen en formato Data URL para procesamiento directo.
+   */
   async pickFromGallery(): Promise<string> {
     const photo = await Camera.getPhoto({
       source: CameraSource.Photos,
@@ -23,7 +31,16 @@ export class CaptureOcrService {
     return photo.dataUrl;
   }
 
-  // Capturar imagen desde la cámara
+  /**
+   * Abre la cámara del dispositivo para capturar una nueva foto
+   * @returns Data URL de la imagen capturada (formato base64)
+   * @throws Error si no se capturó la imagen o se canceló la operación
+   * 
+   * @description
+   * Inicia la cámara del dispositivo y permite al usuario tomar una foto.
+   * La foto se retorna en formato Data URL para procesamiento inmediato.
+   * No se permite edición de la foto para mantener la calidad original.
+   */
   async captureWithCamera(): Promise<string> {
     const photo = await Camera.getPhoto({
       source: CameraSource.Camera,
@@ -35,7 +52,23 @@ export class CaptureOcrService {
     return photo.dataUrl;
   }
 
-  // OCR optimizado para móvil con Tesseract.js
+  /**
+   * Procesa una imagen con OCR (Reconocimiento Óptico de Caracteres) usando Tesseract.js
+   * Extrae todo el texto visible de la imagen
+   * @param dataUrl - Imagen en formato Data URL (base64)
+   * @returns Texto extraído de la imagen
+   * @throws Error si hay problemas con el procesamiento OCR o la imagen es inválida
+   * 
+   * @description
+   * Esta función:
+   * 1. Inicializa el worker de Tesseract con idioma español
+   * 2. Configura parámetros optimizados para documentos móviles
+   * 3. Procesa la imagen y extrae el texto
+   * 4. Limpia y normaliza el texto extraído
+   * 5. Retorna el texto procesado
+   * 
+   * Optimizado para rendimiento en dispositivos móviles.
+   */
   async runOcrFromDataUrl(dataUrl: string): Promise<string> {
     try {
       console.log('Iniciando OCR...');
@@ -77,7 +110,13 @@ export class CaptureOcrService {
     }
   }
 
-  // Limpiar texto OCR para mejor detección de fechas
+  /**
+   * Limpia y normaliza el texto extraído por OCR
+   * Remueve espacios y saltos de línea excesivos para mejorar la legibilidad
+   * @param text - Texto crudo extraído por OCR
+   * @returns Texto normalizado
+   * @private
+   */
   private cleanOcrText(text: string): string {
     return text
       .replace(/\s+/g, ' ') // Normalizar espacios
@@ -85,7 +124,22 @@ export class CaptureOcrService {
       .trim();
   }
 
-  // Crear PDF a partir de la imagen
+  /**
+   * Convierte una imagen a documento PDF
+   * @param dataUrl - Imagen en formato Data URL
+   * @param footerText - Texto opcional para el pie de página del PDF
+   * @returns Array de bytes que representa el PDF generado
+   * @throws Error si hay problemas al crear el PDF
+   * 
+   * @description
+   * Crea un documento PDF a partir de una imagen:
+   * 1. Convierte la imagen a bytes
+   * 2. Crea un nuevo documento PDF
+   * 3. Redimensiona la imagen para ajustarse a la página
+   * 4. Centra la imagen en el PDF
+   * 5. Agrega texto opcional en el pie de página
+   * 6. Retorna el PDF como array de bytes
+   */
   async createPdfFromDataUrl(dataUrl: string, footerText?: string): Promise<Uint8Array> {
     const bytes = this.dataUrlToBytes(dataUrl);
     const pdf = await PDFDocument.create();
@@ -116,7 +170,19 @@ export class CaptureOcrService {
     return await pdf.save();
   }
 
-  // Guardar PDF localmente
+  /**
+   * Guarda un archivo PDF en el sistema de archivos del dispositivo
+   * @param bytes - Contenido del PDF como array de bytes
+   * @param fileName - Nombre del archivo PDF a guardar
+   * @returns Objeto con la ruta relativa y URI completa del archivo guardado
+   * @throws Error si no se puede escribir el archivo
+   * 
+   * @description
+   * Guarda el PDF en el directorio de documentos del dispositivo en:
+   * - Ruta: `docu/{fileName}`
+   * - Crea directorios automáticamente si no existen
+   * - Retorna la ruta y URI para acceso posterior
+   */
   async savePdf(bytes: Uint8Array, fileName: string) {
     const base64 = this.bytesToBase64(bytes);
     const path = `docu/${fileName}`;
@@ -130,7 +196,12 @@ export class CaptureOcrService {
     return { path, uri };
   }
 
-  //  Conversores auxiliares
+  /**
+   * Convierte una imagen Data URL a array de bytes
+   * @param dataUrl - Imagen en formato Data URL (data:image/...;base64,...)
+   * @returns Array de bytes de la imagen
+   * @private
+   */
   private dataUrlToBytes(dataUrl: string): Uint8Array {
     const base64 = dataUrl.split(',')[1];
     const binary = atob(base64);
@@ -139,6 +210,13 @@ export class CaptureOcrService {
     return bytes;
   }
 
+  /**
+   * Convierte un array de bytes a string base64
+   * Maneja archivos grandes procesándolos en chunks
+   * @param bytes - Array de bytes a convertir
+   * @returns String en formato base64
+   * @private
+   */
   private bytesToBase64(bytes: Uint8Array): string {
     let binary = '';
     const chunk = 0x8000;

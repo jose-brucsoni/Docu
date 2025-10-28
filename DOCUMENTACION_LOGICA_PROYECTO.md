@@ -555,7 +555,52 @@ El proyecto incluye documentación adicional en archivos markdown:
 
 ---
 
-**Autor**: José Carlo Suárez Brucsoni  & Marcelo Quito
- **Fecha**: 2025  
+## 💬 Comentarios y Documentación del Código
+
+### Estado de Documentación
+
+Todos los servicios en `src/app/services/` están completamente documentados con comentarios JSDoc en español:
+
+- ✅ **login.ts**: Comentarios detallados en todas las funciones de autenticación
+- ✅ **registro-u.ts**: Documentación completa del proceso de registro
+- ✅ **capture-io.ts**: Comentarios explicativos en funciones de captura y OCR
+- ✅ **document-firestore.service.ts**: Ya tenía comentarios detallados
+- ✅ **document-storage.service.ts**: Ya tenía comentarios detallados
+- ✅ **notification.service.ts**: Comentarios añadidos a todas las funciones
+
+### Formato de Comentarios
+
+Los comentarios siguen el estándar **JSDoc** con:
+- Descripción de la función
+- `@param` para parámetros
+- `@returns` para valores de retorno
+- `@throws` para errores posibles
+- `@description` para explicaciones detalladas
+- `@private` para métodos privados
+
+### Ejemplo de Comentario
+
+```typescript
+/**
+ * Procesa una imagen con OCR usando Tesseract.js
+ * @param dataUrl - Imagen en formato Data URL
+ * @returns Texto extraído de la imagen
+ * @throws Error si hay problemas con el procesamiento OCR
+ * @description
+ * Esta función:
+ * 1. Inicializa el worker de Tesseract con idioma español
+ * 2. Configura parámetros optimizados para móviles
+ * 3. Procesa la imagen y extrae el texto
+ * 4. Retorna el texto procesado
+ */
+async runOcrFromDataUrl(dataUrl: string): Promise<string> {
+  // ... código ...
+}
+```
+
+---
+
+**Autor**: José Carlo Suárez Brucsoni & Marcelo Quito  
+**Fecha**: 2025  
 **Tecnología**: Ionic + Angular + Firebase
 

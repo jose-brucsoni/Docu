@@ -13,7 +13,12 @@ export class NotificationService {
   constructor(private documentStorageService: DocumentStorageService) {}
 
   /**
-   * Inicializar el servicio de notificaciones
+   * Inicializa el servicio de notificaciones
+   * Solicita permisos y programa verificaciones periódicas de documentos
+   * @description
+   * Se debe llamar al inicio de la aplicación para:
+   * - Verificar/conceder permisos de notificaciones
+   * - Programar verificación automática de documentos próximos a vencer
    */
   async inicializar(): Promise<void> {
     try {
@@ -29,7 +34,15 @@ export class NotificationService {
   }
 
   /**
-   * Solicitar permisos para enviar notificaciones
+   * Solicita permisos del usuario para mostrar notificaciones
+   * Verifica primero si ya tiene permisos concedidos
+   * @returns true si se concedieron los permisos, false si fueron denegados
+   * @description
+   * En Android e iOS, las notificaciones requieren permiso explícito del usuario.
+   * Esta función:
+   * 1. Verifica si ya hay permisos concedidos
+   * 2. Si no, solicita permisos al usuario
+   * 3. Guarda el estado de los permisos en memoria
    */
   async solicitarPermisos(): Promise<boolean> {
     try {
@@ -121,7 +134,13 @@ export class NotificationService {
   }
 
   /**
-   * Cancelar notificación para un documento específico
+   * Cancela una notificación programada para un documento específico
+   * @param documentoId - ID del documento cuya notificación se cancelará
+   * @description
+   * Se usa cuando:
+   * - Se elimina un documento
+   * - Se actualiza la fecha de expiración de un documento
+   * - Se necesita cancelar una notificación programada
    */
   async cancelarNotificacionDocumento(documentoId: string): Promise<void> {
     try {
@@ -134,7 +153,10 @@ export class NotificationService {
   }
 
   /**
-   * Verificar y programar notificaciones para documentos próximos a vencer
+   * Verifica todos los documentos y programa notificaciones para los que estén próximos a vencer
+   * @description
+   * Itera sobre todos los documentos y programa notificaciones si tienen fecha de expiración.
+   * Se llama automáticamente al inicializar el servicio.
    */
   async verificarYProgramarNotificaciones(): Promise<void> {
     try {
@@ -153,7 +175,12 @@ export class NotificationService {
   }
 
   /**
-   * Programar verificación periódica de documentos
+   * Programa verificación periódica de documentos
+   * @private
+   * @description
+   * Sistema de verificación que se ejecuta cuando la aplicación está activa.
+   * Verifica todos los documentos y reprograma notificaciones si es necesario.
+   * En el futuro podría extenderse con un servicio en background.
    */
   private async programarVerificacionPeriodica(): Promise<void> {
     // Esta función se ejecutará cuando la aplicación esté activa
@@ -169,7 +196,8 @@ export class NotificationService {
   }
 
   /**
-   * Obtener todas las notificaciones programadas
+   * Obtiene la lista de todas las notificaciones programadas que aún no se han mostrado
+   * @returns Array de notificaciones pendientes
    */
   async obtenerNotificacionesProgramadas(): Promise<any[]> {
     try {
@@ -182,7 +210,12 @@ export class NotificationService {
   }
 
   /**
-   * Cancelar todas las notificaciones
+   * Cancela todas las notificaciones programadas por la aplicación
+   * @description
+   * Útil para:
+   * - Limpieza de notificaciones antiguas
+   * - Reset del sistema de notificaciones
+   * - Testing y desarrollo
    */
   async cancelarTodasLasNotificaciones(): Promise<void> {
     try {
@@ -194,7 +227,11 @@ export class NotificationService {
   }
 
   /**
-   * Obtener ID de notificación a partir del ID del documento
+   * Genera un ID numérico único para una notificación a partir del ID del documento
+   * Usa un hash simple para convertir el ID de string a número
+   * @param documentoId - ID del documento
+   * @returns ID numérico para la notificación (rango 100000-1099999)
+   * @private
    */
   private obtenerNotificationId(documentoId: string): number {
     // Convertir el ID del documento a un número
@@ -210,7 +247,10 @@ export class NotificationService {
   }
 
   /**
-   * Convertir fecha string DD/MM/YYYY a Date
+   * Convierte una fecha en formato string DD/MM/YYYY a objeto Date
+   * @param fecha - Fecha en formato DD/MM/YYYY
+   * @returns Objeto Date o null si el formato es inválido
+   * @private
    */
   private convertirFechaADate(fecha: string): Date | null {
     try {
@@ -240,7 +280,14 @@ export class NotificationService {
   }
 
   /**
-   * Obtener notificaciones de documentos vencidos o próximos a vencer
+   * Identifica documentos que están próximos a vencer o ya vencidos
+   * @param diasAntes - Número de días antes de la expiración para considerar "próximo a vencer" (default: 7)
+   * @returns Array de documentos que están próximos a vencer o ya vencidos
+   * @description
+   * Busca documentos cuya fecha de expiración está dentro del rango especificado:
+   * - 0 días: Vencido
+   * - 0 a diasAntes días: Próximo a vencer
+   * - Más de diasAntes días: No está próximo a vencer
    */
   async verificarDocumentosProximosAVencer(diasAntes: number = 7): Promise<DocumentoGeneral[]> {
     try {
