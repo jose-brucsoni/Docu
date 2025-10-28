@@ -835,6 +835,13 @@ export class GestionDocuPage implements OnInit {
     this.router.navigateByUrl('/menu-principal');
   }
 
+  /**
+   * Volver al menú principal
+   */
+  volverAlMenu() {
+    this.router.navigateByUrl('/menu-principal');
+  }
+
   // Método para eliminar documento
   async eliminarDocumento() {
     if (!this.documentoEditando || !this.documentoEditando.id || !this.userId) {

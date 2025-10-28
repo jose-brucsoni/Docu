@@ -33,7 +33,8 @@ import {
   chevronBackOutline,
   chevronForwardOutline,
   camera,
-  add
+  add,
+  logOutOutline
 } from 'ionicons/icons';
 
 interface Documento {
@@ -119,7 +120,8 @@ export class MenuPrincipalPage implements OnInit {
       chevronBackOutline,
       chevronForwardOutline,
       camera,
-      add
+      add,
+      logOutOutline
     });
   }
 
@@ -492,6 +494,30 @@ export class MenuPrincipalPage implements OnInit {
       }
     } catch (error) {
       console.error('Error al eliminar documento:', error);
+    }
+  }
+
+  /**
+   * Cerrar sesión del usuario
+   */
+  async cerrarSesion() {
+    try {
+      console.log('Cerrando sesión...');
+      
+      // Cerrar sesión en Firebase
+      await this.auth.logout();
+      
+      // Limpiar datos del usuario actual
+      this.userId = null;
+      this.documentos = [];
+      this.documentosCargados = false;
+      
+      // Navegar al login
+      this.router.navigateByUrl('/login', { replaceUrl: true });
+      
+      console.log('Sesión cerrada exitosamente');
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
     }
   }
 }

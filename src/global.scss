@@ -1921,6 +1921,30 @@ ion-button.secondary-action:hover {
   z-index: 1;
 }
 
+.gest-header-top {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.gest-header-content {
+  flex: 1;
+  text-align: center;
+}
+
+.gest-back-btn {
+  --color: white;
+  --background-hover: rgba(255, 255, 255, 0.1);
+  --ripple-color: rgba(255, 255, 255, 0.2);
+  margin-top: -0.5rem;
+  
+  ion-icon {
+    font-size: 1.8rem;
+  }
+}
+
 // Contenido principal
 .gest-content {
   padding: 1.5rem;
@@ -2353,6 +2377,30 @@ ion-button.secondary-action:hover {
   opacity: 0.95;
   position: relative;
   z-index: 1;
+}
+
+.menu-header-top {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.menu-header-content {
+  flex: 1;
+}
+
+.menu-logout-btn {
+  --color: white;
+  --background-hover: rgba(255, 255, 255, 0.1);
+  --ripple-color: rgba(255, 255, 255, 0.2);
+  margin-top: -0.5rem;
+  
+  ion-icon {
+    font-size: 1.8rem;
+  }
 }
 
 // Contenido principal
