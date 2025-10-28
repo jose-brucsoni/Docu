@@ -27,6 +27,11 @@ export class DocumentStorageService {
    */
   async guardarDocumento(documento: DocumentoGeneral, imagenDataUrl: string): Promise<void> {
     try {
+      // Verificar que el documento tenga userId
+      if (!documento.userId) {
+        throw new Error('El documento debe tener un userId asociado');
+      }
+      
       // Generar ID único para el documento
       const documentoId = documento.id || this.generarIdUnico();
       
@@ -117,7 +122,28 @@ export class DocumentStorageService {
   }
 
   /**
-   * Obtener todos los documentos guardados
+   * Obtener todos los documentos guardados de un usuario específico
+   */
+  async obtenerDocumentosPorUsuario(userId: string): Promise<DocumentoGeneral[]> {
+    try {
+      const { value } = await Preferences.get({ key: this.STORAGE_KEY });
+      
+      if (!value) {
+        return [];
+      }
+      
+      const documentos = JSON.parse(value) as DocumentoGeneral[];
+      // Filtrar documentos por userId
+      return documentos.filter(doc => doc.userId === userId);
+    } catch (error) {
+      console.error('Error al obtener documentos:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Obtener todos los documentos guardados (sin filtro de usuario)
+   * @deprecated Usar obtenerDocumentosPorUsuario(userId) en su lugar
    */
   async obtenerTodosLosDocumentos(): Promise<DocumentoGeneral[]> {
     try {
@@ -136,9 +162,23 @@ export class DocumentStorageService {
   }
 
   /**
-   * Obtener un documento por su ID
+   * Obtener un documento por su ID y userId
    */
-  async obtenerDocumentoPorId(id: string): Promise<DocumentoGeneral | null> {
+  async obtenerDocumentoPorId(id: string, userId: string): Promise<DocumentoGeneral | null> {
+    try {
+      const documentos = await this.obtenerDocumentosPorUsuario(userId);
+      return documentos.find(doc => doc.id === id) || null;
+    } catch (error) {
+      console.error('Error al obtener documento:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Obtener un documento por su ID sin filtro de usuario (para compatibilidad)
+   * @deprecated Usar obtenerDocumentoPorId(id, userId) en su lugar
+   */
+  async obtenerDocumentoPorIdLegacy(id: string): Promise<DocumentoGeneral | null> {
     try {
       const documentos = await this.obtenerTodosLosDocumentos();
       return documentos.find(doc => doc.id === id) || null;
@@ -167,12 +207,17 @@ export class DocumentStorageService {
   }
 
   /**
-   * Eliminar un documento
+   * Eliminar un documento por usuario
    */
-  async eliminarDocumento(id: string): Promise<void> {
+  async eliminarDocumento(id: string, userId: string): Promise<void> {
     try {
       // Obtener el documento para encontrar la ruta de la imagen
-      const documento = await this.obtenerDocumentoPorId(id);
+      const documento = await this.obtenerDocumentoPorId(id, userId);
+      
+      // Verificar que el documento pertenece al usuario
+      if (!documento || documento.userId !== userId) {
+        throw new Error('No tienes permisos para eliminar este documento');
+      }
       
       if (documento && documento.imagenPath) {
         // Eliminar la imagen
@@ -245,15 +290,15 @@ export class DocumentStorageService {
   }
 
   /**
-   * Obtener estadísticas de documentos guardados
+   * Obtener estadísticas de documentos guardados por usuario
    */
-  async obtenerEstadisticas(): Promise<{
+  async obtenerEstadisticas(userId: string): Promise<{
     total: number;
     porTipo: Record<string, number>;
     proximosAVencer: number;
   }> {
     try {
-      const documentos = await this.obtenerTodosLosDocumentos();
+      const documentos = await this.obtenerDocumentosPorUsuario(userId);
       const hoy = new Date();
       
       const porTipo: Record<string, number> = {};
@@ -306,11 +351,11 @@ export class DocumentStorageService {
   }
 
   /**
-   * Buscar documentos por tipo
+   * Buscar documentos por tipo y usuario
    */
-  async buscarDocumentosPorTipo(tipoDocumento: string): Promise<DocumentoGeneral[]> {
+  async buscarDocumentosPorTipo(tipoDocumento: string, userId: string): Promise<DocumentoGeneral[]> {
     try {
-      const documentos = await this.obtenerTodosLosDocumentos();
+      const documentos = await this.obtenerDocumentosPorUsuario(userId);
       return documentos.filter(doc => doc.tipoDocumento === tipoDocumento);
     } catch (error) {
       console.error('Error al buscar documentos:', error);

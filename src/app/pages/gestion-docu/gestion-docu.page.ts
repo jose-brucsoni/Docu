@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -23,6 +23,8 @@ import { addIcons } from 'ionicons';
 import { camera, documentText, save, card, car, document, arrowBack, trashOutline, informationCircle, create, close, calendarOutline, timeOutline, calendar } from 'ionicons/icons';
 import { DocumentoGeneral, DocumentoGeneralForm, FechasExtraidas, TipoDocumento, OPCIONES_TIPO_DOCUMENTO } from '../../models/documento-general.model';
 import { DocumentStorageService } from '../../services/document-storage.service';
+import { Login } from '../../services/login';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-gestion-docu',
@@ -48,6 +50,12 @@ import { DocumentStorageService } from '../../services/document-storage.service'
   ]
 })
 export class GestionDocuPage implements OnInit {
+  // Servicios
+  private auth = inject(Login);
+  
+  // Información del usuario
+  userId: string | null = null;
+  
   capturedImage: string | null = null;
   isProcessing: boolean = false;
   showAlert: boolean = false;
@@ -76,6 +84,17 @@ export class GestionDocuPage implements OnInit {
   async ngOnInit() {
     console.log('Página de gestión de documentos inicializada');
     
+    // Obtener usuario autenticado
+    const user = await firstValueFrom(this.auth.user$);
+    if (!user) {
+      console.error('No hay usuario autenticado');
+      this.router.navigateByUrl('/login');
+      return;
+    }
+    
+    this.userId = user.uid;
+    console.log('Usuario autenticado:', this.userId);
+    
     // Verificar si hay un ID en la ruta (modo edición)
     this.route.params.subscribe(async params => {
       const id = params['id'];
@@ -88,10 +107,16 @@ export class GestionDocuPage implements OnInit {
 
   async cargarDocumentoParaEdicion(id: string) {
     try {
+      if (!this.userId) {
+        console.error('No hay usuario autenticado');
+        this.modoEdicion = false;
+        return;
+      }
+      
       console.log('Cargando documento para edición:', id);
       
-      // Obtener todos los documentos
-      const documentos = await this.documentStorageService.obtenerTodosLosDocumentos();
+      // Obtener documentos del usuario
+      const documentos = await this.documentStorageService.obtenerDocumentosPorUsuario(this.userId);
       
       // Convertir id a número para comparación
       const idNumero = parseInt(id);
@@ -684,7 +709,11 @@ export class GestionDocuPage implements OnInit {
 
   // Método para generar nombre único automáticamente
   private async generarNombreUnico(tipoDocumento: string): Promise<string> {
-    const documentos = await this.documentStorageService.obtenerTodosLosDocumentos();
+    if (!this.userId) {
+      throw new Error('No hay usuario autenticado');
+    }
+    
+    const documentos = await this.documentStorageService.obtenerDocumentosPorUsuario(this.userId);
     
     // Filtrar documentos del mismo tipo
     const documentosDelMismoTipo = documentos.filter(doc => doc.tipoDocumento === tipoDocumento);
@@ -748,6 +777,7 @@ export class GestionDocuPage implements OnInit {
       // Convertir el formulario a DocumentoGeneral
       const documento: DocumentoGeneral = {
         id: this.modoEdicion ? this.documentoEditando?.id : undefined, // Mantener ID en edición
+        userId: this.userId || undefined, // Asociar con el usuario autenticado
         nombre: nombreFinal,
         fechaEmision: this.documentoExtraido.fechaEmision,
         fechaExpiracion: this.documentoExtraido.fechaExpiracion,
@@ -807,13 +837,13 @@ export class GestionDocuPage implements OnInit {
 
   // Método para eliminar documento
   async eliminarDocumento() {
-    if (!this.documentoEditando || !this.documentoEditando.id) {
+    if (!this.documentoEditando || !this.documentoEditando.id || !this.userId) {
       this.showAlertMessage('No se puede eliminar el documento');
       return;
     }
 
     try {
-      await this.documentStorageService.eliminarDocumento(this.documentoEditando.id);
+      await this.documentStorageService.eliminarDocumento(this.documentoEditando.id, this.userId);
       console.log('Documento eliminado exitosamente');
       this.showAlertMessage('Documento eliminado exitosamente');
       

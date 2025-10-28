@@ -1,5 +1,6 @@
 export interface DocumentoGeneral {
   id?: string;
+  userId?: string; // ID del usuario propietario del documento
   nombre?: string; // Nombre/título del documento
   fechaEmision: string;
   fechaExpiracion: string;

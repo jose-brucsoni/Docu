@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DocumentStorageService } from '../../services/document-storage.service';
 import { NotificationService } from '../../services/notification.service';
 import { DocumentoGeneral } from '../../models/documento-general.model';
+import { Login } from '../../services/login';
+import { firstValueFrom } from 'rxjs';
 import { 
   IonContent, 
   IonButton,
@@ -67,6 +69,12 @@ interface Documento {
 })
 export class MenuPrincipalPage implements OnInit {
   
+  // Servicios
+  private auth = inject(Login);
+  
+  // Información del usuario autenticado
+  userId: string | null = null;
+  
   // Datos cargados desde almacenamiento local
   documentos: Documento[] = [];
   documentosCargados: boolean = false;
@@ -116,6 +124,17 @@ export class MenuPrincipalPage implements OnInit {
   }
 
   async ngOnInit() {
+    // Obtener usuario autenticado
+    const user = await firstValueFrom(this.auth.user$);
+    if (!user) {
+      console.error('No hay usuario autenticado');
+      this.router.navigateByUrl('/login');
+      return;
+    }
+    
+    this.userId = user.uid;
+    console.log('Usuario autenticado:', this.userId);
+    
     // Inicializar y verificar notificaciones
     await this.inicializarNotificaciones();
     
@@ -163,8 +182,14 @@ export class MenuPrincipalPage implements OnInit {
 
   async cargarDocumentos() {
     try {
-      console.log('Cargando documentos desde almacenamiento...');
-      const documentosGuardados = await this.documentStorageService.obtenerTodosLosDocumentos();
+      if (!this.userId) {
+        console.error('No hay usuario autenticado');
+        this.documentos = [];
+        return;
+      }
+      
+      console.log('Cargando documentos del usuario:', this.userId);
+      const documentosGuardados = await this.documentStorageService.obtenerDocumentosPorUsuario(this.userId);
       
       console.log('Documentos obtenidos del storage:', documentosGuardados);
       console.log('Cantidad de documentos:', documentosGuardados.length);
@@ -445,14 +470,19 @@ export class MenuPrincipalPage implements OnInit {
 
   async eliminarDocumento(documento: Documento) {
     try {
+      if (!this.userId) {
+        console.error('No hay usuario autenticado');
+        return;
+      }
+      
       // Buscar el ID real del documento en el almacenamiento
-      const documentosGuardados = await this.documentStorageService.obtenerTodosLosDocumentos();
+      const documentosGuardados = await this.documentStorageService.obtenerDocumentosPorUsuario(this.userId);
       const documentoEliminar = documentosGuardados.find((doc: DocumentoGeneral) => 
         parseInt(doc.id?.replace('doc_', '') || '0') === documento.id
       );
 
       if (documentoEliminar && documentoEliminar.id) {
-        await this.documentStorageService.eliminarDocumento(documentoEliminar.id);
+        await this.documentStorageService.eliminarDocumento(documentoEliminar.id, this.userId);
         
         // Recargar documentos
         await this.cargarDocumentos();
