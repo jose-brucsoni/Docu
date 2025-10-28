@@ -191,6 +191,17 @@ export class MenuPrincipalPage implements OnInit {
       }
       
       console.log('Cargando documentos del usuario:', this.userId);
+      
+      // Sincronizar con Firestore antes de cargar
+      try {
+        await this.documentStorageService.sincronizarDocumentosConFirestore(this.userId);
+        console.log('Documentos sincronizados con Firestore');
+      } catch (sincError) {
+        console.error('Error al sincronizar con Firestore:', sincError);
+        // Continuar con documentos locales en caso de error
+      }
+      
+      // Obtener documentos (ahora sincronizados)
       const documentosGuardados = await this.documentStorageService.obtenerDocumentosPorUsuario(this.userId);
       
       console.log('Documentos obtenidos del storage:', documentosGuardados);

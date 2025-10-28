@@ -2,6 +2,7 @@ import { Injectable, Injector } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { DocumentoGeneral } from '../models/documento-general.model';
+import { DocumentFirestoreService } from './document-firestore.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,10 @@ export class DocumentStorageService {
   private readonly STORAGE_KEY = 'docu_documents';
   private notificationService: any;
 
-  constructor(private injector: Injector) {}
+  constructor(
+    private injector: Injector,
+    private firestoreService: DocumentFirestoreService
+  ) {}
 
   /**
    * Obtener el servicio de notificaciones de forma lazy para evitar dependencia circular
@@ -44,8 +48,18 @@ export class DocumentStorageService {
       documento.fechaCreacion = new Date();
       documento.fechaActualizacion = new Date();
       
-      // Guardar los metadatos en Preferences
+      // Guardar los metadatos en Preferences (local)
       await this.guardarMetadatos(documento);
+      
+      // Sincronizar con Firestore
+      try {
+        await this.firestoreService.guardarDocumento(documento);
+        console.log('Documento sincronizado con Firestore');
+      } catch (firestoreError) {
+        console.error('Error al sincronizar con Firestore:', firestoreError);
+        // No lanzar error, permitir que el documento se guarde localmente
+        console.warn('Documento guardado localmente pero no sincronizado con Firestore');
+      }
       
       // Programar notificación si el documento tiene fecha de expiración
       try {
@@ -241,7 +255,7 @@ export class DocumentStorageService {
         console.warn('No se pudo cancelar notificación:', error);
       }
       
-      // Eliminar de los metadatos
+      // Eliminar de los metadatos (local)
       const documentos = await this.obtenerTodosLosDocumentos();
       const documentosFiltrados = documentos.filter(doc => doc.id !== id);
       
@@ -249,6 +263,16 @@ export class DocumentStorageService {
         key: this.STORAGE_KEY,
         value: JSON.stringify(documentosFiltrados)
       });
+      
+      // Eliminar de Firestore
+      try {
+        await this.firestoreService.eliminarDocumento(id, userId);
+        console.log('Documento eliminado de Firestore');
+      } catch (firestoreError) {
+        console.error('Error al eliminar documento de Firestore:', firestoreError);
+        // No lanzar error, permitir que el documento se elimine localmente
+        console.warn('Documento eliminado localmente pero no de Firestore');
+      }
       
       console.log('Documento eliminado exitosamente');
     } catch (error) {
@@ -264,6 +288,16 @@ export class DocumentStorageService {
     try {
       documento.fechaActualizacion = new Date();
       await this.guardarMetadatos(documento);
+      
+      // Sincronizar con Firestore
+      try {
+        await this.firestoreService.actualizarDocumento(documento);
+        console.log('Documento actualizado en Firestore');
+      } catch (firestoreError) {
+        console.error('Error al actualizar documento en Firestore:', firestoreError);
+        // No lanzar error, permitir que el documento se actualice localmente
+        console.warn('Documento actualizado localmente pero no en Firestore');
+      }
       
       // Reprogramar notificación con la nueva fecha de expiración
       try {
@@ -360,6 +394,48 @@ export class DocumentStorageService {
     } catch (error) {
       console.error('Error al buscar documentos:', error);
       return [];
+    }
+  }
+
+  /**
+   * Sincronizar todos los documentos de un usuario con Firestore
+   */
+  async sincronizarDocumentosConFirestore(userId: string): Promise<DocumentoGeneral[]> {
+    try {
+      console.log('Iniciando sincronización con Firestore...');
+      
+      // Obtener documentos locales
+      const documentosLocales = await this.obtenerDocumentosPorUsuario(userId);
+      console.log('Documentos locales:', documentosLocales.length);
+      
+      // Sincronizar con Firestore
+      const documentosSincronizados = await this.firestoreService.sincronizarTodosLosDocumentos(userId, documentosLocales);
+      console.log('Documentos sincronizados:', documentosSincronizados.length);
+      
+      // Guardar documentos sincronizados en almacenamiento local
+      await Preferences.set({
+        key: this.STORAGE_KEY,
+        value: JSON.stringify(documentosSincronizados)
+      });
+      
+      // Guardar imágenes que no existen localmente (solo metadata, las imágenes se mantienen en Firestore)
+      for (const doc of documentosSincronizados) {
+        if (doc.imagenPath && !documentosLocales.find(d => d.id === doc.id)) {
+          // Nueva imagen desde Firestore, guardar referencia
+          try {
+            await this.guardarMetadatos(doc);
+          } catch (error) {
+            console.warn('Error al guardar metadatos de imagen desde Firestore:', error);
+          }
+        }
+      }
+      
+      console.log('Sincronización completada');
+      return documentosSincronizados;
+    } catch (error) {
+      console.error('Error al sincronizar documentos con Firestore:', error);
+      // En caso de error, retornar documentos locales
+      return await this.obtenerDocumentosPorUsuario(userId);
     }
   }
 
