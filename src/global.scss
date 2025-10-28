@@ -1921,24 +1921,19 @@ ion-button.secondary-action:hover {
   z-index: 1;
 }
 
-.gest-header-top {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-.gest-header-content {
-  flex: 1;
-  text-align: center;
-}
-
-.gest-back-btn {
+// Botón de retorno flotante
+.gest-floating-btn {
+  position: absolute !important;
+  top: 1.75rem;
+  left: 1.25rem;
+  z-index: 1000;
   --color: white;
-  --background-hover: rgba(255, 255, 255, 0.1);
-  --ripple-color: rgba(255, 255, 255, 0.2);
-  margin-top: -0.5rem;
+  --background: rgba(255, 255, 255, 0.15);
+  --background-hover: rgba(255, 255, 255, 0.25);
+  --ripple-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   
   ion-icon {
     font-size: 1.8rem;
@@ -2379,24 +2374,19 @@ ion-button.secondary-action:hover {
   z-index: 1;
 }
 
-.menu-header-top {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.menu-header-content {
-  flex: 1;
-}
-
-.menu-logout-btn {
+// Botón de logout flotante
+.menu-floating-btn {
+  position: absolute !important;
+  top: 1.75rem;
+  right: 1.25rem;
+  z-index: 1000;
   --color: white;
-  --background-hover: rgba(255, 255, 255, 0.1);
-  --ripple-color: rgba(255, 255, 255, 0.2);
-  margin-top: -0.5rem;
+  --background: rgba(255, 255, 255, 0.15);
+  --background-hover: rgba(255, 255, 255, 0.25);
+  --ripple-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   
   ion-icon {
     font-size: 1.8rem;

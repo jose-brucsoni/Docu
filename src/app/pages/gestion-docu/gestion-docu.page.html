@@ -3,24 +3,20 @@
   
   <!-- Header con gradiente -->
   <div class="gest-header">
-    <div class="gest-header-top">
-      <ion-button 
-        fill="clear" 
-        size="small"
-        class="gest-back-btn"
-        (click)="volverAlMenu()">
-        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
-      </ion-button>
-      <div class="gest-header-content">
-        <div class="gest-header-icon">
-          <ion-icon name="document-text"></ion-icon>
-        </div>
-        <div>
-          <h1 class="gest-header-title">Gestión de Documentos</h1>
-          <p class="gest-header-subtitle" *ngIf="!capturedImage && !showTipoSelector">Captura y gestiona tus documentos</p>
-        </div>
-      </div>
+    <div class="gest-header-icon">
+      <ion-icon name="document-text"></ion-icon>
     </div>
+    <h1 class="gest-header-title">Gestión de Documentos</h1>
+    <p class="gest-header-subtitle" *ngIf="!capturedImage && !showTipoSelector">Captura y gestiona tus documentos</p>
+    
+    <!-- Botón de retorno flotante -->
+    <ion-button 
+      fill="clear" 
+      size="small"
+      class="gest-back-btn gest-floating-btn"
+      (click)="volverAlMenu()">
+      <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+    </ion-button>
   </div>
 
   <div class="gest-content">
