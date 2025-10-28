@@ -555,7 +555,7 @@ El proyecto incluye documentación adicional en archivos markdown:
 
 ---
 
-**Autor**: José Suárez  
-**Fecha**: 2024  
+**Autor**: José Carlo Suárez Brucsoni  & Marcelo Quito
+ **Fecha**: 2025  
 **Tecnología**: Ionic + Angular + Firebase
 
