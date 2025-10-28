@@ -2218,6 +2218,31 @@ ion-button.secondary-action:hover {
   color: #999;
   margin: 0.25rem 0 0 0;
   font-style: italic;
+  
+  &.required-hint {
+    color: #d32f2f;
+    font-weight: 600;
+    font-style: normal;
+    background: rgba(211, 47, 47, 0.05);
+    padding: 0.5rem;
+    border-radius: 8px;
+    border-left: 3px solid #d32f2f;
+  }
+}
+
+.gest-input-container.required-empty {
+  border-color: #d32f2f;
+  background: rgba(211, 47, 47, 0.05);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    border-color: #d32f2f;
+  }
+  50% {
+    border-color: rgba(211, 47, 47, 0.5);
+  }
 }
 
 .gest-input-label {

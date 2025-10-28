@@ -222,17 +222,15 @@ export class GestionDocuPage implements OnInit {
       // Extraer fechas específicas del documento
       this.fechasExtraidas = this.extraerFechasDocumento(processedText);
       
-      // Si se encontraron fechas válidas, extraer más datos del documento
-      if (this.fechasExtraidas.esValida) {
-        this.documentoExtraido = this.extraerDatosDocumento(processedText);
-        this.showEditCard = true;
-      }
+      // SIEMPRE mostrar el formulario para edición (independientemente de la confianza)
+      this.documentoExtraido = this.extraerDatosDocumento(processedText);
+      this.showEditCard = true;
       
       // Terminar el worker
       await worker.terminate();
 
       if (confidence < 30) {
-        this.showAlertMessage('La calidad de la imagen puede ser baja. Intenta capturar nuevamente con mejor iluminación.');
+        this.showAlertMessage('La calidad del reconocimiento es baja. Por favor, revisa y corrige los datos extraídos.');
       }
     } catch (error) {
       console.error('Error al procesar OCR:', error);
@@ -445,6 +443,13 @@ export class GestionDocuPage implements OnInit {
   extraerFechasDocumento(texto: string): FechasExtraidas {
     console.log('Extrayendo fechas del documento...');
     
+    // Obtener fecha actual en formato DD/MM/YYYY
+    const hoy = new Date();
+    const diaActual = hoy.getDate().toString().padStart(2, '0');
+    const mesActual = (hoy.getMonth() + 1).toString().padStart(2, '0');
+    const añoActual = hoy.getFullYear();
+    const fechaActualString = `${diaActual}/${mesActual}/${añoActual}`;
+    
     // Patrones para buscar fechas en formato DD/MM/YYYY
     const patronFecha = /(\d{1,2})\/(\d{1,2})\/(\d{4})/g;
     const fechasEncontradas: string[] = [];
@@ -500,20 +505,31 @@ export class GestionDocuPage implements OnInit {
       }
     }
     
-    // Validar que las fechas sean válidas y que nacimiento < emisión < expiración
-    const esValida = this.validarFechasCompletas(fechaNacimiento, fechaEmision, fechaExpiracion);
+    // Si no se encontró fecha de emisión, usar fecha actual
+    if (!fechaEmision) {
+      fechaEmision = fechaActualString;
+      console.log('No se encontró fecha de emisión, usando fecha actual:', fechaEmision);
+    }
+    
+    // Si no se encontró fecha de expiración, dejarla vacía (obligará al usuario a ingresarla)
+    if (!fechaExpiracion) {
+      console.log('No se encontró fecha de expiración, quedará vacía para que el usuario la ingrese');
+    }
+    
+    // Siempre marcamos como válido para mostrar el formulario
+    const esValida = true;
     
     const resultado: FechasExtraidas = {
       fechaEmision,
-      fechaExpiracion,
+      fechaExpiracion: fechaExpiracion || '', // Dejar vacío si no se encontró
       esValida,
-      mensajeError: esValida ? undefined : 'No se pudieron extraer fechas válidas del documento'
+      mensajeError: undefined
     };
     
     console.log('Resultado extracción fechas:', resultado);
     console.log('Fecha nacimiento:', fechaNacimiento);
     console.log('Fecha emisión:', fechaEmision);
-    console.log('Fecha expiración:', fechaExpiracion);
+    console.log('Fecha expiración:', fechaExpiracion || '(vacía - el usuario debe ingresarla)');
     return resultado;
   }
 
@@ -708,6 +724,12 @@ export class GestionDocuPage implements OnInit {
   async guardarDocumento() {
     if (!this.documentoExtraido || !this.capturedImage) {
       this.showAlertMessage('No hay datos para guardar');
+      return;
+    }
+
+    // Validar que la fecha de expiración esté presente
+    if (!this.documentoExtraido.fechaExpiracion || this.documentoExtraido.fechaExpiracion.trim() === '') {
+      this.showAlertMessage('La fecha de expiración es obligatoria. Por favor, ingresa una fecha válida.');
       return;
     }
 

@@ -154,14 +154,18 @@
                 <ion-icon name="time-outline"></ion-icon>
                 Fecha de Expiración *
               </label>
-              <div class="gest-input-container">
+              <div class="gest-input-container" [class.required-empty]="!documentoExtraido.fechaExpiracion">
                 <ion-input 
                   type="text" 
                   [(ngModel)]="documentoExtraido.fechaExpiracion"
-                  placeholder="DD/MM/YYYY"
+                  placeholder="DD/MM/YYYY (OBLIGATORIO)"
                   name="fechaExpiracion"
+                  required
                   class="gest-modern-input"></ion-input>
               </div>
+              <p class="gest-input-hint required-hint" *ngIf="!documentoExtraido.fechaExpiracion">
+                ⚠️ Este campo es obligatorio. Ingresa la fecha de expiración.
+              </p>
             </div>
           </div>
           

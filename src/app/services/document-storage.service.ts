@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { DocumentoGeneral } from '../models/documento-general.model';
@@ -8,8 +8,19 @@ import { DocumentoGeneral } from '../models/documento-general.model';
 })
 export class DocumentStorageService {
   private readonly STORAGE_KEY = 'docu_documents';
+  private notificationService: any;
 
-  constructor() {}
+  constructor(private injector: Injector) {}
+
+  /**
+   * Obtener el servicio de notificaciones de forma lazy para evitar dependencia circular
+   */
+  private getNotificationService() {
+    if (!this.notificationService) {
+      this.notificationService = this.injector.get('NotificationService');
+    }
+    return this.notificationService;
+  }
 
   /**
    * Guardar un documento con su imagen
@@ -30,6 +41,16 @@ export class DocumentStorageService {
       
       // Guardar los metadatos en Preferences
       await this.guardarMetadatos(documento);
+      
+      // Programar notificación si el documento tiene fecha de expiración
+      try {
+        const notificationService = this.injector.get('NotificationService');
+        if (notificationService && documento.fechaExpiracion) {
+          await notificationService.programarNotificacionParaDocumento(documento);
+        }
+      } catch (error) {
+        console.warn('No se pudo programar notificación:', error);
+      }
       
       console.log('Documento guardado exitosamente:', documentoId);
     } catch (error) {
@@ -165,6 +186,16 @@ export class DocumentStorageService {
         }
       }
       
+      // Cancelar notificación si existe
+      try {
+        const notificationService = this.injector.get('NotificationService');
+        if (notificationService) {
+          await notificationService.cancelarNotificacionDocumento(id);
+        }
+      } catch (error) {
+        console.warn('No se pudo cancelar notificación:', error);
+      }
+      
       // Eliminar de los metadatos
       const documentos = await this.obtenerTodosLosDocumentos();
       const documentosFiltrados = documentos.filter(doc => doc.id !== id);
@@ -188,6 +219,17 @@ export class DocumentStorageService {
     try {
       documento.fechaActualizacion = new Date();
       await this.guardarMetadatos(documento);
+      
+      // Reprogramar notificación con la nueva fecha de expiración
+      try {
+        const notificationService = this.injector.get('NotificationService');
+        if (notificationService && documento.fechaExpiracion) {
+          await notificationService.programarNotificacionParaDocumento(documento);
+        }
+      } catch (error) {
+        console.warn('No se pudo reprogramar notificación:', error);
+      }
+      
       console.log('Documento actualizado exitosamente');
     } catch (error) {
       console.error('Error al actualizar documento:', error);
