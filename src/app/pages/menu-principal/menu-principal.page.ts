@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DocumentStorageService } from '../../services/document-storage.service';
+import { NotificationService } from '../../services/notification.service';
 import { DocumentoGeneral } from '../../models/documento-general.model';
 import { 
   IonContent, 
@@ -93,7 +94,8 @@ export class MenuPrincipalPage implements OnInit {
 
   constructor(
     private router: Router,
-    private documentStorageService: DocumentStorageService
+    private documentStorageService: DocumentStorageService,
+    private notificationService: NotificationService
   ) {
     addIcons({ 
       documentText, 
@@ -114,9 +116,42 @@ export class MenuPrincipalPage implements OnInit {
   }
 
   async ngOnInit() {
+    // Inicializar y verificar notificaciones
+    await this.inicializarNotificaciones();
+    
     await this.cargarDocumentos();
     this.calcularEstadisticas();
     this.totalPaginas = Math.ceil(this.documentos.length / this.documentosPorPagina);
+  }
+
+  /**
+   * Inicializar y verificar notificaciones para documentos próximos a vencer
+   */
+  async inicializarNotificaciones() {
+    try {
+      console.log('Inicializando notificaciones en menu-principal...');
+      
+      // Verificar permisos
+      const tienePermisos = await this.notificationService.solicitarPermisos();
+      
+      if (!tienePermisos) {
+        console.warn('Permisos de notificación no concedidos');
+        return;
+      }
+      
+      // Verificar y programar notificaciones para todos los documentos
+      await this.notificationService.verificarYProgramarNotificaciones();
+      
+      // Obtener y mostrar documentos próximos a vencer
+      const documentosProximos = await this.notificationService.verificarDocumentosProximosAVencer(7);
+      console.log('Documentos próximos a vencer (7 días):', documentosProximos.length);
+      
+      if (documentosProximos.length > 0) {
+        console.log('Documentos próximos a vencer:', documentosProximos);
+      }
+    } catch (error) {
+      console.error('Error inicializando notificaciones:', error);
+    }
   }
 
   async ionViewWillEnter() {
